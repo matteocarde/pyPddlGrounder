@@ -14,7 +14,7 @@ The grounding process is performed by replacing the variables in the domain with
 ## Overview
 The [example.py](example.py) contains an example of use where:
 * ```Domain(domain_path)``` Creates an instance of the [Domain object](#domain) from the file [domain.pddl](files/domain.pddl)
-* ```Problem(problem_path)``` Creates an instance of the Problem object from the file [problem.pddl](files/problem.pddl)
+* ```Problem(problem_path)``` Creates an instance of the [Problem object](#problem) from the file [problem.pddl](files/problem.pddl)
 * ```objDomain.ground(objProblem)``` Returns the grounded Domain object 
 * ```.writeJson(result_folder,"filename")``` Writes the object in json format in the [result_folder](results)
 * ```objDomainGrounded.writePddl(result_folder,"filename")``` Writes the [pddl file](results/domain_grounded.pddl) of the Domain object
@@ -45,3 +45,22 @@ It represents the pddl file of the domain.
   It makes the grounding of the domain on the problem given as input. The method returns a Domain object. [Example of grounded domain](results/domain_grounded.pddl)
 * ```.writePddl(file_path:str,filename:str)```<br>
   It writes the PDDL file of the Domain, naming it as filename, in the folder result at the file_path
+  
+### Problem
+It represents the pddl file of the problem.
+
+#### Attributes
+* ```name : str``` The string representing the name of the problem
+* ```domain : str``` The list representing the name of the domain
+* ```objects : list[str] ``` The list representing the objects of the problem
+* ```init : list[str]``` The list of predicates that represent the initial state of the problem 
+* ```goal : list[str]``` The list of the predicates that represent the goal of the problem
+
+#### Methods
+* ```.writeJson(file_path:str,filename:str)``` <br>
+  It writes the Json representation of the Problem, naming it as filename, in the folder result at the file_path. [Example](results/problem.json)
+* ```.toJson()```<br>
+  It returns the dictionary containing the json representation of the Problem
+* ```.printAll()```<br>
+  It prints in console each attributes of the Problem and their values
+
