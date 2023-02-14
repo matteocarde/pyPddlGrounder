@@ -248,3 +248,33 @@ The constructor can take as input:
 * ```.toString()```
   It returns the string of the predicate into brackets. <br>
   *For example:* "(>= (distanceRun ?r ?a ?b) (distance ?a ?b))"
+  
+------
+### Operation
+The class Operation is the generalization of actions,processes and events. It is composed by name, parameters, preconditions and effect.
+
+#### Attributes
+* ```name : str ``` The name of the operation. <br>
+ *For example:* "StartMoving"
+* ```parameters : list[Parameters]``` The list containing the objects Parameter
+* ```preconditions : list[Precondition]``` The list containing the objects Precondition.
+* ```effect : list[Effect]```  The list containing the ojects Effect
+
+#### Constructor
+The constructor can take as input:
+* or an antlr4 tree containing the operation <br>
+  *For example:* Operation(node)
+* or the parameters for the name, parameters, preconditions and effect <br>
+ *For example:* Operation(name= "name_string",parameters=[], preconditions=[precondition1 : Precondition, precondition2 : Precondition], effects = [effect1 : Effect, effect2 : Effect)]
+ 
+------
+### Action
+The class Action represents one action of the pddl file. It is composed by name, parameters, preconditions and effect. It inherits everything by the [Operation class](#operation)
+
+------
+### Process
+The class Process represents one process of the pddl file. It is composed by name, parameters, preconditions and effect.It inherits everything by the [Operation class](#operation)
+
+------
+### Event
+The class Event represents one event of the pddl file. It is composed by name, parameters, preconditions and effect.It inherits everything by the [Operation class](#operation)
