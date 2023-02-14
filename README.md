@@ -23,7 +23,8 @@ The [example.py](example.py) contains an example of use where:
 
 ## Documentation
 ### Domain
-It represents the pddl file of the domain.
+It represents the pddl file of the domain.![Immagine](https://user-images.githubusercontent.com/101431140/218881790-f125bffd-a7da-4e07-9476-4d685e313bbb.png)
+
 
 #### Attributes
 * ```name : str``` The string representing the name of the domain
