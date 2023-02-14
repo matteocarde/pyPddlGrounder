@@ -214,7 +214,9 @@ class Domain:
         print("\n \n \n")
 
     def toJson(self):
-
+        '''
+        Returns a dictionary containing attributes represented in a json format
+        '''
         def getConstants(List):
             result = []
             for constant in List:
@@ -284,6 +286,16 @@ class Domain:
 
 
     def writeJson(self,file_path:str,filename:str):
+        '''
+        It writes the json representation of the Domain
+        
+        Parameters
+        ----------
+        file_path : str 
+            The path to the folder where the json file will be saved
+        filename : str
+            The name of the file that will be written
+        '''
         with open(file_path+"/"+filename+".json", 'w') as json_file:
             json.dump(self.toJson(), json_file, indent= 4)
         pass
