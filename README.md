@@ -4,7 +4,7 @@ and in particular it allows to ground the domain on a defined problem.
 
 The grounding process is performed by replacing the variables in the domain with the instances of objects present in a given associated problem.
 
-[Domain](files/domain.pddl) + [Problem](files/problem.pddl) ---grounding--> [Grounded Domain](files/domain_grounded.pddl)
+[Domain](files/domain.pddl) + [Problem](files/problem.pddl) ---pyGrounder--> [Grounded Domain](results/domain_grounded.pddl)
 
 ## Requirements
 * Python version: 3.7 or higher
@@ -65,4 +65,64 @@ It represents the pddl file of the problem.
   It returns the dictionary containing the json representation of the Problem
 * ```.printAll()```<br>
   It prints in console each attributes of the Problem and their values
+  
+### Variable
+The variable object represents a variable in ```<name> - <type>``` format. <br>
+*For example:* "?r - robot"
 
+#### Attributes
+* ```name : str``` The name of the variable. <br>
+*For example:* "?r"
+* ```type : str``` The type of the variable. <br>
+*For example:* "robot"
+
+#### Constructor
+The Variable's constructor takes in input the string in "name - type" format and it splits the string by removing the dash in order to store the name and the type. <br>
+*For example:* Variable("?r - robot")
+
+#### Methods
+* ```.toString()```<br>
+  It returns the whole variable in string format.<br>
+  *For example:* "?r - robot"
+  
+### Literal
+ The Literal object represents a proposition in ```<name> <argument1>..<argumentN>``` format. <br>
+ *For example:* "atRobot ?r - robot ?l - room"
+ 
+#### Attributes
+* ```name : str``` The name of the Literal.<br>
+*For example* "atRobot"
+* ```arguments : list[Variable]```  The list containing the [arguments](#variable) of the Literal. <br>
+*For example:* [?r - robot, ?l - room]
+
+#### Constructor
+The Predicate's constructor takes in input an antlr4 tree containing the nodes with the name of the [Literal](#literal) and its arguments<br>
+*For example:* Literal(node)
+
+### Predicate
+The Predicate object represents a proposition in ```<name> <argument1>..<argumentN>``` format. It extends the [Literal](#literal) object.<br>
+*For example:* "atRobot ?r - robot ?l - room"
+
+#### Attributes
+* ```name : str``` The name of the Predicate.<br>
+*For example* "atRobot"
+* ```arguments : list[Variable]```  The list containing the [arguments](#variable) of the Predicate. <br>
+*For example:* [?r - robot, ?l - room]
+
+#### Constructor
+The Predicate's constructor takes in input an antlr4 tree containing the nodes with the name of the [Literal](#literal) and its arguments<br>
+*For example:* Predicate(node)
+
+### Function
+The Function object represents a proposition in ```<name> <argument1>..<argumentN>``` format. It extends the [Literal](#literal) object.<br>
+*For example:* "distance ?a - room ?b - room"
+
+#### Attributes
+* ```name : str``` The name of the Function.<br>
+*For example* "atRobot"
+* ```arguments : list[Variable]```  The list containing the [arguments](#variable) of the Function. <br>
+*For example:* [?a - room ?b - room]
+
+#### Constructor
+The Predicate's constructor takes in input an antlr4 tree containing the nodes with the name of the [Literal](#literal) and its arguments<br>
+*For example:* Function(node)
