@@ -12,4 +12,9 @@ The grounding process is performed by replacing the variables in the domain with
 ## Installation
 
 ## Overview
-The [example.py](pyGrounder/example.py) contains an example of use 
+The [example.py](example.py) contains an example of use where:
+* ```Domain(domain_path)``` Creates an instance of the Domain object from the file [domain.pddl](files/domain.pddl)
+* ```Problem(problem_path)``` Creates an instance of the Problem object from the file [problem.pddl](files/problem.pddl)
+* ```objDomain.ground(objProblem)``` Returns the grounded Domain object 
+* ```.writeJson(result_folder,"filename")``` Writes the object in json format in the [result_folder](results)
+* ```objDomainGrounded.writePddl(result_folder,"filename")``` Writes the [pddl file](results/domain_grounded.pddl) of the Domain object
