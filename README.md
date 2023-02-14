@@ -48,6 +48,7 @@ It represents the pddl file of the domain.
 * ```.writePddl(file_path:str,filename:str)```<br>
   It writes the PDDL file of the Domain, naming it as filename, in the folder result at the file_path
   
+------
 ### Problem
 It represents the pddl file of the problem.
 
@@ -65,7 +66,8 @@ It represents the pddl file of the problem.
   It returns the dictionary containing the json representation of the Problem
 * ```.printAll()```<br>
   It prints in console each attributes of the Problem and their values
-  
+
+------
 ### Variable
 The variable object represents a variable in ```<name> - <type>``` format. <br>
 *For example:* "?r - robot"
@@ -84,7 +86,8 @@ The Variable's constructor takes in input the string in "name - type" format and
 * ```.toString()```<br>
   It returns the whole variable in string format.<br>
   *For example:* "?r - robot"
-  
+ 
+------
 ### Literal
  The Literal object represents a proposition in ```<name> <argument1>..<argumentN>``` format. <br>
  *For example:* "atRobot ?r - robot ?l - room"
@@ -99,6 +102,7 @@ The Variable's constructor takes in input the string in "name - type" format and
 The Predicate's constructor takes in input an antlr4 tree containing the nodes with the name of the [Literal](#literal) and its arguments<br>
 *For example:* Literal(node)
 
+------
 ### Predicate
 The Predicate object represents a proposition in ```<name> <argument1>..<argumentN>``` format. It extends the [Literal](#literal) object.<br>
 *For example:* "atRobot ?r - robot ?l - room"
@@ -113,6 +117,7 @@ The Predicate object represents a proposition in ```<name> <argument1>..<argumen
 The Predicate's constructor takes in input an antlr4 tree containing the nodes with the name of the [Literal](#literal) and its arguments<br>
 *For example:* Predicate(node)
 
+------
 ### Function
 The Function object represents a proposition in ```<name> <argument1>..<argumentN>``` format. It extends the [Literal](#literal) object.<br>
 *For example:* "distance ?a - room ?b - room"
@@ -126,3 +131,120 @@ The Function object represents a proposition in ```<name> <argument1>..<argument
 #### Constructor
 The Predicate's constructor takes in input an antlr4 tree containing the nodes with the name of the [Literal](#literal) and its arguments<br>
 *For example:* Function(node)
+
+------
+### Parameter
+This class represents one parameter for the action/event/process. It inherits everything from the [Variable class](#variable)
+
+------
+### Precondition
+The Precondition class represents one precondition for the action/process/event. It only contains one predicate, that can be a [SimplePredicate](#simplepredicate), [NegatedPredicate](#negatedpredicate) or [ComposedPredicate](#composedpredicate)
+
+#### Attributes
+* ```predicate : SimplePredicate | NegatedPredicate | ComposedPredicate```
+
+#### Constructor
+The Precondition's constructor can take as input:
+* or an antlr4 tree containing the node with the precondition
+* or one predicate between [SimplePredicate](#simplepredicate), [NegatedPredicate](#negatedpredicate), [ComposedPredicate](#composedpredicate)
+
+#### Methods
+* ```.getString()```
+  It returns the string of the Precondition
+  
+------
+### Effect
+The Effect class represents one effect for the action/process/event. It only contains one predicate, that can be a [SimplePredicate](#simplepredicate), [NegatedPredicate](#negatedpredicate) or [ComposedPredicate](#composedpredicate)
+
+#### Attributes
+* ```predicate : SimplePredicate | NegatedPredicate | ComposedPredicate```
+
+#### Constructor
+The Effect's constructor can take as input:
+* or an antlr4 tree containing the node with the effect
+* or one predicate between  [SimplePredicate](#simplepredicate), [NegatedPredicate](#negatedpredicate), [ComposedPredicate](#composedpredicate)
+
+#### Methods
+* ```.getString()```
+  It returns the string of the Effect
+  
+------
+### SimplePredicate
+This class represents a SimplePredicate in this form: ```<name> <argument1>..<argumentN>```.<br>
+*For Example:* "atRobot ?r ?b"
+
+#### Attributes
+* ```string : str ``` The string of the whole predicate into brackets. <br>
+ *For example:* "(atRobot ?r ?b)
+* ```name : str ```  The name of the predicate. <br>
+  *For example:* "atRobot"
+* ``` arguments:List[str]```  The list containing the string of each argument. <br>
+  *For example:* [?r, ?b]
+* ```isComplex:False```  Metadata for some operations, it means it's not a composed predicate
+* ```isNegated:False``` Metadata for some operations, it means it's not a negated predicate
+
+#### Constructor
+The constructor can take as input:
+* or a string containing the predicate <br>
+  *For example:* SimplePredicate("atRobot ?r ?b")
+* or the parameters for the name and the arguments <br>
+  *For example:* SimplePredicate(name = "atRobot", arguments = ["?r", ?b"])
+  
+#### Methods
+* ```.getString()```
+  It returns the string of the predicate into brackets. <br>
+  *For example:* "(atRobot ?r ?b)"
+  
+------
+### NegatedPredicate
+  This class represents a Negated Predicate in this form:  ```not <name> <argument1>..<argumentN>```.<br>
+*For Example:* "not(atRobot ?r ?b)"
+
+#### Attributes
+* ```string : str ``` The string of the whole predicate into brackets. <br>
+ *For example:*  "(not (atRobot ?r ?b))"
+* ```name : str ```  The name of the predicate. <br>
+  *For example:* "atRobot"
+* ``` arguments:List[str]```  The list containing the string of each argument. <br>
+  *For example:* [?r, ?b]
+* ```isComplex:False```  Metadata for some operations, it means it's not a composed predicate
+* ```isNegated:True``` Metadata for some operations, it means it's a negated predicate
+
+#### Constructor
+The constructor can take as input:
+* or a string containing the predicate <br>
+  *For example:* NegatedPredicate(" not(atRobot ?r ?b)")
+* or the parameters for the name and the arguments <br>
+  *For example:* NegatedPredicate(name = "atRobot", arguments = ["?r", ?b"])
+  
+#### Methods
+* ```.getString()```
+  It returns the string of the predicate into brackets. <br>
+  *For example:* "not((atRobot ?r ?b))"
+  
+------
+### ComposedPredicate
+This class represents a Composed Predicate in this form:  ```operation <argument1> <argument2>```. <br>
+*For Example:* " >= (distanceRun ?r ?a ?b) (distance ?a ?b)"
+
+#### Attributes
+* ```string : str ``` The string of the whole predicate into brackets. <br>
+ *For example:*  "(>= (distanceRun ?r ?a ?b) (distance ?a ?b))"
+* ```name : str ``` The name of the operation. <br>
+  *For example:* ">="
+* ```arguments:List[SimplePredicate|ConstantPredicate|ComposedPredicate]```  The list containing the predicate of each argument. <br>
+  *For example:* [(distanceRun ?r ?a ?b),(distance ?a ?b)]
+* ```isComplex:True```   Metadata for some operations, it means it's a composed predicate
+* ```isNegated:False``` Metadata for some operations, it means it's not a negated predicate
+
+#### Constructor
+The constructor can take as input:
+* or a string containing the predicate <br>
+  *For example:* NegatedPredicate(" not(atRobot ?r ?b)")
+* or the parameters for the name and the arguments <br>
+  *For example:* NegatedPredicate(name = "atRobot", arguments = ["?r", ?b"])
+  
+#### Methods
+* ```.toString()```
+  It returns the string of the predicate into brackets. <br>
+  *For example:* "(>= (distanceRun ?r ?a ?b) (distance ?a ?b))"
