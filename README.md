@@ -4,6 +4,8 @@ and in particular it allows to ground the domain on a defined problem.
 
 The grounding process is performed by replacing the variables in the domain with the instances of objects present in a given associated problem.
 
+[Domain](files/domain.pddl) + [Problem](files/problem.pddl) ---grounding--> [Grounded Domain](files/domain_grounded.pddl)
+
 ## Requirements
 * Python version: 3.7 or higher
 * [Antlr4](https://www.antlr.org/) 
