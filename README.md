@@ -12,6 +12,10 @@ The grounding process is performed by replacing the variables in the domain with
 * [Antlr4 Python3 runtime target](https://www.antlr.org/download.html)
 
 ## Installation
+Download the [python wheel file](pyGrounder-0.0.1-py3-none-any.whl) containing the library and run the following command:
+``` bash
+python pip -m install pyGrounder-0.0.1-py3-none-any.whl 
+```
 
 ## Overview
 The [example.py](example.py) contains an example of use where:
