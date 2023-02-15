@@ -67,9 +67,9 @@ This class represents the pddl file of the problem.
 #### Attributes
 * ```name : str``` The string representing the name of the problem
 * ```domain : str``` The list representing the name of the domain
-* ```objects : list[str] ``` The list representing the objects of the problem
-* ```init : list[str]``` The list of predicates that represent the initial state of the problem 
-* ```goal : list[str]``` The list of the predicates that represent the goal of the problem
+* ```objects : list[dict] ``` The list representing the objects of the problem
+* ```init : list[dict]``` The list of predicates that represent the initial state of the problem 
+* ```goal : list[dict]``` The list of the predicates that represent the goal of the problem
 
 #### Methods
 * ```.writeJson(file_path:str,filename:str)``` <br>
