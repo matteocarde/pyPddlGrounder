@@ -23,18 +23,21 @@ The [example.py](example.py) contains an example of use where:
 
 ## Documentation
 ### Domain
-It represents the pddl file of the domain.![Immagine](https://user-images.githubusercontent.com/101431140/218881790-f125bffd-a7da-4e07-9476-4d685e313bbb.png)
+This class represents the pddl file of the domain.
+#### Quick look
+![Immagine-modified](https://user-images.githubusercontent.com/101431140/219009467-1fd6c90c-9894-4790-a3d0-906a25e2a17b.png)
+
 
 
 #### Attributes
 * ```name : str``` The string representing the name of the domain
 * ```requirements : list[str]``` The list representing the requirements of the domain
 * ```types : list[str] ``` The list representing the types of the domain
-* ```predicates : list[Predicate]``` The list representing the predicates of the domain 
-* ```functions : list[Function]``` The list representing the functions of the domain
-* ```actions : list[Action]``` The list representing the actions of the domain
-* ```events : list[Event]``` The list representing the events of the domain
-* ```processes : list[Process]``` The list representing the processes of the domain
+* ```predicates : list[Predicate]``` The list representing the [predicates](#predicate) of the domain 
+* ```functions : list[Function]``` The list representing the [functions](#function) of the domain
+* ```actions : list[Action]``` The list representing the [actions](#action) of the domain
+* ```events : list[Event]``` The list representing the [events](#event) of the domain
+* ```processes : list[Process]``` The list representing the [processes](#process) of the domain
 * ```constants :list[Variable]``` The list representing the constants of the domain
 
 #### Methods
@@ -51,7 +54,11 @@ It represents the pddl file of the domain.![Immagine](https://user-images.github
   
 ------
 ### Problem
-It represents the pddl file of the problem.
+This class represents the pddl file of the problem.
+
+#### Quick look
+![Immagine-modified (1)](https://user-images.githubusercontent.com/101431140/219013905-880d888b-9dcd-4d40-b84e-d4f5558b7346.png)
+
 
 #### Attributes
 * ```name : str``` The string representing the name of the problem
