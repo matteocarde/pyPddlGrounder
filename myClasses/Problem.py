@@ -18,7 +18,7 @@ class Problem:
     domain : str
         The name of the domain. For example: robot
     objects : list[dict]
-        The list of problem objects. Each element is a dict {"objectType" : <string>, "objectIstances" [<string1>,..<stringN>]}. For example [{objectType: robot, objectIstances: [robot1, robot2]}]
+        The list of problem objects. Each element is a dict {"objectType" : <string>, "objectInstances" [<string1>,..<stringN>]}. For example [{objectType: robot, objectInstances: [robot1, robot2]}]
     init : list[dict]
         The list of initialization predicates. Each element is a dict.
     goal : list[dict]
@@ -55,7 +55,7 @@ class Problem:
             result["objectType"] = node.getChild(-1).getText()
             for child in range(node.getChildCount()-2):#-2 perchè il penultimo è "-" e -1 è il tipo
                 lista_di_oggetti.append(node.getChild(child).getText())
-            result["objectIstances"] = lista_di_oggetti    
+            result["objectInstances"] = lista_di_oggetti
             return result
 
         def getInitList(node):
@@ -192,7 +192,7 @@ class Problem:
         print(self.__domain+ "\n")
         print("----------------------------Objects: -----------------------------------------------------")
         for object in self.__objects:
-            print(object["objectType"] +" - "+ str(object["objectIstances"]))
+            print(object["objectType"] +" - "+ str(object["objectInstances"]))
             #print(object)
         print("----------------------------init: --------------------------------------------------------")
         for init in self.__init:

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Set
 
 from libs.pyGrounder.myClasses.Action import Action
 from libs.pyGrounder.myClasses.Domain import Domain
@@ -10,30 +10,26 @@ from libs.pyGrounder.myClasses.Variable import Variable
 
 
 class GroundedDomain(Domain):
+    __operationsDict: Dict[str, Operation] = dict()
+
     def __init__(self, domain: Domain, problem: Problem):
 
         constants = []
-        for object in problem.objects:
-            objType = object["objectType"]
-            for instance in object["objectIstances"]:
+        for obj in problem.objects:
+            objType = obj["objectType"]
+            for instance in obj["objectInstances"]:
                 constants.append(Variable(instance + "-" + objType))
 
-        gActions: List[Action] = [gAction for action in domain.actions for gAction in action.ground(problem)]
-        gEvents: List[Event] = [gEvent for event in domain.events for gEvent in event.ground(problem)]
-        gProcesses: List[Process] = [gProcess for process in domain.processes for gProcess in process.ground(problem)]
+        gActions: Set[Operation] = set([g for action in domain.actions for g in action.ground(problem)])
+        gEvents: Set[Operation] = set([g for event in domain.events for g in event.ground(problem)])
+        gProcesses: Set[Operation] = set([g for process in domain.processes for g in process.ground(problem)])
+
+        for op in gActions.union(gEvents).union(gProcesses):
+            self.__operationsDict[op.planName] = op
 
         super().__init__(name=domain.name, requirements=domain.requirements, types=domain.types,
-                              constants=constants, actions=gActions, events=gEvents,
-                              processes=gProcesses)
+                         constants=constants, actions=gActions, events=gEvents,
+                         processes=gProcesses)
 
-
-def __createOperationsDict(self) -> Dict[str, Operation]:
-    operationsDict: Dict[str, Operation] = dict()
-    for action in self.__actions:
-        operationsDict[action.getPlanName()] = action
-    for event in self.__events:
-        operationsDict[event.getPlanName()] = event
-    for process in self.__processes:
-        operationsDict[process.getPlanName()] = process
-
-    return operationsDict
+    def getOperationByPlanName(self, planName) -> Operation:
+        return self.__operationsDict[planName]
