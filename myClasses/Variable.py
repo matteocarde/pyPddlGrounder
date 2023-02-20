@@ -38,8 +38,8 @@ class Variable:
     def type(self, type):
         self.__type = type
     
-    def toString(self):
-        '''
-        It returns the whole variable in string format. For example "?r - robot"
-        '''
-        return (self.__name + " - " + self.__type)
+    def __str__(self):
+        return self.__name + " - " + self.__type
+
+    def __repr__(self):
+        return str(self)

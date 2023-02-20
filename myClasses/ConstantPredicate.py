@@ -31,6 +31,12 @@ class ConstantPredicate():
             self.__name = "Constant"
             self.__value = value
 
+    def __str__(self):
+        return str(self.__value)
+
+    def __repr__(self):
+        return str(self)
+
     def printPredicato(self):
         print("valore :"+ self.__value)
         print("\n")
@@ -54,6 +60,9 @@ class ConstantPredicate():
     @property
     def arguments(self):
         return self.__arguments
+
+    def ground(self, combination=None):
+        return self
 
     def printStringPredicate(self):
         print(self.__value)

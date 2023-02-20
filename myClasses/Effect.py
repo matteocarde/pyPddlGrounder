@@ -1,8 +1,8 @@
-from pyGrounder.myClasses.SimplePredicate import SimplePredicate
-from pyGrounder.myClasses.NegatedPredicate import NegatedPredicate
-from pyGrounder.myClasses.ConstantPredicate import ConstantPredicate
-from pyGrounder.myClasses.ComposedPredicate import ComposedPredicate
-from pyGrounder.myClasses.myUtilities import process_string
+from libs.pyGrounder.myClasses.SimplePredicate import SimplePredicate
+from libs.pyGrounder.myClasses.NegatedPredicate import NegatedPredicate
+from libs.pyGrounder.myClasses.ConstantPredicate import ConstantPredicate
+from libs.pyGrounder.myClasses.ComposedPredicate import ComposedPredicate
+from libs.pyGrounder.myClasses.myUtilities import process_string
 
 class Effect():
 
@@ -40,12 +40,14 @@ class Effect():
         else:
             self.__predicate = predicate
 
+    def ground(self, combination):
+        return Effect(predicate=self.predicate.ground(combination))
 
-    def getString(self):
-        '''
-        It return the string of the Effect
-        '''
-        self.__predicate.printStringPredicate()
+    def __str__(self):
+        return str(self.__predicate)
+
+    def __repr__(self):
+        return str(self)
 
     def predicateAsDict(self):
         '''

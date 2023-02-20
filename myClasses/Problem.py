@@ -1,6 +1,6 @@
 import json
-from pyGrounder.myClasses.myUtilities import remove_comments
-from pyGrounder.myClasses.myUtilities import get_antlr4_parsetree
+from libs.pyGrounder.myClasses.myUtilities import remove_comments
+from libs.pyGrounder.myClasses.myUtilities import get_antlr4_parsetree
 
 class Problem:
     '''

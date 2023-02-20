@@ -1,4 +1,4 @@
-from pyGrounder.myClasses.Variable import Variable
+from libs.pyGrounder.myClasses.Variable import Variable
 
 class Literal:
     '''
@@ -49,14 +49,17 @@ class Literal:
             result.append({"parameterName": argument.name, "parameterType": argument.type})
         return result
 
-    def toString(self):
+    def __str__(self):
         '''
         It returns the string in <name> <argument1>..<argumentN> format. For example "atRobot ?r - robot ?l - room"
         '''
         result = ""
         for argument in self.__arguments:
-            result = result + " " + argument.toString()
-        return (self.__name + result)
+            result = result + " " + str(argument)
+        return self.__name + result
+
+    def __repr__(self):
+        return str(self)
 
     def write(self, f):
         '''

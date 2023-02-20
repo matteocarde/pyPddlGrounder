@@ -1,21 +1,24 @@
-from pyGrounder.myClasses.myUtilities import remove_comments
-from pyGrounder.myClasses.myUtilities import get_antlr4_parsetree
-from pyGrounder.myClasses.Variable import Variable
-from pyGrounder.myClasses.Predicate import Predicate
-from pyGrounder.myClasses.Function import Function
-from pyGrounder.myClasses.Action import Action
-from pyGrounder.myClasses.Event import Event
-from pyGrounder.myClasses.Process import Process
-from pyGrounder.myClasses.SimplePredicate import SimplePredicate
-from pyGrounder.myClasses.NegatedPredicate import NegatedPredicate
-from pyGrounder.myClasses.ConstantPredicate import ConstantPredicate
-from pyGrounder.myClasses.ComposedPredicate import ComposedPredicate
-from pyGrounder.myClasses.Precondition import Precondition
-from pyGrounder.myClasses.Effect import Effect
+from typing import Dict, List
 
+from libs.pyGrounder.myClasses.Operation import Operation
+from libs.pyGrounder.myClasses.myUtilities import remove_comments
+from libs.pyGrounder.myClasses.myUtilities import get_antlr4_parsetree
+from libs.pyGrounder.myClasses.Variable import Variable
+from libs.pyGrounder.myClasses.Predicate import Predicate
+from libs.pyGrounder.myClasses.Function import Function
+from libs.pyGrounder.myClasses.Action import Action
+from libs.pyGrounder.myClasses.Event import Event
+from libs.pyGrounder.myClasses.Process import Process
+from libs.pyGrounder.myClasses.SimplePredicate import SimplePredicate
+from libs.pyGrounder.myClasses.NegatedPredicate import NegatedPredicate
+from libs.pyGrounder.myClasses.ConstantPredicate import ConstantPredicate
+from libs.pyGrounder.myClasses.ComposedPredicate import ComposedPredicate
+from libs.pyGrounder.myClasses.Precondition import Precondition
+from libs.pyGrounder.myClasses.Effect import Effect
 
 from itertools import product
 import json
+
 
 class Domain:
     '''
@@ -47,18 +50,19 @@ class Domain:
     processes : list[Process]
         The list of processes'''
     __name = str
-    __requirements : list
-    __types : list
-    __predicates : list[Predicate]
-    __functions : list[Function]
-    __actions : list[Action]
-    __events : list[Event]
-    __processes : list[Process]
-    __constants :list[Variable]
+    __requirements: list
+    __types: list
+    __predicates: list[Predicate]
+    __functions: list[Function]
+    __actions: list[Action]
+    __events: list[Event]
+    __processes: list[Process]
+    __constants: list[Variable]
 
-        
+    __operationsDict: Dict[str, Operation]
 
-    def __init__(self, file_path = None, name = None, requirements = None, constants= None, types = None, predicates = None, functions = None, actions = None, events = None, processes = None ):
+    def __init__(self, file_path=None, name=None, requirements=None, constants=None, types=None, predicates=None,
+                 functions=None, actions=None, events=None, processes=None):
 
         def getDomainName(stringa):
             stringa = stringa.replace("(domain", "")
@@ -67,7 +71,7 @@ class Domain:
 
         def getRequirementsList(node):
             result = []
-            for child in range (node.getChildCount()):
+            for child in range(node.getChildCount()):
                 stringa = node.getChild(child).getText()
                 if stringa != '(' and stringa != ')' and stringa != ':requirements':
                     result.append(stringa)
@@ -75,7 +79,7 @@ class Domain:
 
         def getTypesList(node):
             result = []
-            for child in range (node.getChildCount()):
+            for child in range(node.getChildCount()):
                 stringa = node.getChild(child).getText()
                 if stringa != '(' and stringa != ')' and stringa != ':types':
                     result.append(stringa)
@@ -83,7 +87,7 @@ class Domain:
 
         def getPredicatesList(node):
             result = []
-            for child in range (node.getChildCount()):
+            for child in range(node.getChildCount()):
                 child_node = node.getChild(child)
                 child_string = child_node.getText()
                 if child_string != '(' and child_string != ')' and child_string != ':predicates':
@@ -92,7 +96,7 @@ class Domain:
 
         def getFunctionsList(node):
             result = []
-            for child in range (node.getChildCount()):
+            for child in range(node.getChildCount()):
                 child_node = node.getChild(child)
                 child_string = child_node.getText()
                 if child_string != '(' and child_string != ')' and child_string != ':functions':
@@ -105,15 +109,16 @@ class Domain:
             self.__actions = []
             self.__processes = []
             self.__events = []
+            self.__requirements = []
             self.__constants = None
-            for i in range (tree.getChildCount()):
+            for i in range(tree.getChildCount()):
                 if 'domain' in tree.getChild(i).getText():
                     self.__name = getDomainName(tree.getChild(i).getText())
                 elif ':requirements' in tree.getChild(i).getText():
                     self.__requirements = getRequirementsList(tree.getChild(i))
                 elif ':types' in tree.getChild(i).getText():
                     self.__types = getTypesList(tree.getChild(i))
-                    #to do constants self.__constants =
+                    # to do constants self.__constants =
                 elif ':predicates' in tree.getChild(i).getText():
                     self.__predicates = getPredicatesList(tree.getChild(i))
                 elif ':functions' in tree.getChild(i).getText():
@@ -144,20 +149,24 @@ class Domain:
         return self.__requirements
 
     @property
+    def constants(self):
+        return self.__constants
+
+    @property
     def types(self):
         return self.__types
 
     @property
     def predicates(self):
-        return self.__predicates       
+        return self.__predicates
 
     @property
     def functions(self):
-        return self.__functions  
+        return self.__functions
 
     @property
     def actions(self):
-        return self.__actions 
+        return self.__actions
 
     @property
     def events(self):
@@ -165,17 +174,71 @@ class Domain:
 
     @property
     def processes(self):
-        return self.__processes 
+        return self.__processes
 
+    def writePddl(self, file_path: str, filename: str):
+        f = open(file_path + "/" + filename + ".pddl", "w")
 
+        # write the domain
+        f.write("(define (domain " + self.__name + ")\n")
+
+        # write the requirements
+        f.write(" " * 4 + "(:requirements")
+        for requirement in self.__requirements:
+            f.write(" " + requirement)
+        f.write(")\n")
+
+        # write the types
+        f.write(" " * 4 + "(:types")
+        for type in self.__types:
+            f.write(" " + type)
+        f.write(")\n")
+
+        # write the constants
+        if self.__constants != None:
+            f.write(" " * 4 + "(:constants" + "\n")
+            for constant in self.__constants:
+                f.write(" " * 8 + constant.toString() + "\n")
+            f.write(" " * 4 + ")\n")
+
+        # write the predicates
+        f.write(" " * 4 + "(:predicates" + "\n")
+        for predicate in self.__predicates:
+            predicate.write(f)
+        f.write(" " * 4 + ")\n")
+
+        # write the functions
+        f.write(" " * 4 + "(:functions" + "\n")
+        for function in self.__functions:
+            function.write(f)
+        f.write(" " * 4 + ")\n")
+
+        # write the actions
+        for action in self.__actions:
+            action.write(f, "action")
+
+        # write the processes
+        for process in self.__processes:
+            process.write(f, "process")
+
+        # write the events
+        for event in self.__events:
+            event.write(f, "event")
+
+        f.write(")")
+
+        f.close()
+
+    def getOperationFromString(self, opStr):
+        pass
 
     def printAll(self):
         print("----------------------------Domain name: ------------------------------------------------")
-        print(self.__name+ "\n")
+        print(self.__name + "\n")
         print("----------------------------Requirements: ---------------------------------------------- ")
-        print(str(self.__requirements)+ "\n")
+        print(str(self.__requirements) + "\n")
         print("----------------------------Types : -----------------------------------------------------")
-        print(str(self.__types)+ "\n")
+        print(str(self.__types) + "\n")
         if self.__constants != None:
             print("-----------------------------Constants: -------------------------------------------------")
             for constant in self.__constants:
@@ -194,7 +257,7 @@ class Domain:
             action.printParameters()
             action.printPreconditions()
             action.printEffects()
-            print("\n")            
+            print("\n")
         print("\n \n \n")
         print("-----------------------------Processes: ------------------------------------------------")
         for process in self.__processes:
@@ -202,7 +265,7 @@ class Domain:
             process.printParameters()
             process.printPreconditions()
             process.printEffects()
-            print("\n") 
+            print("\n")
         print("\n \n \n")
         print("------------------------------Events: --------------------------------------------------")
         for event in self.__events:
@@ -210,13 +273,14 @@ class Domain:
             event.printParameters()
             event.printPreconditions()
             event.printEffects()
-            print("\n") 
+            print("\n")
         print("\n \n \n")
 
     def toJson(self):
         '''
         Returns a dictionary containing attributes represented in a json format
         '''
+
         def getConstants(List):
             result = []
             for constant in List:
@@ -226,41 +290,39 @@ class Domain:
         def getPredicates(List):
             result = []
             for predicate in List:
-                result.append({"predicateName": predicate.name, "predicateParameters":predicate.argumentsAsList })
+                result.append({"predicateName": predicate.name, "predicateParameters": predicate.argumentsAsList})
             return result
 
         def getFunctions(List):
             result = []
             for function in List:
-                result.append({"predicateName": function.name, "predicateParameters":function.argumentsAsList })
+                result.append({"predicateName": function.name, "predicateParameters": function.argumentsAsList})
             return result
 
-
-        def getAEP(Operation,PaE):
+        def getAEP(Operation, PaE):
             result = {}
-            result[PaE+"Name"] = Operation.name
-            result[PaE+"Parameters"] = getParameters(Operation)
-            result[PaE+"Preconditions"] = getPreconditions(Operation) 
-            result[PaE+"Effects"] = getEffects(Operation)
+            result[PaE + "Name"] = Operation.name
+            result[PaE + "Parameters"] = getParameters(Operation)
+            result[PaE + "Preconditions"] = getPreconditions(Operation)
+            result[PaE + "Effects"] = getEffects(Operation)
             return result
-
 
         def getParameters(Operation):
             result = []
             for parameter in Operation.parameters:
-                result.append({"parameterName" : parameter.name, "parameterType" : parameter.type})
+                result.append({"parameterName": parameter.name, "parameterType": parameter.type})
             return result
 
         def getPreconditions(Operation):
             result = []
             for precondition in Operation.preconditions:
-                result.append(precondition.predicateAsDict())                           
+                result.append(precondition.predicateAsDict())
             return result
 
         def getEffects(Operation):
             result = []
             for effect in Operation.effects:
-                result.append(effect.predicateAsDict())                           
+                result.append(effect.predicateAsDict())
             return result
 
         json_data = {}
@@ -276,218 +338,25 @@ class Domain:
         json_data['events'] = []
 
         for action in self.__actions:
-            json_data['actions'].append(getAEP(action,"action"))
+            json_data['actions'].append(getAEP(action, "action"))
         for process in self.__processes:
-            json_data['processes'].append(getAEP(process,"process"))
+            json_data['processes'].append(getAEP(process, "process"))
         for event in self.__events:
-            json_data['events'].append(getAEP(event,"event"))
+            json_data['events'].append(getAEP(event, "event"))
 
         return json_data
 
-
-    def writeJson(self,file_path:str,filename:str):
+    def writeJson(self, file_path: str, filename: str):
         '''
         It writes the json representation of the Domain
-        
+
         Parameters
         ----------
-        file_path : str 
+        file_path : str
             The path to the folder where the json file will be saved
         filename : str
             The name of the file that will be written
         '''
-        with open(file_path+"/"+filename+".json", 'w') as json_file:
-            json.dump(self.toJson(), json_file, indent= 4)
+        with open(file_path + "/" + filename + ".json", 'w') as json_file:
+            json.dump(self.toJson(), json_file, indent=4)
         pass
-    
-    def ground(self,problem):
-
-        def getConstants(objects):
-            result = []
-            for object in objects:
-                objType = object["objectType"]
-                for instance in object["objectIstances"]:
-                    result.append(Variable(instance+"-"+objType))
-            return result
-
-        def getGroundedOperation(operations, objects, operationType):
-
-            def removeDash(string):
-                string = string.split("-")[0]
-                return string
-            
-            def getGroundedName(name, parameters):
-                groundedName = name
-                for i in range(len(parameters)):
-                    groundedName = groundedName+"_"+removeDash(parameters[i])
-                return groundedName
-
-            def getGroundedComposedPredicate(predicate, combination):
-                name = predicate.name
-                groundedArguments = []
-                for pred in predicate.arguments:
-                    if isinstance(pred,ComposedPredicate):
-                        groundedArguments.append(getGroundedComposedPredicate(pred,combination))
-                    elif isinstance(pred,ConstantPredicate):
-                        groundedArguments.append(ConstantPredicate(value = pred.value))
-                    else:
-                        groundedArguments.append(getSimpleGroundedPredicate(pred,combination))
-                return ComposedPredicate(name = name,arguments=groundedArguments)
-
-            def getSimpleGroundedPredicate(predicate, combination):
-                name = predicate.name
-                groundedArguments = []
-                for argument in predicate.arguments:
-                    for istance in combination:
-                        if argument in istance:
-                            groundedArguments.append(removeDash(istance))
-                return SimplePredicate(name=name, arguments=groundedArguments)
-
-
-            def getNegatedGroundedPredicate(predicate, combination):
-                name = predicate.name
-                groundedArguments = []
-                for argument in predicate.arguments:
-                    for istance in combination:
-                        if argument in istance:
-                            groundedArguments.append(removeDash(istance))                    
-                return NegatedPredicate(name=name, arguments=groundedArguments)
-
-            def getGroundedPreconditionsOrEffects(list, combination, preconditionOrEffect: str):
-                groundedResult = []
-                if preconditionOrEffect == "precondition":
-                    for predicate in list:
-                        predicate = predicate.predicate
-                        if isinstance(predicate, ComposedPredicate):
-                            groundedResult.append(Precondition(predicate = getGroundedComposedPredicate(predicate, combination)))
-                        if isinstance(predicate, NegatedPredicate):
-                            groundedResult.append(Precondition(predicate = getNegatedGroundedPredicate(predicate, combination)))
-                        if isinstance(predicate, SimplePredicate):
-                            groundedResult.append(Precondition(predicate = getSimpleGroundedPredicate(predicate, combination)))
-                else:
-                    for predicate in list:
-                        predicate = predicate.predicate
-                        if isinstance(predicate, ComposedPredicate):
-                            groundedResult.append(Effect(predicate = getGroundedComposedPredicate(predicate, combination)))
-                        if isinstance(predicate, NegatedPredicate):
-                            groundedResult.append(Effect(predicate = getNegatedGroundedPredicate(predicate, combination)))
-                        if isinstance(predicate, SimplePredicate):
-                            groundedResult.append(Effect(predicate = getSimpleGroundedPredicate(predicate, combination)))
-
-                return groundedResult
-
-            def get_combinations(objects_list, parameters_list):
-                    # Creiamo una lista vuota per salvare le combinazioni
-                    combinations = []
-                    # Creiamo un dizionario per salvare gli objectIstances in base al loro tipo
-                    objects_dict = {}
-                    for obj in objects_list:
-                        objects_dict[obj["objectType"]] = obj["objectIstances"]
-                    # Iteriamo su ogni oggetto nella lista dei parametri
-                    for param in parameters_list:
-                        # Prendiamo il tipo dell'oggetto dalla lista dei parametri
-                        #param_type = param["parameterType"]
-                        param_type = param.type
-                        # Prendiamo il nome del parametro dalla lista dei parametri
-                        #param_name = param["parameterName"]
-                        param_name = param.name
-                        # Prendiamo la lista degli objectIstances corrispondenti al tipo del parametro
-                        param_objects = objects_dict[param_type]
-                        # Creiamo una lista vuota per salvare le combinazioni per questo parametro
-                        param_combinations = []
-                        # Iteriamo su ogni oggetto nella lista degli objectIstances
-                        for obj in param_objects:
-                            # Aggiungiamo l'oggetto alla lista delle combinazioni per questo parametro
-                            param_combinations.append(obj + "-" + param_name)
-                        # Aggiungiamo la lista delle combinazioni per questo parametro alla lista delle combinazioni globali
-                        combinations.append(param_combinations)
-                    # Utilizziamo la funzione product per generare tutte le combinazioni possibili
-                    result = list(product(*combinations))
-                    return result
-
-
-            result = []
-            for operation in operations:
-                name = operation.name
-                parameters = operation.parameters
-                preconditions = operation.preconditions
-                effects = operation.effects
-                combinations = get_combinations(objects, parameters)
-
-                for combination in combinations:
-                    if operationType == "action":
-                        result.append(Action(name = getGroundedName(name,combination), parameters = [], preconditions = getGroundedPreconditionsOrEffects(preconditions, combination, "precondition"), effects = getGroundedPreconditionsOrEffects(effects, combination, "effect")))
-                    elif operationType == "process":
-                        result.append(Process(name = getGroundedName(name,combination), parameters = [], preconditions = getGroundedPreconditionsOrEffects(preconditions, combination, "precondition"), effects = getGroundedPreconditionsOrEffects(effects, combination, "effect")))
-                    elif operationType == "event":
-                        result.append(Event(name = getGroundedName(name,combination), parameters = [], preconditions = getGroundedPreconditionsOrEffects(preconditions, combination, "precondition"), effects = getGroundedPreconditionsOrEffects(effects, combination, "effect")))
-            
-            return result
-
-
-        groundedDomainName = self.name
-        groundedDomainRequirements = self.requirements
-        groundedDomainTypes = self.types
-        groundedDomainConstants = getConstants(problem.objects)
-        groundedDomainPredicates = self.predicates
-        groundedDomainFunctions = self.functions
-        groundedDomainActions = getGroundedOperation(self.actions, problem.objects, "action")
-        groundedDomainProcesses = getGroundedOperation(self.processes, problem.objects, "process")
-        groundedDomainEvents = getGroundedOperation(self.events, problem.objects, "event")
-
-        return Domain(name = groundedDomainName, requirements = groundedDomainRequirements, types = groundedDomainTypes, constants = groundedDomainConstants, predicates = groundedDomainPredicates, functions = groundedDomainFunctions, actions = groundedDomainActions, processes = groundedDomainProcesses, events = groundedDomainEvents)
-
-    def writePddl(self,file_path:str,filename:str):
-        f = open(file_path+"/"+filename+".pddl", "w")
-        
-        # write the domain
-        f.write("(define (domain "+self.__name+")\n")
-
-        # write the requirements
-        f.write(" "*4 + "(:requirements")
-        for requirement in self.__requirements:
-            f.write(" "+requirement)
-        f.write(")\n")
-
-        # write the types
-        f.write(" "*4 + "(:types")
-        for type in self.__types:
-            f.write(" "+type)
-        f.write(")\n")
-
-        
-        # write the constants
-        if self.__constants != None:
-            f.write(" "*4 + "(:constants"+"\n")
-            for constant in self.__constants:
-                f.write(" "*8+constant.toString()+"\n")
-            f.write(" "*4+")\n")
-        
-
-        # write the predicates
-        f.write(" "*4 + "(:predicates"+"\n")
-        for predicate in self.__predicates:
-            predicate.write(f)
-        f.write(" "*4+")\n")
-
-        # write the functions
-        f.write(" "*4 + "(:functions"+"\n")
-        for function in self.__functions:
-            function.write(f)
-        f.write(" "*4+")\n")
-
-        # write the actions
-        for action in self.__actions:
-            action.write(f,"action")
-
-        # write the processes
-        for process in self.__processes:
-            process.write(f,"process")
-
-        # write the events
-        for event in self.__events:
-            event.write(f,"event")
-
-        f.write(")")
-
-        f.close()

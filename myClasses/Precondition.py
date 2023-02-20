@@ -1,8 +1,8 @@
-from pyGrounder.myClasses.SimplePredicate import SimplePredicate
-from pyGrounder.myClasses.NegatedPredicate import NegatedPredicate
-from pyGrounder.myClasses.ConstantPredicate import ConstantPredicate
-from pyGrounder.myClasses.ComposedPredicate import ComposedPredicate
-from pyGrounder.myClasses.myUtilities import process_string
+from libs.pyGrounder.myClasses.SimplePredicate import SimplePredicate
+from libs.pyGrounder.myClasses.NegatedPredicate import NegatedPredicate
+from libs.pyGrounder.myClasses.ConstantPredicate import ConstantPredicate
+from libs.pyGrounder.myClasses.ComposedPredicate import ComposedPredicate
+from libs.pyGrounder.myClasses.myUtilities import process_string
 
 
 class Precondition:
@@ -23,34 +23,35 @@ class Precondition:
 
     __predicate = None
 
-
-    def __init__(self, node = None, predicate = None):
-
-        if node != None:
-            string = node.getText()
-            OPERATORS = [">", ">=", "<", "<=", "assign", "increase", "decrease", "*"]
-            predicateString = process_string(string)
-            predicate = predicateString.split(" ")
-            if predicate[0] == "not":
-                self.__predicate = NegatedPredicate(node.getChild(3), predicateString)
-            elif predicate[0] in OPERATORS:
-                self.__predicate = ComposedPredicate(node, predicateString)
-            else:
-                self.__predicate = SimplePredicate(predicateString) 
-        else:
+    def __init__(self, node=None, predicate=None):
+        if node is None:
             self.__predicate = predicate
+            return
 
-    def getString(self):
-        '''
-        It return the string of the Precondition
-        '''
-        self.__predicate.printStringPredicate()
+        string = node.getText()
+        OPERATORS = {">", ">=", "<", "<=", "assign", "increase", "decrease", "*"}
+        predicateString = process_string(string)
+        predicate = predicateString.split(" ")
+        if predicate[0] == "not":
+            self.__predicate = NegatedPredicate(node.getChild(3), predicateString)
+        elif predicate[0] in OPERATORS:
+            self.__predicate = ComposedPredicate(node, predicateString)
+        else:
+            self.__predicate = SimplePredicate(predicateString)
+
+    def ground(self, combination):
+        return Precondition(predicate=self.predicate.ground(combination))
+
+    def __str__(self):
+        return str(self.__predicate)
+
+    def __repr__(self):
+        return str(self)
 
     @property
     def predicate(self):
         return self.__predicate
 
-    
     def predicateAsDict(self):
         '''
         It returns the dict containing the details of the Precondition in order to write its Json representation
@@ -81,6 +82,5 @@ class Precondition:
             return result
 
         result = makeDictOfPredicates(self.__predicate)
-        
-        return result
 
+        return result

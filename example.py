@@ -1,5 +1,5 @@
-from pyGrounder.myClasses.Domain import Domain
-from pyGrounder.myClasses.Problem import Problem
+from pyGrounder import Domain
+from pyGrounder import Problem
 
 #Path of the pddl files
 problem_path = r"C:/Users/Desktop/test/files/problem.pddl"

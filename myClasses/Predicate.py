@@ -1,4 +1,4 @@
-from pyGrounder.myClasses.Literal import Literal
+from libs.pyGrounder.myClasses.Literal import Literal
 
 class Predicate(Literal):
     '''

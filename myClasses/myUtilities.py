@@ -1,6 +1,6 @@
 from antlr4 import *
-from pyGrounder.antlr4_directory.pddlLexer import pddlLexer
-from pyGrounder.antlr4_directory.pddlParser import pddlParser
+from libs.pyGrounder.antlr4_directory.pddlLexer import pddlLexer
+from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
 
 def process_string(string):
             string = string[1:-1]

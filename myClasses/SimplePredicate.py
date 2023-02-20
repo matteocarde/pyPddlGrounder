@@ -50,8 +50,19 @@ class SimplePredicate:
                 string = string + " " + argument
             self.__string = "("+string+")"
 
-    def printStringPredicate(self):
-        print(self.__string)
+    def __str__(self):
+        return self.__string
+
+    def __repr__(self):
+        return str(self)
+
+    def ground(self, combination):
+        groundedArguments = []
+        for argument in self.arguments:
+            for instance in combination:
+                if argument in instance:
+                    groundedArguments.append(instance.split("-")[0])
+        return SimplePredicate(name=self.name, arguments=groundedArguments)
 
     @property
     def isComplex(self):
