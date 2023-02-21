@@ -1,4 +1,4 @@
-class ConstantPredicate():
+class ConstantPredicate:
     '''
     It represents a constant or the #t symbol in a predicate.
     
@@ -18,13 +18,14 @@ class ConstantPredicate():
     __isComplex = False
     __isNegated = False
 
-    def __init__(self, node = None, value = None):
-        if node != None:
+    def __init__(self, node=None, value=None):
+        if node is not None:
             if node.getText() == "#t":
                 self.__name = "Time"
-            else : self.__name = "Constant"
+            else:
+                self.__name = "Constant"
             self.__value = node.getText()
-        elif value =="#t":
+        elif value == "#t":
             self.__name = "Time"
             self.__value = "#t"
         else:
@@ -38,7 +39,7 @@ class ConstantPredicate():
         return str(self)
 
     def printPredicato(self):
-        print("valore :"+ self.__value)
+        print("valore :" + self.__value)
         print("\n")
 
     @property
@@ -68,4 +69,4 @@ class ConstantPredicate():
         print(self.__value)
 
     def toString(self):
-        return " "+str(self.__value)
+        return " " + str(self.__value)

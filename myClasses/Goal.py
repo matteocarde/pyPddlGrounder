@@ -6,5 +6,3 @@ class Goal(NPreconditions):
 
     def __init__(self, node: pddlParser.GoalContext):
         super().__init__(node.getChild(2))
-
-        print("Ciao")

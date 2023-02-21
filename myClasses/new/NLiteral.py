@@ -13,6 +13,7 @@ class NLiteral(NPredicate):
         atomNode = positiveLiteralNode.getChild(1)
 
         self.atom = NAtom(atomNode)
+        self.var = self.atom.toFunctionName()
 
     def __str__(self):
         if self.sign == "+":

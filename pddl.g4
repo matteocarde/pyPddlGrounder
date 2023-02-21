@@ -24,13 +24,12 @@ EVENT : ':event';
 INCREASE : 'increase';
 DECREASE : 'decrease';
 
-DELTA: '#t';
 NAME:    LETTER ANY_CHAR* ;
 fragment LETTER : 'a'..'z' | 'A'..'Z';
 fragment ANY_CHAR : LETTER | '0'..'9' | '-' | '_';
 VARIABLE : '?' NAME ;
 fragment DIGIT: '0'..'9';
-NUMBER : ('-')? DIGIT+ ('.' DIGIT+)? | DELTA ;
+NUMBER : (('-')? DIGIT+ ('.' DIGIT+)?) | '#t' ;
 WS : [ \t\r\n]+ -> skip ;
 
 REQUIRE_KEY
@@ -135,13 +134,9 @@ effect
 effect_formula
     : LP predicatedVariables RP
 	| LP 'not' LP predicatedVariables RP RP
-	| LP 'assign' LP predicatedVariables RP NUMBER RP
-	| LP 'increase' LP predicatedVariables RP NUMBER RP
-	| LP 'decrease' LP predicatedVariables RP NUMBER RP
 	| LP 'assign' LP predicatedVariables RP operation RP
 	| LP 'increase' LP predicatedVariables RP operation RP
 	| LP 'decrease' LP predicatedVariables RP operation RP
-	| LP 'assign' LP predicatedVariables RP LP predicatedVariables RP RP
 	;
 
 operation
@@ -156,7 +151,9 @@ operation
 	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') operation NUMBER RP
 	| LP 'not' operation RP
 	| LP 'not' LP predicatedVariables RP RP
+	| LP predicatedVariables RP
 	| NUMBER
+	| '#t'
 	;
 
 /************* PROCESSES ****************************/
@@ -240,7 +237,7 @@ modificator: 'assign'|'increase'|'decrease';
 operator: '+'|'-'|'*'|'/';
 comparator: '>'|'>='|'<='|'<'|'=';
 number: NUMBER;
-delta: DELTA;
+delta: '#t';
 constant: number | delta;
 
 operationSide: nOperation | positiveLiteral | constant;

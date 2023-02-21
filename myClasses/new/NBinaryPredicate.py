@@ -1,7 +1,15 @@
+from enum import Enum
+
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
 from libs.pyGrounder.myClasses.new.NConstant import NConstant
 from libs.pyGrounder.myClasses.new.NLiteral import NLiteral
 from libs.pyGrounder.myClasses.new.NPredicate import NPredicate
+
+
+class BinaryPredicateType(Enum):
+    MODIFICATION = "modification"
+    OPERATION = "operation"
+    COMPARATION = "comparation"
 
 
 class NBinaryPredicate(NPredicate):
@@ -16,6 +24,13 @@ class NBinaryPredicate(NPredicate):
             self.lhs = self.__assignClass(node.getChild(2))
         else:
             self.lhs = NLiteral(node.getChild(2))
+
+        if isinstance(node, p.ModificationContext):
+            self.type = BinaryPredicateType.MODIFICATION
+        elif isinstance(node, p.ComparationContext):
+            self.type = BinaryPredicateType.COMPARATION
+        elif isinstance(node, p.NOperationContext):
+            self.type = BinaryPredicateType.OPERATION
 
     @staticmethod
     def __assignClass(node: p.OperationSideContext):

@@ -21,7 +21,7 @@ class ComposedPredicate:
     def __init__(self, node=None, string=None, name=None, arguments=None):
 
         def getOperands(node):
-            if node.getChildCount() == 0:
+            if node.getChildCount() == 0 or node.getText() == "#t":
                 return ConstantPredicate(node)
             elif "(" not in node.getText():
                 return SimplePredicate(process_string2(node.getText()))
