@@ -24,12 +24,13 @@ EVENT : ':event';
 INCREASE : 'increase';
 DECREASE : 'decrease';
 
+DELTA: '#t';
 NAME:    LETTER ANY_CHAR* ;
 fragment LETTER : 'a'..'z' | 'A'..'Z';
 fragment ANY_CHAR : LETTER | '0'..'9' | '-' | '_';
 VARIABLE : '?' NAME ;
 fragment DIGIT: '0'..'9';
-NUMBER : ('-')? DIGIT+ ('.' DIGIT+)? | '#t' ;
+NUMBER : ('-')? DIGIT+ ('.' DIGIT+)? | DELTA ;
 WS : [ \t\r\n]+ -> skip ;
 
 REQUIRE_KEY
@@ -41,19 +42,7 @@ REQUIRE_KEY
     | ':durative-actions'
     ;
 
-OPERATION
-	: '>'
-	| '>='
-	| '<'
-	| '<='
-	| '='
-	| '+'
-	| '-'
-	| '*'
-	| '/'
-	| 'and'
-	| 'or'
-	;
+OPERATION : '>'| '>='| '<'| '<='| '='| '+'| '-'| '*'| '/'| 'and'| 'or';
 
 	/************* Start of grammar *******************/
 
@@ -167,6 +156,7 @@ operation
 	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') operation NUMBER RP
 	| LP 'not' operation RP
 	| LP 'not' LP predicatedVariables RP RP
+	| NUMBER
 	;
 
 /************* PROCESSES ****************************/
@@ -221,38 +211,52 @@ sameTypeNamesList
 	:NAME+ '-' NAME
 	;
 
-init
-	: LP ':init' initEl* RP
-	;
-
-initEl
-	: nameLiteral
-	| equalLiteral
-	;
-
-nameLiteral
-	: atomicNameFormula
-	| LP 'not' atomicNameFormula RP
-	;
-
+init : LP ':init' initEl* RP;
 atomicNameFormula
 	:LP NAME+ RP
 	;
-
 equalLiteral
 	:LP '=' atomicNameFormula NUMBER RP
 	;
+initEl : nameLiteral | equalLiteral;
 
-goal
-	: LP ':goal' LP 'and' goalDesc+ RP RP
-	;
+nameLiteral : atomicNameFormula | LP 'not' atomicNameFormula RP;
 
-goalDesc
-	: atomicNameFormula
-	| LP 'not' atomicNameFormula RP
-	| LP ('>'|'<'|'='|'<='|'>=') LP NAME+ RP NUMBER RP
-	;
+//groundAtom: name a b c d
+//liftedAtom: name ?a ?b ?c ?d
 
-metric
-	: LP ':metric' ('maximize'|'minimize') atomicNameFormula RP
-	;
+atomName: NAME;
+groundAtomParameter: NAME;
+liftedAtomParameter: '?' NAME;
+atom: atomName (groundAtomParameter+ | liftedAtomParameter+);
+
+//positiveLiteral: (name a b c d)
+positiveLiteral: LP atom RP;
+//negativeLiteral: (not (name a b c d))
+negativeLiteral: LP 'not' positiveLiteral RP;
+booleanLiteral: positiveLiteral | negativeLiteral;
+
+modificator: 'assign'|'increase'|'decrease';
+operator: '+'|'-'|'*'|'/';
+comparator: '>'|'>='|'<='|'<'|'=';
+number: NUMBER;
+delta: DELTA;
+constant: number | delta;
+
+operationSide: nOperation | positiveLiteral | constant;
+nOperation: LP operator operationSide operationSide RP;
+
+comparation: LP comparator positiveLiteral operationSide RP;
+modification: LP modificator positiveLiteral operationSide RP;
+
+nPrecondition: booleanLiteral | comparation;
+nEffect:  booleanLiteral | modification;
+
+andPrecondition: LP 'and' nPrecondition+ RP;
+andEffect : LP 'and' nEffect+ RP;
+preconditions: nPrecondition | andPrecondition;
+effects: nEffect | andEffect;
+
+goal : LP ':goal' preconditions RP;
+
+metric : LP ':metric' ('maximize'|'minimize') atomicNameFormula RP;

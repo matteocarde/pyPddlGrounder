@@ -6,21 +6,6 @@ from libs.pyGrounder.myClasses.myUtilities import process_string
 
 
 class Precondition:
-    '''
-    The Precondition class represents one Precondition for the action/process/event. It only contains one predicate, that can be a SimplePredicate, NegatedPredicate or ComposedPredicate
-    
-    Parameters
-    ----------
-    node : antrl4 tree
-    
-    OR
-    
-    predicate : SimplePredicate | NegatedPredicate | ComposedPredicate
-    
-    Attributes
-    ----------
-    predicate : SimplePredicate | NegatedPredicate | ComposedPredicate '''
-
     __predicate = None
 
     def __init__(self, node=None, predicate=None):
@@ -84,3 +69,4 @@ class Precondition:
         result = makeDictOfPredicates(self.__predicate)
 
         return result
+

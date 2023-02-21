@@ -1,6 +1,7 @@
 from libs.pyGrounder.myClasses.SimplePredicate import SimplePredicate
 from libs.pyGrounder.myClasses.ConstantPredicate import ConstantPredicate
 from libs.pyGrounder.myClasses.myUtilities import process_string2
+from pyspel.pyspel import Predicate
 
 
 def process_string(string):
@@ -11,34 +12,6 @@ def process_string(string):
 
 
 class ComposedPredicate:
-    '''
-    This class represents a Composed Predicate in this form: operation <argument1> <argument2>. For Example: >= (distanceRun ?r ?a ?b) (distance ?a ?b)
-    
-    Parameters
-    ----------
-    node : antlr4 tree
-        The node containing the string of the predicate. For example: ">= (distanceRun ?r ?a ?b) (distance ?a ?b)"
-    
-    OR
-    
-    name : str
-        The name of the operation of the predicate. For example: >=
-    arguments:List[SimplePredicate|ConstantPredicate|ComposedPredicate]
-        The list containing the predicate of each argument. For example [(distanceRun ?r ?a ?b),(distance ?a ?b)
-    
-    Attributes
-    ----------
-    string:str
-        The string of the whole predicate into brackets.  For example: "(>= (distanceRun ?r ?a ?b) (distance ?a ?b))"
-    name : str
-        The name of the operation. For example: >=
-    arguments:List[SimplePredicate|ConstantPredicate|ComposedPredicate]
-        The list containing the predicate of each argument. For example [(distanceRun ?r ?a ?b),(distance ?a ?b)
-    isComplex:True
-        Metadata for some operations, it means it's a composed predicate
-    isNegated:False
-        Metadata for some operations, it means it's not a negated predicate
-    '''
     __string = ""
     __name = ""
     __arguments = []

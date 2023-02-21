@@ -1,4 +1,6 @@
 import json
+
+from libs.pyGrounder.myClasses.Goal import Goal
 from libs.pyGrounder.myClasses.myUtilities import remove_comments
 from libs.pyGrounder.myClasses.myUtilities import get_antlr4_parsetree
 
@@ -8,7 +10,7 @@ class Problem:
     __domain = ""
     __objects = []
     __init = []
-    __goal = []
+    __goal: Goal
 
     def __init__(self, file_path):
 
@@ -27,7 +29,7 @@ class Problem:
             elif ':init' in text:
                 self.__init = Problem.__getInitList(child)
             elif ':goal' in text:
-                self.__goal = Problem.__getGoalList(child)
+                self.__goal = Goal(child)
 
     @staticmethod
     def __getProblemName(problem):
@@ -111,7 +113,7 @@ class Problem:
 
     @staticmethod
     def __getGoalPredicate(node):
-        result = dict()
+        result = []
         if node.getChildCount() == 1:
             return Problem.__getSimplePredicate(node.getChild(0))
 
