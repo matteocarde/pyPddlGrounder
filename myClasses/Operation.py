@@ -59,7 +59,8 @@ class Operation:
     def __parseEffects(node):
         result = []
         for child in range(node.getChildCount() - 1):
-            if ":effect" in node.getChild(child).getText():
+            text = node.getChild(child).getText()
+            if ":effect" in text:
                 node = node.getChild(child)
                 break
         for child in range(3, node.getChildCount() - 1):

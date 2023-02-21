@@ -13,8 +13,15 @@ The grounding process is performed by replacing the variables in the domain with
 
 ## Installation
 Download the [python wheel file](pyGrounder-0.0.1-py3-none-any.whl) containing the library and run the following command:
+
 ``` bash
 python pip -m install pyGrounder-0.0.1-py3-none-any.whl 
+```
+## Compilation of ANTLR .g4
+In the folder run
+
+``` bash
+java -jar antlr.jar -Dlanguage=Python3 pddl.g4 -o antlr4_directory
 ```
 
 ## Overview

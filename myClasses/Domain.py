@@ -77,23 +77,25 @@ class Domain:
             self.__requirements = []
             self.__constants = set()
             for i in range(tree.getChildCount()):
-                if 'domain' in tree.getChild(i).getText():
-                    self.__name = getDomainName(tree.getChild(i).getText())
-                elif ':requirements' in tree.getChild(i).getText():
-                    self.__requirements = getRequirementsList(tree.getChild(i))
-                elif ':types' in tree.getChild(i).getText():
-                    self.__types = getTypesList(tree.getChild(i))
+                child = tree.getChild(i)
+                childText = child.getText()
+                if 'domain' in childText:
+                    self.__name = getDomainName(childText)
+                elif ':requirements' in childText:
+                    self.__requirements = getRequirementsList(child)
+                elif ':types' in childText:
+                    self.__types = getTypesList(child)
                     # to do constants self.__constants =
-                elif ':predicates' in tree.getChild(i).getText():
-                    self.__predicates = getPredicatesList(tree.getChild(i))
-                elif ':functions' in tree.getChild(i).getText():
-                    self.__functions = getFunctionsList(tree.getChild(i))
-                elif ':action' in tree.getChild(i).getText():
-                    self.__actions.add(Action(tree.getChild(i)))
-                elif ':process' in tree.getChild(i).getText():
-                    self.__processes.add(Process(tree.getChild(i)))
-                elif ':event' in tree.getChild(i).getText():
-                    self.__events.add(Event(tree.getChild(i)))
+                elif ':predicates' in childText:
+                    self.__predicates = getPredicatesList(child)
+                elif ':functions' in childText:
+                    self.__functions = getFunctionsList(child)
+                elif ':action' in childText:
+                    self.__actions.add(Action(child))
+                elif ':process' in childText:
+                    self.__processes.add(Process(child))
+                elif ':event' in childText:
+                    self.__events.add(Event(child))
         else:
             self.__name = name
             self.__requirements = requirements

@@ -2,154 +2,133 @@ import json
 from libs.pyGrounder.myClasses.myUtilities import remove_comments
 from libs.pyGrounder.myClasses.myUtilities import get_antlr4_parsetree
 
+
 class Problem:
-    '''
-    This object represents the pddl Problem.
-    
-    Parameter
-    ---------
-    file_path : string
-        The path of the problem.pddl file 
-        
-    Attributes
-    ----------
-    name : str
-        The name of the problem. For example: Problem1
-    domain : str
-        The name of the domain. For example: robot
-    objects : list[dict]
-        The list of problem objects. Each element is a dict {"objectType" : <string>, "objectInstances" [<string1>,..<stringN>]}. For example [{objectType: robot, objectInstances: [robot1, robot2]}]
-    init : list[dict]
-        The list of initialization predicates. Each element is a dict.
-    goal : list[dict]
-        The list of goal predicates. Each element is a dict.
-    '''
     __name = ""
     __domain = ""
     __objects = []
     __init = []
     __goal = []
 
-
-    def __init__(self,file_path):
-
-        def getProblemName(stringa):
-            stringa = stringa.replace("(problem", "")
-            stringa = stringa.replace(")", "")
-            return stringa.strip()
-
-        def getDomainName(stringa):
-            stringa = stringa.replace("(:domain", "")
-            stringa = stringa.replace(")", "")
-            return stringa.strip()
-
-        def getObjectsList(node):
-            result = []
-            for child in range(2, node.getChildCount()-1):
-                result.append(getObjects(node.getChild(child)))
-            return result
-
-        def getObjects(node):
-            result = {}
-            lista_di_oggetti = []
-            result["objectType"] = node.getChild(-1).getText()
-            for child in range(node.getChildCount()-2):#-2 perchè il penultimo è "-" e -1 è il tipo
-                lista_di_oggetti.append(node.getChild(child).getText())
-            result["objectInstances"] = lista_di_oggetti
-            return result
-
-        def getInitList(node):
-            result = []
-            for child in range(2, node.getChildCount()-1):
-                if "=" in node.getChild(child).getText():
-                    result.append(getAssignmentPredicate(node.getChild(child)))
-                else:
-                    result.append(getSimplePredicate(node.getChild(child)))
-            return result
-
-        def getSimplePredicate(node):
-            result = {}
-            if node.getChildCount() == 1:
-                result = getSimplePredicate(node.getChild(0))
-            else:
-                result["string"] = node.getText()
-                result["isAssignment?"] = False
-                result["predName"] = node.getChild(1).getText()
-                result["predObjects"] = []
-                for child in range(2, node.getChildCount()-1):
-                    result["predObjects"].append(node.getChild(child).getText())
-                return result
-            return result
-
-        def getAssignmentPredicate(node):
-            result = {}
-            if node.getChildCount() == 1:
-                result = getAssignmentPredicate(node.getChild(0))
-            else:
-                result["string"] = node.getText()
-                result["isAssignment?"] = True
-                result["operands"] = []
-                result["operands"].append(getOperand(node.getChild(2)))
-                result["operands"].append(getConstant(node.getChild(3)))
-
-            return result
-
-        def getOperand(node):
-            result = {}
-            result["operandName"] = node.getChild(1).getText()
-            result["operandObjects"] = []
-            for child in range(2, node.getChildCount()-1):
-                result["operandObjects"].append(node.getChild(child).getText())
-            return result
-
-        def getConstant(node):
-            result ={}
-            result["operandName"] = "Constant"
-            result["operandValue"] = node.getText()
-            return result
-
-
-        def getGoalList(node):
-            node = node.getChild(2)
-            result = []
-            for child in range(2, node.getChildCount()-1):
-                result.append(getGoalPredicate(node.getChild(child)))
-            return result
-
-        def getGoalPredicate(node):
-            result = {}
-            if node.getChildCount() == 1:
-                result = getSimplePredicate(node.getChild(0))
-            else:
-                result["string"] = node.getText()
-                result["predName"] = node.getChild(1).getText()
-                result["predObjects"] = []
-                for child in range(2, node.getChildCount()-1):
-                    result["predObjects"].append(node.getChild(child).getText())
-                return result
-            return result
-
+    def __init__(self, file_path):
 
         file = remove_comments(file_path)
         tree = get_antlr4_parsetree(file).problem()
 
-        for i in range (tree.getChildCount()):
-            if 'problem' in tree.getChild(i).getText():
-                self.__name = getProblemName(tree.getChild(i).getText())
+        for i in range(tree.getChildCount()):
+            child = tree.getChild(i)
+            text = child.getText()
+            if 'problem' in text:
+                self.__name = Problem.__getProblemName(text)
+            if ':domain' in text:
+                self.__domain = Problem.__getDomainName(text)
+            elif ':objects' in text:
+                self.__objects = Problem.__getObjectsList(child)
+            elif ':init' in text:
+                self.__init = Problem.__getInitList(child)
+            elif ':goal' in text:
+                self.__goal = Problem.__getGoalList(child)
 
-            if ':domain' in tree.getChild(i).getText():
-                self.__domain = getDomainName(tree.getChild(i).getText())
-                
-            elif ':objects' in tree.getChild(i).getText():
-                self.__objects = getObjectsList(tree.getChild(i))
+    @staticmethod
+    def __getProblemName(problem):
+        return problem.replace("(problem", "").replace(")", "").strip()
 
-            elif ':init' in tree.getChild(i).getText():
-                self.__init = getInitList(tree.getChild(i))
+    @staticmethod
+    def __getDomainName(domain):
+        return domain.replace("(:domain", "").replace(")", "").strip()
 
-            elif ':goal' in tree.getChild(i).getText():
-                self.__goal = getGoalList(tree.getChild(i))
-  
+    @staticmethod
+    def __getObjectsList(node):
+        result = []
+        for child in range(2, node.getChildCount() - 1):
+            result.append(Problem.__getObjects(node.getChild(child)))
+        return result
 
+    @staticmethod
+    def __getObjects(node):
+        result = {}
+        objectList = []
+        result["objectType"] = node.getChild(-1).getText()
+        for child in range(node.getChildCount() - 2):  # -2 perchè il penultimo è "-" e -1 è il tipo
+            objectList.append(node.getChild(child).getText())
+        result["objectInstances"] = objectList
+        return result
+
+    @staticmethod
+    def __getInitList(node):
+        result = []
+        for child in range(2, node.getChildCount() - 1):
+            if "=" in node.getChild(child).getText():
+                result.append(Problem.__getAssignmentPredicate(node.getChild(child)))
+            else:
+                result.append(Problem.__getSimplePredicate(node.getChild(child)))
+        return result
+
+    @staticmethod
+    def __getSimplePredicate(node):
+        result = {}
+        if node.getChildCount() == 1:
+            result = Problem.__getSimplePredicate(node.getChild(0))
+        else:
+            result["string"] = node.getText()
+            result["isAssignment?"] = False
+            result["predName"] = node.getChild(1).getText()
+            result["predObjects"] = []
+            for child in range(2, node.getChildCount() - 1):
+                result["predObjects"].append(node.getChild(child).getText())
+            return result
+        return result
+
+    @staticmethod
+    def __getAssignmentPredicate(node):
+        result = {}
+        if node.getChildCount() == 1:
+            return Problem.__getAssignmentPredicate(node.getChild(0))
+
+        result["string"] = node.getText()
+        result["isAssignment?"] = True
+        result["operands"] = []
+        result["operands"].append(Problem.__getOperand(node.getChild(2)))
+        result["operands"].append(Problem.__getConstant(node.getChild(3)))
+
+        return result
+
+    @staticmethod
+    def __getOperand(node):
+        result = dict()
+        result["operandName"] = node.getChild(1).getText()
+        result["operandObjects"] = []
+        for child in range(2, node.getChildCount() - 1):
+            result["operandObjects"].append(node.getChild(child).getText())
+        return result
+
+    @staticmethod
+    def __getConstant(node):
+        result = dict()
+        result["operandName"] = "Constant"
+        result["operandValue"] = node.getText()
+        return result
+
+    @staticmethod
+    def __getGoalPredicate(node):
+        result = dict()
+        if node.getChildCount() == 1:
+            return Problem.__getSimplePredicate(node.getChild(0))
+
+        result["string"] = node.getText()
+        result["predName"] = node.getChild(1).getText()
+        result["predObjects"] = []
+        for child in range(2, node.getChildCount() - 1):
+            result["predObjects"].append(node.getChild(child).getText())
+        return result
+
+    @staticmethod
+    def __getGoalList(node):
+        node = node.getChild(2)
+        result = []
+        for child in range(2, node.getChildCount() - 1):
+            result.append(Problem.__getGoalPredicate(node.getChild(child)))
+        return result
 
     @property
     def name(self):
@@ -172,7 +151,7 @@ class Problem:
         return self.__goal
 
     def toJson(self):
-        json_data = {}
+        json_data = dict()
         json_data['problem'] = self.__name
         json_data['domain'] = self.__domain
         json_data['objects'] = self.__objects
@@ -180,27 +159,22 @@ class Problem:
         json_data['goal'] = self.__goal
         return json_data
 
-
-    def writeJson(self,file_path:str,filename:str):
-        with open(file_path+"/"+filename+".json", 'w') as json_file:
-            json.dump(self.toJson(), json_file, indent= 4)
+    def writeJson(self, file_path: str, filename: str):
+        with open(file_path + "/" + filename + ".json", 'w') as json_file:
+            json.dump(self.toJson(), json_file, indent=4)
 
     def printALL(self):
         print("----------------------------Problem name: ------------------------------------------------")
-        print(self.__name+ "\n")
+        print(self.__name + "\n")
         print("----------------------------Domain name: -------------------------------------------------")
-        print(self.__domain+ "\n")
+        print(self.__domain + "\n")
         print("----------------------------Objects: -----------------------------------------------------")
         for object in self.__objects:
-            print(object["objectType"] +" - "+ str(object["objectInstances"]))
-            #print(object)
+            print(object["objectType"] + " - " + str(object["objectInstances"]))
+            # print(object)
         print("----------------------------init: --------------------------------------------------------")
         for init in self.__init:
             print(init["string"])
         print("----------------------------goal: --------------------------------------------------------")
         for goal in self.__goal:
             print(goal["string"])
-        
-
-
-

@@ -26,7 +26,7 @@ class Effect():
 
     def __init__(self, node = None, predicate = None):
 
-        if node != None:
+        if node is not None:
             string = node.getText()
             OPERATORS = [">", ">=", "<", "<=", "assign", "increase", "decrease", "*"]
             predicateString = process_string(string)

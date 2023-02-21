@@ -1,4 +1,4 @@
-# Generated from pddl.g4 by ANTLR 4.11.1
+# Generated from pddl.g4 by ANTLR 4.12.0
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .pddlParser import pddlParser
@@ -62,6 +62,15 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#predicate.
+    def enterPredicate(self, ctx:pddlParser.PredicateContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#predicate.
+    def exitPredicate(self, ctx:pddlParser.PredicateContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#atomicFormulaSkeleton.
     def enterAtomicFormulaSkeleton(self, ctx:pddlParser.AtomicFormulaSkeletonContext):
         pass
@@ -86,6 +95,15 @@ class pddlListener(ParseTreeListener):
 
     # Exit a parse tree produced by pddlParser#functionsDef.
     def exitFunctionsDef(self, ctx:pddlParser.FunctionsDefContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#function.
+    def enterFunction(self, ctx:pddlParser.FunctionContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#function.
+    def exitFunction(self, ctx:pddlParser.FunctionContext):
         pass
 
 
@@ -152,39 +170,21 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#operation.
+    def enterOperation(self, ctx:pddlParser.OperationContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#operation.
+    def exitOperation(self, ctx:pddlParser.OperationContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#processDef.
     def enterProcessDef(self, ctx:pddlParser.ProcessDefContext):
         pass
 
     # Exit a parse tree produced by pddlParser#processDef.
     def exitProcessDef(self, ctx:pddlParser.ProcessDefContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#process_effect.
-    def enterProcess_effect(self, ctx:pddlParser.Process_effectContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#process_effect.
-    def exitProcess_effect(self, ctx:pddlParser.Process_effectContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#process_effect_formula.
-    def enterProcess_effect_formula(self, ctx:pddlParser.Process_effect_formulaContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#process_effect_formula.
-    def exitProcess_effect_formula(self, ctx:pddlParser.Process_effect_formulaContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#multiplication.
-    def enterMultiplication(self, ctx:pddlParser.MultiplicationContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#multiplication.
-    def exitMultiplication(self, ctx:pddlParser.MultiplicationContext):
         pass
 
 
@@ -302,6 +302,15 @@ class pddlListener(ParseTreeListener):
 
     # Exit a parse tree produced by pddlParser#goalDesc.
     def exitGoalDesc(self, ctx:pddlParser.GoalDescContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#metric.
+    def enterMetric(self, ctx:pddlParser.MetricContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#metric.
+    def exitMetric(self, ctx:pddlParser.MetricContext):
         pass
 
 
