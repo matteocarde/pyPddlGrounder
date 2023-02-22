@@ -60,8 +60,6 @@ class Domain:
             elif isinstance(child, pddlParser.ProcessContext):
                 self.processes.add(Process(child, self.types))
 
-        print("Done")
-
     @classmethod
     def fromFile(cls, filename) -> Domain:
         f = open(filename, 'r')

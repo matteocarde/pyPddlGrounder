@@ -66,10 +66,11 @@ number: NUMBER;
 delta: '#t';
 constant: number | delta;
 
+assignmentSide: number;
 operationSide: operation | positiveLiteral | constant;
 operation: LP operator operationSide operationSide RP;
 
-assignment: LP '=' positiveLiteral number RP;
+assignment: LP '=' positiveLiteral assignmentSide RP;
 comparation: LP comparator positiveLiteral operationSide RP;
 modification: LP modificator positiveLiteral operationSide RP;
 

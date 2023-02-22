@@ -41,6 +41,8 @@ class BinaryPredicate(Predicate):
             return Literal(child)
         elif isinstance(child, p.ConstantContext):
             return Constant(child)
+        elif isinstance(child, p.NumberContext):
+            return Constant(child)
         else:
             raise NotImplemented()
 

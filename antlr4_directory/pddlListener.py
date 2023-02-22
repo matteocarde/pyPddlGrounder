@@ -242,6 +242,15 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#assignmentSide.
+    def enterAssignmentSide(self, ctx:pddlParser.AssignmentSideContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#assignmentSide.
+    def exitAssignmentSide(self, ctx:pddlParser.AssignmentSideContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#operationSide.
     def enterOperationSide(self, ctx:pddlParser.OperationSideContext):
         pass

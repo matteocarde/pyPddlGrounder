@@ -3,14 +3,17 @@ from libs.pyGrounder.classes.Predicate import Predicate
 
 
 class Constant(Predicate):
-
     value: float
     isDelta: bool
 
-    def __init__(self, node: pddlParser.ConstantContext):
+    def __init__(self, node: pddlParser.ConstantContext or pddlParser.NumberContext):
         super().__init__()
-        child = node.getChild(0)
         self.isDelta = False
+        if isinstance(node, pddlParser.NumberContext):
+            self.value = float(node.getText())
+            return
+
+        child = node.getChild(0)
         if isinstance(child, pddlParser.NumberContext):
             self.value = float(child.getText())
         elif isinstance(child, pddlParser.DeltaContext):
@@ -21,4 +24,3 @@ class Constant(Predicate):
 
     def __repr__(self):
         return str(self)
-
