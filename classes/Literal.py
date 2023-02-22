@@ -1,10 +1,9 @@
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
-from libs.pyGrounder.myClasses.new.NAtom import NAtom
-from libs.pyGrounder.myClasses.new.NPredicate import NPredicate
-from pyspel.pyspel import Predicate
+from libs.pyGrounder.classes.Atom import Atom
+from libs.pyGrounder.classes.Predicate import Predicate
 
 
-class NLiteral(NPredicate):
+class Literal(Predicate):
 
     def __init__(self, node: p.PositiveLiteralContext or p.NegativeLiteralContext):
         super().__init__()
@@ -12,7 +11,7 @@ class NLiteral(NPredicate):
         positiveLiteralNode = node.getChild(2) if self.sign == "-" else node
         atomNode = positiveLiteralNode.getChild(1)
 
-        self.atom = NAtom(atomNode)
+        self.atom = Atom(atomNode)
         self.var = self.atom.toFunctionName()
 
     def __str__(self):

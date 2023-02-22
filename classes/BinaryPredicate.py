@@ -1,9 +1,9 @@
 from enum import Enum
 
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
-from libs.pyGrounder.myClasses.new.NConstant import NConstant
-from libs.pyGrounder.myClasses.new.NLiteral import NLiteral
-from libs.pyGrounder.myClasses.new.NPredicate import NPredicate
+from libs.pyGrounder.classes.Constant import Constant
+from libs.pyGrounder.classes.Literal import Literal
+from libs.pyGrounder.classes.Predicate import Predicate
 
 
 class BinaryPredicateType(Enum):
@@ -12,9 +12,9 @@ class BinaryPredicateType(Enum):
     COMPARATION = "comparation"
 
 
-class NBinaryPredicate(NPredicate):
+class BinaryPredicate(Predicate):
 
-    def __init__(self, node: p.ModificationContext or p.ComparationContext or p.NOperationContext):
+    def __init__(self, node: p.ModificationContext or p.ComparationContext or p.OperationContext):
         super().__init__()
 
         self.operator = node.getChild(1).getText()
@@ -23,24 +23,24 @@ class NBinaryPredicate(NPredicate):
         if isinstance(node, p.OperationContext):
             self.lhs = self.__assignClass(node.getChild(2))
         else:
-            self.lhs = NLiteral(node.getChild(2))
+            self.lhs = Literal(node.getChild(2))
 
         if isinstance(node, p.ModificationContext):
             self.type = BinaryPredicateType.MODIFICATION
         elif isinstance(node, p.ComparationContext):
             self.type = BinaryPredicateType.COMPARATION
-        elif isinstance(node, p.NOperationContext):
+        elif isinstance(node, p.OperationContext):
             self.type = BinaryPredicateType.OPERATION
 
     @staticmethod
     def __assignClass(node: p.OperationSideContext):
         child = node.getChild(0)
-        if isinstance(child, p.NOperationContext):
-            return NBinaryPredicate(child)
+        if isinstance(child, p.OperationContext):
+            return BinaryPredicate(child)
         elif isinstance(child, p.PositiveLiteralContext):
-            return NLiteral(child)
+            return Literal(child)
         elif isinstance(child, p.ConstantContext):
-            return NConstant(child)
+            return Constant(child)
         else:
             raise NotImplemented()
 

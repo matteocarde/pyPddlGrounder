@@ -35,255 +35,57 @@ class pddlListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#requireDef.
-    def enterRequireDef(self, ctx:pddlParser.RequireDefContext):
+    # Enter a parse tree produced by pddlParser#requireKey.
+    def enterRequireKey(self, ctx:pddlParser.RequireKeyContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#requireDef.
-    def exitRequireDef(self, ctx:pddlParser.RequireDefContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#typesDef.
-    def enterTypesDef(self, ctx:pddlParser.TypesDefContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#typesDef.
-    def exitTypesDef(self, ctx:pddlParser.TypesDefContext):
+    # Exit a parse tree produced by pddlParser#requireKey.
+    def exitRequireKey(self, ctx:pddlParser.RequireKeyContext):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#predicatesDef.
-    def enterPredicatesDef(self, ctx:pddlParser.PredicatesDefContext):
+    # Enter a parse tree produced by pddlParser#requirements.
+    def enterRequirements(self, ctx:pddlParser.RequirementsContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#predicatesDef.
-    def exitPredicatesDef(self, ctx:pddlParser.PredicatesDefContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#predicate.
-    def enterPredicate(self, ctx:pddlParser.PredicateContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#predicate.
-    def exitPredicate(self, ctx:pddlParser.PredicateContext):
+    # Exit a parse tree produced by pddlParser#requirements.
+    def exitRequirements(self, ctx:pddlParser.RequirementsContext):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#atomicFormulaSkeleton.
-    def enterAtomicFormulaSkeleton(self, ctx:pddlParser.AtomicFormulaSkeletonContext):
+    # Enter a parse tree produced by pddlParser#parentType.
+    def enterParentType(self, ctx:pddlParser.ParentTypeContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#atomicFormulaSkeleton.
-    def exitAtomicFormulaSkeleton(self, ctx:pddlParser.AtomicFormulaSkeletonContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#typedVariable.
-    def enterTypedVariable(self, ctx:pddlParser.TypedVariableContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#typedVariable.
-    def exitTypedVariable(self, ctx:pddlParser.TypedVariableContext):
+    # Exit a parse tree produced by pddlParser#parentType.
+    def exitParentType(self, ctx:pddlParser.ParentTypeContext):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#functionsDef.
-    def enterFunctionsDef(self, ctx:pddlParser.FunctionsDefContext):
+    # Enter a parse tree produced by pddlParser#typeName.
+    def enterTypeName(self, ctx:pddlParser.TypeNameContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#functionsDef.
-    def exitFunctionsDef(self, ctx:pddlParser.FunctionsDefContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#function.
-    def enterFunction(self, ctx:pddlParser.FunctionContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#function.
-    def exitFunction(self, ctx:pddlParser.FunctionContext):
+    # Exit a parse tree produced by pddlParser#typeName.
+    def exitTypeName(self, ctx:pddlParser.TypeNameContext):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#predicatedVariables.
-    def enterPredicatedVariables(self, ctx:pddlParser.PredicatedVariablesContext):
+    # Enter a parse tree produced by pddlParser#type.
+    def enterType(self, ctx:pddlParser.TypeContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#predicatedVariables.
-    def exitPredicatedVariables(self, ctx:pddlParser.PredicatedVariablesContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#structureDef.
-    def enterStructureDef(self, ctx:pddlParser.StructureDefContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#structureDef.
-    def exitStructureDef(self, ctx:pddlParser.StructureDefContext):
+    # Exit a parse tree produced by pddlParser#type.
+    def exitType(self, ctx:pddlParser.TypeContext):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#actionDef.
-    def enterActionDef(self, ctx:pddlParser.ActionDefContext):
+    # Enter a parse tree produced by pddlParser#types.
+    def enterTypes(self, ctx:pddlParser.TypesContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#actionDef.
-    def exitActionDef(self, ctx:pddlParser.ActionDefContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#precondition.
-    def enterPrecondition(self, ctx:pddlParser.PreconditionContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#precondition.
-    def exitPrecondition(self, ctx:pddlParser.PreconditionContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#precondition_formula.
-    def enterPrecondition_formula(self, ctx:pddlParser.Precondition_formulaContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#precondition_formula.
-    def exitPrecondition_formula(self, ctx:pddlParser.Precondition_formulaContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#effect.
-    def enterEffect(self, ctx:pddlParser.EffectContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#effect.
-    def exitEffect(self, ctx:pddlParser.EffectContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#effect_formula.
-    def enterEffect_formula(self, ctx:pddlParser.Effect_formulaContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#effect_formula.
-    def exitEffect_formula(self, ctx:pddlParser.Effect_formulaContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#operation.
-    def enterOperation(self, ctx:pddlParser.OperationContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#operation.
-    def exitOperation(self, ctx:pddlParser.OperationContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#processDef.
-    def enterProcessDef(self, ctx:pddlParser.ProcessDefContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#processDef.
-    def exitProcessDef(self, ctx:pddlParser.ProcessDefContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#eventDef.
-    def enterEventDef(self, ctx:pddlParser.EventDefContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#eventDef.
-    def exitEventDef(self, ctx:pddlParser.EventDefContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#problem.
-    def enterProblem(self, ctx:pddlParser.ProblemContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#problem.
-    def exitProblem(self, ctx:pddlParser.ProblemContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#problemDecl.
-    def enterProblemDecl(self, ctx:pddlParser.ProblemDeclContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#problemDecl.
-    def exitProblemDecl(self, ctx:pddlParser.ProblemDeclContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#problemDomain.
-    def enterProblemDomain(self, ctx:pddlParser.ProblemDomainContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#problemDomain.
-    def exitProblemDomain(self, ctx:pddlParser.ProblemDomainContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#objectDecl.
-    def enterObjectDecl(self, ctx:pddlParser.ObjectDeclContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#objectDecl.
-    def exitObjectDecl(self, ctx:pddlParser.ObjectDeclContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#sameTypeNamesList.
-    def enterSameTypeNamesList(self, ctx:pddlParser.SameTypeNamesListContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#sameTypeNamesList.
-    def exitSameTypeNamesList(self, ctx:pddlParser.SameTypeNamesListContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#init.
-    def enterInit(self, ctx:pddlParser.InitContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#init.
-    def exitInit(self, ctx:pddlParser.InitContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#atomicNameFormula.
-    def enterAtomicNameFormula(self, ctx:pddlParser.AtomicNameFormulaContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#atomicNameFormula.
-    def exitAtomicNameFormula(self, ctx:pddlParser.AtomicNameFormulaContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#equalLiteral.
-    def enterEqualLiteral(self, ctx:pddlParser.EqualLiteralContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#equalLiteral.
-    def exitEqualLiteral(self, ctx:pddlParser.EqualLiteralContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#initEl.
-    def enterInitEl(self, ctx:pddlParser.InitElContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#initEl.
-    def exitInitEl(self, ctx:pddlParser.InitElContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#nameLiteral.
-    def enterNameLiteral(self, ctx:pddlParser.NameLiteralContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#nameLiteral.
-    def exitNameLiteral(self, ctx:pddlParser.NameLiteralContext):
+    # Exit a parse tree produced by pddlParser#types.
+    def exitTypes(self, ctx:pddlParser.TypesContext):
         pass
 
 
@@ -311,6 +113,24 @@ class pddlListener(ParseTreeListener):
 
     # Exit a parse tree produced by pddlParser#liftedAtomParameter.
     def exitLiftedAtomParameter(self, ctx:pddlParser.LiftedAtomParameterContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#typedAtomParameter.
+    def enterTypedAtomParameter(self, ctx:pddlParser.TypedAtomParameterContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#typedAtomParameter.
+    def exitTypedAtomParameter(self, ctx:pddlParser.TypedAtomParameterContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#atomParameter.
+    def enterAtomParameter(self, ctx:pddlParser.AtomParameterContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#atomParameter.
+    def exitAtomParameter(self, ctx:pddlParser.AtomParameterContext):
         pass
 
 
@@ -347,6 +167,24 @@ class pddlListener(ParseTreeListener):
 
     # Exit a parse tree produced by pddlParser#booleanLiteral.
     def exitBooleanLiteral(self, ctx:pddlParser.BooleanLiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#predicates.
+    def enterPredicates(self, ctx:pddlParser.PredicatesContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#predicates.
+    def exitPredicates(self, ctx:pddlParser.PredicatesContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#functions.
+    def enterFunctions(self, ctx:pddlParser.FunctionsContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#functions.
+    def exitFunctions(self, ctx:pddlParser.FunctionsContext):
         pass
 
 
@@ -413,12 +251,21 @@ class pddlListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#nOperation.
-    def enterNOperation(self, ctx:pddlParser.NOperationContext):
+    # Enter a parse tree produced by pddlParser#operation.
+    def enterOperation(self, ctx:pddlParser.OperationContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#nOperation.
-    def exitNOperation(self, ctx:pddlParser.NOperationContext):
+    # Exit a parse tree produced by pddlParser#operation.
+    def exitOperation(self, ctx:pddlParser.OperationContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#assignment.
+    def enterAssignment(self, ctx:pddlParser.AssignmentContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#assignment.
+    def exitAssignment(self, ctx:pddlParser.AssignmentContext):
         pass
 
 
@@ -440,21 +287,21 @@ class pddlListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#nPrecondition.
-    def enterNPrecondition(self, ctx:pddlParser.NPreconditionContext):
+    # Enter a parse tree produced by pddlParser#precondition.
+    def enterPrecondition(self, ctx:pddlParser.PreconditionContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#nPrecondition.
-    def exitNPrecondition(self, ctx:pddlParser.NPreconditionContext):
+    # Exit a parse tree produced by pddlParser#precondition.
+    def exitPrecondition(self, ctx:pddlParser.PreconditionContext):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#nEffect.
-    def enterNEffect(self, ctx:pddlParser.NEffectContext):
+    # Enter a parse tree produced by pddlParser#effect.
+    def enterEffect(self, ctx:pddlParser.EffectContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#nEffect.
-    def exitNEffect(self, ctx:pddlParser.NEffectContext):
+    # Exit a parse tree produced by pddlParser#effect.
+    def exitEffect(self, ctx:pddlParser.EffectContext):
         pass
 
 
@@ -491,6 +338,132 @@ class pddlListener(ParseTreeListener):
 
     # Exit a parse tree produced by pddlParser#effects.
     def exitEffects(self, ctx:pddlParser.EffectsContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#parameters.
+    def enterParameters(self, ctx:pddlParser.ParametersContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#parameters.
+    def exitParameters(self, ctx:pddlParser.ParametersContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#opName.
+    def enterOpName(self, ctx:pddlParser.OpNameContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#opName.
+    def exitOpName(self, ctx:pddlParser.OpNameContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#opParameters.
+    def enterOpParameters(self, ctx:pddlParser.OpParametersContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#opParameters.
+    def exitOpParameters(self, ctx:pddlParser.OpParametersContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#opPrecondition.
+    def enterOpPrecondition(self, ctx:pddlParser.OpPreconditionContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#opPrecondition.
+    def exitOpPrecondition(self, ctx:pddlParser.OpPreconditionContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#opEffect.
+    def enterOpEffect(self, ctx:pddlParser.OpEffectContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#opEffect.
+    def exitOpEffect(self, ctx:pddlParser.OpEffectContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#action.
+    def enterAction(self, ctx:pddlParser.ActionContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#action.
+    def exitAction(self, ctx:pddlParser.ActionContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#event.
+    def enterEvent(self, ctx:pddlParser.EventContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#event.
+    def exitEvent(self, ctx:pddlParser.EventContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#process.
+    def enterProcess(self, ctx:pddlParser.ProcessContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#process.
+    def exitProcess(self, ctx:pddlParser.ProcessContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#problem.
+    def enterProblem(self, ctx:pddlParser.ProblemContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#problem.
+    def exitProblem(self, ctx:pddlParser.ProblemContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#problemName.
+    def enterProblemName(self, ctx:pddlParser.ProblemNameContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#problemName.
+    def exitProblemName(self, ctx:pddlParser.ProblemNameContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#problemDomain.
+    def enterProblemDomain(self, ctx:pddlParser.ProblemDomainContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#problemDomain.
+    def exitProblemDomain(self, ctx:pddlParser.ProblemDomainContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#typedObjects.
+    def enterTypedObjects(self, ctx:pddlParser.TypedObjectsContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#typedObjects.
+    def exitTypedObjects(self, ctx:pddlParser.TypedObjectsContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#objects.
+    def enterObjects(self, ctx:pddlParser.ObjectsContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#objects.
+    def exitObjects(self, ctx:pddlParser.ObjectsContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#init.
+    def enterInit(self, ctx:pddlParser.InitContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#init.
+    def exitInit(self, ctx:pddlParser.InitContext):
         pass
 
 

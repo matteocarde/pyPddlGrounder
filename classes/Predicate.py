@@ -1,4 +1,4 @@
-class NPredicate:
+class Predicate:
 
     def __init__(self):
         pass

@@ -14,11 +14,12 @@ class ConstantPredicate:
     '''
     __name = ""
     __value = 0
-    __arguments = []
+    __arguments: list
     __isComplex = False
     __isNegated = False
 
     def __init__(self, node=None, value=None):
+        self.__arguments = []
         if node is not None:
             if node.getText() == "#t":
                 self.__name = "Time"

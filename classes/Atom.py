@@ -1,7 +1,7 @@
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
 
 
-class NAtom:
+class Atom:
 
     def __init__(self, node: p.AtomContext):
         self.name = node.getChild(0).getText()

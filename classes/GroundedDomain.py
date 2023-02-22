@@ -1,12 +1,12 @@
 from typing import Dict, List, Set
 
-from libs.pyGrounder.myClasses.Action import Action
-from libs.pyGrounder.myClasses.Domain import Domain
-from libs.pyGrounder.myClasses.Event import Event
-from libs.pyGrounder.myClasses.Operation import Operation
-from libs.pyGrounder.myClasses.Problem import Problem
-from libs.pyGrounder.myClasses.Process import Process
-from libs.pyGrounder.myClasses.Variable import Variable
+from libs.pyGrounder.classes.Action import Action
+from libs.pyGrounder.classes.Domain import Domain
+from libs.pyGrounder.classes.Event import Event
+from libs.pyGrounder.classes.Operation import Operation
+from libs.pyGrounder.classes.Problem import Problem
+from libs.pyGrounder.classes.Process import Process
+from libs.pyGrounder.classes.Variable import Variable
 
 
 class GroundedDomain(Domain):

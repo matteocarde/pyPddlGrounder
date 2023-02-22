@@ -1,8 +1,6 @@
 import json
 
-from libs.pyGrounder.myClasses.Goal import Goal
-from libs.pyGrounder.myClasses.myUtilities import remove_comments
-from libs.pyGrounder.myClasses.myUtilities import get_antlr4_parsetree
+from libs.pyGrounder.classes.Goal import Goal
 
 
 class Problem:
@@ -13,23 +11,23 @@ class Problem:
     __goal: Goal
 
     def __init__(self, file_path):
-
-        file = remove_comments(file_path)
-        tree = get_antlr4_parsetree(file).problem()
-
-        for i in range(tree.getChildCount()):
-            child = tree.getChild(i)
-            text = child.getText()
-            if 'problem' in text:
-                self.__name = Problem.__getProblemName(text)
-            if ':domain' in text:
-                self.__domain = Problem.__getDomainName(text)
-            elif ':objects' in text:
-                self.__objects = Problem.__getObjectsList(child)
-            elif ':init' in text:
-                self.__init = Problem.__getInitList(child)
-            elif ':goal' in text:
-                self.__goal = Goal(child)
+        pass
+        # file = remove_comments(file_path)
+        # tree = get_antlr4_parsetree(file).problem()
+        #
+        # for i in range(tree.getChildCount()):
+        #     child = tree.getChild(i)
+        #     text = child.getText()
+        #     if 'problem' in text:
+        #         self.__name = Problem.__getProblemName(text)
+        #     if ':domain' in text:
+        #         self.__domain = Problem.__getDomainName(text)
+        #     elif ':objects' in text:
+        #         self.__objects = Problem.__getObjectsList(child)
+        #     elif ':init' in text:
+        #         self.__init = Problem.__getInitList(child)
+        #     elif ':goal' in text:
+        #         self.__goal = Goal(child)
 
     @staticmethod
     def __getProblemName(problem):

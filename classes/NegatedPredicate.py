@@ -1,32 +1,4 @@
-class NegatedPredicate():
-    '''
-    This class represents a Negated Predicate in this form: not <name> <argument1>..<argumentN>. For Example: not(atRobot ?r ?b)
-    
-    Parameters
-    ----------
-    node : antlr4 tree
-        The node containing the string of the predicate. For example: "not (atRobot ?r ?b)"
-    
-    OR
-    
-    name : str
-        The name of the predicate. For example: atRobot
-    arguments:List[str]
-        The list containing the string of each argument. For example [?r, ?b]
-    
-    Attributes
-    ----------
-    string:str
-        The string of the whole predicate into brackets.  For example: "(not (atRobot ?r ?b))"
-    name : str
-        The name of the predicate. For example: atRobot
-    arguments:List[str]
-        The list containing the string of each argument. For example [?r, ?b]
-    isComplex:False
-        Metadata for some operations, it means it's not a composed predicate
-    isNegated:True
-        Metadata for some operations, it means it's a negated predicate
-    '''
+class NegatedPredicate:
     __string = ""
     __name = ""
     __arguments = []
@@ -34,7 +6,7 @@ class NegatedPredicate():
     __isNegated = True
 
     def __init__(self, node=None, string=None, name=None, arguments=None):
-        if node != None:
+        if node is not None:
             self.__arguments = []
             self.__string = "(" + string + ")"
             name = string.split(" ")

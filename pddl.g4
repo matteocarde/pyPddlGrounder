@@ -6,24 +6,8 @@ grammar pddl;
 
 LP : '(';
 RP : ')';
-QUOTE : '"';
-COMMA : ',';
-DEFINE : 'define';
-PROBLEM : 'problem';
-DOMAIN : 'domain';
-REQUIREMENTS : ':requirements';
-TYPES : ':types';
-PREDICATES : ':predicates';
-FUNCTIONS : ':functions';
-ACTION : ':action';
-PARAMETERS : ':parameters';
-PRECONDITION : ':precondition';
-EFFECT : ':effect';
-PROCESS : ':process';
-EVENT : ':event';
-INCREASE : 'increase';
-DECREASE : 'decrease';
 
+VAR: '?' NAME;
 NAME:    LETTER ANY_CHAR* ;
 fragment LETTER : 'a'..'z' | 'A'..'Z';
 fragment ANY_CHAR : LETTER | '0'..'9' | '-' | '_';
@@ -32,206 +16,48 @@ fragment DIGIT: '0'..'9';
 NUMBER : (('-')? DIGIT+ ('.' DIGIT+)?) | '#t' ;
 WS : [ \t\r\n]+ -> skip ;
 
-REQUIRE_KEY
-    : ':typing'
-    | ':duration-inequalities'
-    | ':time'
-    | ':fluents'
-    | ':adl'
-    | ':durative-actions'
-    ;
-
-OPERATION : '>'| '>='| '<'| '<='| '='| '+'| '-'| '*'| '/'| 'and'| 'or';
-
-	/************* Start of grammar *******************/
+/************* Start of grammar *******************/
 
 pddlDoc : domain | problem;
 
 /************* DOMAINS ****************************/
 
-domain
-    : '(' 'define' domainName 
-	requireDef?
-    typesDef?
-	predicatesDef?
-    functionsDef?
-	structureDef*
-	RP
-    ;
+domain : LP 'define' domainName requirements? types? predicates? functions? (action | event | process)* RP;
 
-domainName
-    : LP DOMAIN NAME RP
-    ;
+//DOMAIN NAME
+domainName: LP 'domain' NAME RP;
 
-requireDef
-	: LP REQUIREMENTS REQUIRE_KEY+ RP
-	;
+//REQUIREMENTS
+requireKey: ':typing' | ':duration-inequalities' | ':time' | ':fluents' | ':adl' | ':durative-actions';
+requirements: LP ':requirements' requireKey* RP;
 
-typesDef
-	: LP TYPES (NAME('-' NAME)?)+ RP
-	;
+//TYPES
+parentType: '-' typeName;
+typeName: NAME;
+type: typeName parentType*;
+types: LP ':types' type+ RP;
 
-predicatesDef
-	: LP PREDICATES predicate+ RP
-	;
-
-predicate
-	: LP NAME typedVariable* RP
-	;
-
-
-/* name stringa - stringa */
-atomicFormulaSkeleton
-	: LP NAME typedVariable+ RP
-	;
-
-typedVariable
-	: VARIABLE '-' NAME
-	;
-
-functionsDef
-	: LP FUNCTIONS function+ RP
-	;
-
-function
-	: LP NAME typedVariable* RP
-	;
-
-predicatedVariables
-	: NAME VARIABLE*  
-	;
-
-structureDef
-	: actionDef
-	| processDef
-	| eventDef
-	;
-
-
-/************* ACTIONS ****************************/
-
-actionDef
-	: LP ACTION NAME
-	    PARAMETERS LP typedVariable* RP
-        precondition?
-		effect?
-		RP
-;
-
-precondition
-	: PRECONDITION LP 'and' precondition_formula* RP
-	;
-
-precondition_formula
-    : LP predicatedVariables RP
-    | operation
-    ;
-
-effect
-	: EFFECT LP 'and' effect_formula+ RP
-	;
-
-effect_formula
-    : LP predicatedVariables RP
-	| LP 'not' LP predicatedVariables RP RP
-	| LP 'assign' LP predicatedVariables RP operation RP
-	| LP 'increase' LP predicatedVariables RP operation RP
-	| LP 'decrease' LP predicatedVariables RP operation RP
-	;
-
-operation
-	: LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') LP predicatedVariables RP NUMBER RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') NUMBER LP predicatedVariables RP RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') NUMBER NUMBER RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') LP predicatedVariables RP LP predicatedVariables RP RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') LP predicatedVariables RP operation RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/')  operation LP predicatedVariables RP RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') NUMBER operation RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') operation operation RP
-	| LP (OPERATION|'-'|'='|'<'|'=<'|'>='|'>'|'+'|'*'|'/') operation NUMBER RP
-	| LP 'not' operation RP
-	| LP 'not' LP predicatedVariables RP RP
-	| LP predicatedVariables RP
-	| NUMBER
-	| '#t'
-	;
-
-/************* PROCESSES ****************************/
-
-processDef
-	: LP PROCESS NAME
-		PARAMETERS LP typedVariable* RP
-		precondition?
-		effect?
-		RP
-	;
-
-
-
-
-
-/************* EVENTS ****************************/
-
-eventDef
-	: LP EVENT NAME
-	    PARAMETERS LP typedVariable* RP
-        precondition?
-		effect?
-		RP
-;
-
-/************* PROBLEMS ****************************/
-
-problem
-	: '(' 'define' problemDecl
-	problemDomain
-	objectDecl?
-	init
-	goal
-	metric?
-	RP
-	;
-
-problemDecl
-	: LP PROBLEM NAME RP
-	;
-
-problemDomain
-	: LP ':domain' NAME RP
-	;
-
-objectDecl
-	: LP ':objects' sameTypeNamesList+ RP
-	;
-
-sameTypeNamesList
-	:NAME+ '-' NAME
-	;
-
-init : LP ':init' initEl* RP;
-atomicNameFormula
-	:LP NAME+ RP
-	;
-equalLiteral
-	:LP '=' atomicNameFormula NUMBER RP
-	;
-initEl : nameLiteral | equalLiteral;
-
-nameLiteral : atomicNameFormula | LP 'not' atomicNameFormula RP;
-
-//groundAtom: name a b c d
-//liftedAtom: name ?a ?b ?c ?d
-
+//ATOM AND LITERALS
 atomName: NAME;
 groundAtomParameter: NAME;
-liftedAtomParameter: '?' NAME;
-atom: atomName (groundAtomParameter+ | liftedAtomParameter+);
+liftedAtomParameter: VAR;
+typedAtomParameter: liftedAtomParameter '-' typeName;
+atomParameter: liftedAtomParameter | groundAtomParameter | typedAtomParameter ;
+
+atom: atomName atomParameter*;
 
 //positiveLiteral: (name a b c d)
-positiveLiteral: LP atom RP;
 //negativeLiteral: (not (name a b c d))
+positiveLiteral: LP (atom) RP;
 negativeLiteral: LP 'not' positiveLiteral RP;
 booleanLiteral: positiveLiteral | negativeLiteral;
+
+//PREDICATES
+predicates: LP ':predicates' positiveLiteral+ RP;
+
+//FUNCTIONS
+functions: LP ':functions' positiveLiteral+ RP;
+
 
 modificator: 'assign'|'increase'|'decrease';
 operator: '+'|'-'|'*'|'/';
@@ -240,20 +66,67 @@ number: NUMBER;
 delta: '#t';
 constant: number | delta;
 
-operationSide: nOperation | positiveLiteral | constant;
-nOperation: LP operator operationSide operationSide RP;
+operationSide: operation | positiveLiteral | constant;
+operation: LP operator operationSide operationSide RP;
 
+assignment: LP '=' positiveLiteral number RP;
 comparation: LP comparator positiveLiteral operationSide RP;
 modification: LP modificator positiveLiteral operationSide RP;
 
-nPrecondition: booleanLiteral | comparation;
-nEffect:  booleanLiteral | modification;
+precondition: booleanLiteral | comparation;
+effect:  booleanLiteral | modification;
 
-andPrecondition: LP 'and' nPrecondition+ RP;
-andEffect : LP 'and' nEffect+ RP;
-preconditions: nPrecondition | andPrecondition;
-effects: nEffect | andEffect;
+andPrecondition: LP 'and' precondition+ RP;
+andEffect : LP 'and' effect+ RP;
+preconditions: precondition | andPrecondition;
+effects: effect | andEffect;
 
+parameters: LP typedAtomParameter* RP;
+
+opName: NAME;
+opParameters: ':parameters' parameters;
+opPrecondition: ':precondition' preconditions;
+opEffect: ':effect' effects;
+
+//ACTION
+action:  LP ':action' opName
+	        opParameters?
+            opPrecondition?
+            opEffect
+		    RP;
+//EVENT
+event:  LP ':event' opName
+	        opParameters?
+            opPrecondition?
+            opEffect
+		    RP;
+
+//PROCESS
+process:  LP ':process' opName
+	        opParameters?
+            opPrecondition?
+            opEffect
+		    RP;
+
+/************* PROBLEM ****************************/
+
+problem : LP 'define' problemName problemDomain objects? init goal metric? RP;
+
+//Problem Name
+problemName: LP 'problem' NAME RP;
+
+//Problem Domain
+problemDomain: LP ':domain' NAME RP;
+
+//Objects
+typedObjects: groundAtomParameter+ '-' typeName;
+objects: LP ':objects' typedObjects+ RP;
+
+//Init
+init: LP ':init' (positiveLiteral|assignment)+ RP;
+
+//Goal
 goal : LP ':goal' preconditions RP;
 
-metric : LP ':metric' ('maximize'|'minimize') atomicNameFormula RP;
+//Metric
+metric : LP ':metric' ('maximize'|'minimize') operation RP;

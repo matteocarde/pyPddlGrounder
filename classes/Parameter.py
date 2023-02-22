@@ -1,4 +1,4 @@
-from libs.pyGrounder.myClasses.Variable import Variable
+from libs.pyGrounder.classes.Variable import Variable
 
 class Parameter(Variable):
     '''

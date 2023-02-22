@@ -1,8 +1,8 @@
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
-from libs.pyGrounder.myClasses.new.NPredicate import NPredicate
+from libs.pyGrounder.classes.Predicate import Predicate
 
 
-class NConstant(NPredicate):
+class Constant(Predicate):
 
     value: float
     isDelta: bool
