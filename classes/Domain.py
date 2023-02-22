@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import Dict, List
+from typing import Dict, List, Set, cast
 
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
 from libs.pyGrounder.classes.Operation import Operation
+from libs.pyGrounder.classes.Problem import Problem
 
 from libs.pyGrounder.classes.Utilities import Utilities
 from libs.pyGrounder.classes.Variable import Variable
@@ -24,41 +25,52 @@ class Domain:
     events: set[Event]
     processes: set[Process]
     constants: set[Variable]
-
     __operationsDict: Dict[str, Operation]
 
-    def __init__(self, node: pddlParser.DomainContext = None):
-
-        if node is None:
-            return
-
+    def __init__(self):
         self.types = dict()
         self.predicates = set()
         self.functions = set()
         self.actions = set()
         self.processes = set()
         self.events = set()
-        self.requirements = []
+        self.requirements = list()
         self.constants = set()
+        pass
+
+    def ground(self, problem: Problem) -> GroundedDomain:
+
+        gActions: Set[Action] = set([g for action in self.actions for g in action.ground(problem)])
+        gEvents: Set[Event] = set([g for event in self.events for g in event.ground(problem)])
+        gProcess: Set[Process] = set([g for process in self.processes for g in process.ground(problem)])
+
+        return GroundedDomain(self.name, gActions, gEvents, gProcess)
+
+    @classmethod
+    def fromNode(cls, node: pddlParser.DomainContext) -> Domain:
+
+        domain = cls()
 
         for i in range(node.getChildCount()):
             child = node.getChild(i)
             if isinstance(child, pddlParser.DomainNameContext):
-                self.__setDomainName(child)
+                domain.__setDomainName(child)
             elif isinstance(child, pddlParser.RequirementsContext):
-                self.__setRequirementsList(child)
+                domain.__setRequirementsList(child)
             elif isinstance(child, pddlParser.TypesContext):
-                self.__setTypesList(child)
+                domain.__setTypesList(child)
             elif isinstance(child, pddlParser.PredicatesContext):
-                self.__setPredicates(child)
+                domain.__setPredicates(child)
             elif isinstance(child, pddlParser.FunctionsContext):
-                self.__setFunctions(child)
+                domain.__setFunctions(child)
             elif isinstance(child, pddlParser.ActionContext):
-                self.actions.add(Action(child, self.types))
+                domain.actions.add(Action.fromNode(child))
             elif isinstance(child, pddlParser.EventContext):
-                self.events.add(Event(child, self.types))
+                domain.events.add(Event.fromNode(child))
             elif isinstance(child, pddlParser.ProcessContext):
-                self.processes.add(Process(child, self.types))
+                domain.processes.add(Process.fromNode(child))
+
+        return domain
 
     @classmethod
     def fromFile(cls, filename) -> Domain:
@@ -68,11 +80,10 @@ class Domain:
         domainString = Utilities.removeComments(domainString)
 
         parseTree: pddlParser = Utilities.getParseTree(domainString)
-        domain = cls(parseTree.domain())
-        return domain
+        return cls.fromNode(parseTree.domain())
 
     def __setDomainName(self, node: pddlParser.DomainNameContext):
-        self.name = node.getChild(2)
+        self.name = node.getChild(2).getText()
 
     def __setRequirementsList(self, node: pddlParser.RequirementsContext):
         for child in node.children:
@@ -91,10 +102,33 @@ class Domain:
         for child in node.children:
             if not isinstance(child, pddlParser.PositiveLiteralContext):
                 continue
-            self.predicates.add(TypedPredicate(child, self.types))
+            self.predicates.add(TypedPredicate.fromNode(child, self.types))
 
     def __setFunctions(self, node: pddlParser.FunctionsContext):
         for child in node.children:
             if not isinstance(child, pddlParser.PositiveLiteralContext):
                 continue
-            self.functions.add(TypedPredicate(child, self.types))
+            self.functions.add(TypedPredicate.fromNode(child, self.types))
+
+
+class GroundedDomain(Domain):
+    __operationsDict: Dict[str, Operation] = dict()
+
+    def __init__(self, name: str, actions: Set[Action], events: Set[Event], process: Set[Process]):
+        super().__init__()
+
+        self.name = name
+        self.actions = actions
+        self.events = events
+        self.processes = process
+
+        self.operations: Set[Operation] = set()
+        self.operations.update(self.actions)
+        self.operations.update(self.events)
+        self.operations.update(self.processes)
+
+        for op in self.operations:
+            self.__operationsDict[op.planName] = op
+
+    def getOperationByPlanName(self, planName) -> Operation:
+        return self.__operationsDict[planName]

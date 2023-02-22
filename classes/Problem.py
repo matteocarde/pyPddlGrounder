@@ -25,16 +25,16 @@ class Problem:
             if isinstance(node, pddlParser.ObjectsContext):
                 self.__addObjects(node)
             if isinstance(node, pddlParser.InitContext):
-                self.init = InitialCondition(node)
+                self.init = InitialCondition.fromNode(node)
             if isinstance(node, pddlParser.GoalContext):
-                self.goal = Goal(node)
+                self.goal = Goal.fromNode(node)
             pass
 
     def __setProblemName(self, node: pddlParser.ProblemNameContext):
-        self.name = node.getChild(2)
+        self.name = node.getChild(2).getText()
 
     def __setDomainName(self, node: pddlParser.ProblemDomainContext):
-        self.domainName = node.getChild(2)
+        self.domainName = node.getChild(2).getText()
 
     def __addObjects(self, node: pddlParser.ObjectsContext):
         for typeNode in node.children:
@@ -49,7 +49,6 @@ class Problem:
                     typeStr = child.getText()
             self.objectsByType.setdefault(typeStr, [])
             self.objectsByType[typeStr].extend(objects)
-
 
     @classmethod
     def fromFile(cls, filename):

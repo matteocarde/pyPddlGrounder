@@ -9,11 +9,15 @@ from libs.pyGrounder.classes.Predicate import Predicate
 class InitialCondition:
     assignment: List[Predicate]
 
-    def __init__(self, node: pddlParser.InitContext):
-
+    def __init__(self):
         self.assignment = []
+
+    @classmethod
+    def fromNode(cls, node: pddlParser.InitContext):
+        ic = cls()
+        ic.assignment = []
         for child in node.children:
             if isinstance(child, pddlParser.PositiveLiteralContext):
-                self.assignment.append(Literal(child))
+                ic.assignment.append(Literal.fromNode(child))
             if isinstance(child, pddlParser.AssignmentContext):
-                self.assignment.append(BinaryPredicate(child))
+                ic.assignment.append(BinaryPredicate.fromNode(child))

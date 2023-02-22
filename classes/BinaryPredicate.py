@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from enum import Enum
+from typing import Dict
 
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
 from libs.pyGrounder.classes.Constant import Constant
@@ -13,38 +16,53 @@ class BinaryPredicateType(Enum):
 
 
 class BinaryPredicate(Predicate):
+    operator: str
+    lhs: BinaryPredicate or Literal or Constant
+    rhs: BinaryPredicate or Literal or Constant
 
-    def __init__(self, node: p.ModificationContext or p.ComparationContext or p.OperationContext):
+    def __init__(self):
         super().__init__()
 
-        self.operator = node.getChild(1).getText()
-        self.rhs = self.__assignClass(node.getChild(3))
+    @classmethod
+    def fromNode(cls, node: p.ModificationContext or p.ComparationContext or p.OperationContext) -> BinaryPredicate:
+        bp = cls()
 
-        if isinstance(node, p.OperationContext):
-            self.lhs = self.__assignClass(node.getChild(2))
-        else:
-            self.lhs = Literal(node.getChild(2))
+        bp.operator = node.getChild(1).getText()
+        bp.rhs = bp.__assignClass(node.getChild(3))
+        lhsNode = node.getChild(2)
+
+        bp.lhs = bp.__assignClass(lhsNode) if isinstance(node, p.OperationContext) else Literal.fromNode(lhsNode)
 
         if isinstance(node, p.ModificationContext):
-            self.type = BinaryPredicateType.MODIFICATION
+            bp.type = BinaryPredicateType.MODIFICATION
         elif isinstance(node, p.ComparationContext):
-            self.type = BinaryPredicateType.COMPARATION
+            bp.type = BinaryPredicateType.COMPARATION
         elif isinstance(node, p.OperationContext):
-            self.type = BinaryPredicateType.OPERATION
+            bp.type = BinaryPredicateType.OPERATION
+
+        return bp
 
     @staticmethod
     def __assignClass(node: p.OperationSideContext):
         child = node.getChild(0)
         if isinstance(child, p.OperationContext):
-            return BinaryPredicate(child)
+            return BinaryPredicate.fromNode(child)
         elif isinstance(child, p.PositiveLiteralContext):
-            return Literal(child)
+            return Literal.fromNode(child)
         elif isinstance(child, p.ConstantContext):
-            return Constant(child)
+            return Constant.fromNode(child)
         elif isinstance(child, p.NumberContext):
-            return Constant(child)
+            return Constant.fromNode(child)
         else:
             raise NotImplemented()
+
+    def ground(self, subs: Dict[str, str]) -> BinaryPredicate:
+        bp = BinaryPredicate()
+        bp.operator = self.operator
+        bp.lhs = self.lhs.ground(subs)
+        bp.rhs = self.rhs.ground(subs)
+
+        return bp
 
     def __str__(self):
         return f"({self.operator} {self.lhs} {self.rhs})"

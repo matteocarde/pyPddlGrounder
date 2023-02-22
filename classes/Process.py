@@ -1,23 +1,31 @@
-from typing import List, Dict
+from __future__ import annotations
+from typing import List, Dict, cast
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
+from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
 from libs.pyGrounder.classes.Operation import Operation
 from libs.pyGrounder.classes.OperationType import OperationType
-from libs.pyGrounder.classes.Type import Type
 
 
 class Process(Operation):
 
-    def __init__(self, node: pddlParser.ProcessContext, types: Dict[str, Type]):
-        super().__init__(node, types)
+    def __init__(self):
+        super().__init__()
+
+    @classmethod
+    def fromNode(cls, node: p.ProcessContext):
+        return super().fromNode(node)
 
     @property
     def type(self):
         return OperationType.PROCESS
 
-    def ground(self, problem) -> List:
+    def ground(self, problem) -> List[Process]:
         groundOps: List = []
         for op in self.getGroundedOperations(problem):
-            groundOps.append(
-                Process(name=op.name, planName=op.planName, preconditions=op.preconditions, effects=op.effects))
+            event = Process()
+            event.name = op.name
+            event.preconditions = op.preconditions
+            event.effects = op.effects
+            event.planName = op.planName
+            groundOps.append(event)
         return groundOps
