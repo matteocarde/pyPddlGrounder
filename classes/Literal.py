@@ -1,7 +1,10 @@
 from __future__ import annotations
 from typing import Dict
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
+from antlr4 import InputStream, CommonTokenStream
+
+from libs.pyGrounder.antlr4_directory.pddlLexer import pddlLexer
+from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p, pddlParser
 from libs.pyGrounder.classes.Atom import Atom
 from libs.pyGrounder.classes.Predicate import Predicate
 
@@ -9,7 +12,7 @@ from libs.pyGrounder.classes.Predicate import Predicate
 class Literal(Predicate):
     sign: str
     atom: Atom
-    var: str
+    funct: str
 
     def __init__(self):
         super().__init__()
@@ -23,7 +26,9 @@ class Literal(Predicate):
         atomNode = positiveLiteralNode.getChild(1)
 
         literal.atom = Atom.fromNode(atomNode)
-        literal.var = literal.atom.toFunctionName()
+        literal.string = f"({literal.atom})"
+        literal.funct = literal.atom.toFunctionName()
+        literal.alphaFunct = literal.atom.toAlphaFunctionName()
 
         return literal
 
@@ -33,7 +38,8 @@ class Literal(Predicate):
         literal.sign = self.sign
 
         literal.atom = self.atom.ground(subs)
-        literal.var = literal.atom.toFunctionName()
+        literal.funct = literal.atom.toFunctionName()
+        literal.alphaFunct = literal.atom.toAlphaFunctionName()
 
         return literal
 
@@ -45,3 +51,10 @@ class Literal(Predicate):
 
     def __repr__(self):
         return str(self)
+
+    @classmethod
+    def fromString(cls, string: str) -> Literal:
+        lexer = pddlLexer(InputStream(string))
+        token_stream = CommonTokenStream(lexer)
+        node = pddlParser(token_stream).positiveLiteral()
+        return cls.fromNode(node)

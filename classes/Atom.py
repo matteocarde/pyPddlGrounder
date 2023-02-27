@@ -29,13 +29,14 @@ class Atom:
         return atom
 
     def __str__(self):
-        return f"{self.name} {' '.join([a for a in self.attributes])}"
+        parts = [self.name] + [a for a in self.attributes]
+        return " ".join(parts)
 
     def __repr__(self):
         return str(self)
 
     def toFunctionName(self):
-        return f"{self.name}({''.join([a for a in self.attributes])})"
+        return f"{self.name}({','.join([a for a in self.attributes])})"
 
     def toAlphaFunctionName(self):
-        return f"\\alpha_{{{self.name}}}({''.join([a for a in self.attributes])})"
+        return f"\\alpha_{{{self.name}}}({','.join([a for a in self.attributes])})"

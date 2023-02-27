@@ -19,6 +19,7 @@ class BinaryPredicate(Predicate):
     operator: str
     lhs: BinaryPredicate or Literal or Constant
     rhs: BinaryPredicate or Literal or Constant
+    type: BinaryPredicateType
 
     def __init__(self):
         super().__init__()

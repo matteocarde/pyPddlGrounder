@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List
 
 from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
@@ -13,7 +14,7 @@ class InitialCondition:
         self.assignment = []
 
     @classmethod
-    def fromNode(cls, node: pddlParser.InitContext):
+    def fromNode(cls, node: pddlParser.InitContext) -> InitialCondition:
         ic = cls()
         ic.assignment = []
         for child in node.children:
@@ -21,3 +22,5 @@ class InitialCondition:
                 ic.assignment.append(Literal.fromNode(child))
             if isinstance(child, pddlParser.AssignmentContext):
                 ic.assignment.append(BinaryPredicate.fromNode(child))
+
+        return ic

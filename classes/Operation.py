@@ -76,12 +76,13 @@ class Operation:
             gOperations.append(operation)
         return gOperations
 
-    def __getGroundedName(self, combination: Dict[str, str]) -> str:
-        return f"{self.name}_{'_'.join([c[1] for c in combination.items()])}"
+    def __getGroundedName(self, sub: Dict[str, str]) -> str:
+        parts = [self.name] + [c[1] for c in sub.items()]
+        return "_".join(parts)
 
     def __getGroundedPlanName(self, sub: Dict[str, str]):
-        parameters = ' '.join([sub[par.name] for par in self.parameters])
-        return f"({self.name} {parameters})"
+        parts = [self.name] + [c[1] for c in sub.items()]
+        return f"({'_'.join(parts)})"
 
     @property
     def type(self) -> OperationType:

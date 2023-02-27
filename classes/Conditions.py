@@ -36,3 +36,9 @@ class Conditions:
 
     def __iter__(self):
         return iter(self.conditions)
+
+    def __str__(self):
+        return str(self.conditions)
+
+    def __repr__(self):
+        return str(self.conditions)
