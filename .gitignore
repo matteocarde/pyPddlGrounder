@@ -1,2 +1,8 @@
 
 *.pyc
+
+build/
+
+.idea/
+
+pyPDDL.egg-info/

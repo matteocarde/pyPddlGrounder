@@ -1,18 +1,18 @@
 from __future__ import annotations
 from typing import Dict, List, Set, cast
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
-from libs.pyGrounder.classes.Operation import Operation
-from libs.pyGrounder.classes.Problem import Problem
+from antlr4_directory.pddlParser import pddlParser
+from Operation import Operation
+from Problem import Problem
 
-from libs.pyGrounder.classes.Utilities import Utilities
-from libs.pyGrounder.classes.Variable import Variable
-from libs.pyGrounder.classes.Action import Action
-from libs.pyGrounder.classes.Event import Event
-from libs.pyGrounder.classes.Process import Process
+from Utilities import Utilities
+from Variable import Variable
+from Action import Action
+from Event import Event
+from Process import Process
 
-from libs.pyGrounder.classes.Type import Type
-from libs.pyGrounder.classes.TypedPredicate import TypedPredicate
+from Type import Type
+from TypedPredicate import TypedPredicate
 
 
 class Domain:

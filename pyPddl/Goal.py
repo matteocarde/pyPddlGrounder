@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import cast
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
-from libs.pyGrounder.classes.Preconditions import Preconditions
+from antlr4_directory.pddlParser import pddlParser
+from Preconditions import Preconditions
 
 
 class Goal(Preconditions):

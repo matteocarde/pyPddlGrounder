@@ -2,13 +2,12 @@ import itertools
 from itertools import product
 from typing import Dict, Tuple, List
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
-from libs.pyGrounder.classes.OperationType import OperationType
-from libs.pyGrounder.classes.Parameter import Parameter
-from libs.pyGrounder.classes.Problem import Problem
-from libs.pyGrounder.classes.Effects import Effects
-from libs.pyGrounder.classes.Preconditions import Preconditions
-from libs.pyGrounder.classes.Type import Type
+from antlr4_directory.pddlParser import pddlParser as p
+from OperationType import OperationType
+from Parameter import Parameter
+from Problem import Problem
+from Effects import Effects
+from Preconditions import Preconditions
 
 
 class Operation:

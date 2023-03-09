@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Dict
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
-from libs.pyGrounder.classes import Predicate
-from libs.pyGrounder.classes.BinaryPredicate import BinaryPredicate
-from libs.pyGrounder.classes.Literal import Literal
+from antlr4_directory.pddlParser import pddlParser as p
+from Predicate import Predicate
+from BinaryPredicate import BinaryPredicate
+from Literal import Literal
 
 
 class Conditions:

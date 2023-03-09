@@ -1,7 +1,7 @@
 import re
 from antlr4 import *
-from libs.pyGrounder.antlr4_directory.pddlLexer import pddlLexer
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
+from antlr4_directory.pddlLexer import pddlLexer
+from antlr4_directory.pddlParser import pddlParser
 
 class Utilities:
 

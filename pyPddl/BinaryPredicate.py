@@ -3,10 +3,10 @@ from __future__ import annotations
 from enum import Enum
 from typing import Dict
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
-from libs.pyGrounder.classes.Constant import Constant
-from libs.pyGrounder.classes.Literal import Literal
-from libs.pyGrounder.classes.Predicate import Predicate
+from antlr4_directory.pddlParser import pddlParser as p
+from Constant import Constant
+from Literal import Literal
+from Predicate import Predicate
 
 
 class BinaryPredicateType(Enum):

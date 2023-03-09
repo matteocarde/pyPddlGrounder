@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, cast
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
-from libs.pyGrounder.classes.Conditions import Conditions
+from antlr4_directory.pddlParser import pddlParser
+from Conditions import Conditions
 
 
 class Effects(Conditions):

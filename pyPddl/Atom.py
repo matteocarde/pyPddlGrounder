@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
+from antlr4_directory.pddlParser import pddlParser as p
 
 
 class Atom:
@@ -35,8 +35,15 @@ class Atom:
     def __repr__(self):
         return str(self)
 
+    def __hash__(self):
+        return hash(str(self))
+
     def toFunctionName(self):
-        return f"{self.name}({','.join([a for a in self.attributes])})"
+        parameters = ','.join([a for a in self.attributes])
+        parenthesis = f"({parameters})" if self.attributes else ""
+        return f"{self.name}{parenthesis}"
 
     def toAlphaFunctionName(self):
-        return f"\\alpha_{{{self.name}}}({','.join([a for a in self.attributes])})"
+        parameters = ','.join([a for a in self.attributes])
+        parenthesis = f"({parameters})" if self.attributes else ""
+        return f"\\alpha_{{{self.name}}}{parenthesis}"

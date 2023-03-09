@@ -3,10 +3,10 @@ from typing import Dict
 
 from antlr4 import InputStream, CommonTokenStream
 
-from libs.pyGrounder.antlr4_directory.pddlLexer import pddlLexer
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p, pddlParser
-from libs.pyGrounder.classes.Atom import Atom
-from libs.pyGrounder.classes.Predicate import Predicate
+from antlr4_directory.pddlLexer import pddlLexer
+from antlr4_directory.pddlParser import pddlParser as p, pddlParser
+from Atom import Atom
+from Predicate import Predicate
 
 
 class Literal(Predicate):
@@ -58,3 +58,6 @@ class Literal(Predicate):
         token_stream = CommonTokenStream(lexer)
         node = pddlParser(token_stream).positiveLiteral()
         return cls.fromNode(node)
+
+    def __hash__(self):
+        return hash(self.sign + str(self.atom))

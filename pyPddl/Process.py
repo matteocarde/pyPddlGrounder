@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import List, Dict, cast
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser as p
-from libs.pyGrounder.classes.Operation import Operation
-from libs.pyGrounder.classes.OperationType import OperationType
+from antlr4_directory.pddlParser import pddlParser as p
+from Operation import Operation
+from OperationType import OperationType
 
 
 class Process(Operation):

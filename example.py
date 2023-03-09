@@ -2,7 +2,7 @@ from pyGrounder import Domain
 from pyGrounder import Problem
 
 #Path of the pddl files
-problem_path = r"C:/Users/Desktop/test/files/problem.pddl"
+problem_path = r"C:/Users/Desktop/test/files/pCorrect.pddl"
 domain_path = r"C:/Users/Desktop/test/files/domain.pddl"
 #Path of the result folder
 result_folder = r"C:/Users/Desktop/test/results"

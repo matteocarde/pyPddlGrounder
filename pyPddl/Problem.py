@@ -1,10 +1,10 @@
 import json
 from typing import Dict, List
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
-from libs.pyGrounder.classes.InitialCondition import InitialCondition
-from libs.pyGrounder.classes.Goal import Goal
-from libs.pyGrounder.classes.Utilities import Utilities
+from antlr4_directory.pddlParser import pddlParser
+from InitialCondition import InitialCondition
+from Goal import Goal
+from Utilities import Utilities
 
 
 class Problem:

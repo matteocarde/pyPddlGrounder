@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Dict
 
-from libs.pyGrounder.antlr4_directory.pddlParser import pddlParser
-from libs.pyGrounder.classes.Predicate import Predicate
+from antlr4_directory.pddlParser import pddlParser
+from Predicate import Predicate
 
 
 class Constant(Predicate):
