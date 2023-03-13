@@ -17,6 +17,15 @@ class InitialCondition:
         self.assignment = []
         self.numericAssignments = dict()
 
+    def __str__(self):
+        return str(self.assignment)
+
+    def __repr__(self):
+        return str(self)
+
+    def __iter__(self):
+        return iter(self.assignment)
+
     @classmethod
     def fromNode(cls, node: pddlParser.InitContext) -> InitialCondition:
         ic = cls()

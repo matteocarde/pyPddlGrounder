@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict
+from typing import Dict, Set
 
 from antlr4 import InputStream, CommonTokenStream
 
@@ -31,6 +31,15 @@ class Literal(Predicate):
         literal.alphaFunct = literal.atom.toAlphaFunctionName()
 
         return literal
+
+    def getPredicates(self) -> Set[Atom]:
+        return {self.atom}
+
+    def getFunctions(self) -> Set[Atom]:
+        return {self.atom}
+
+    def getAtom(self) -> Atom:
+        return self.atom
 
     def ground(self, subs: Dict[str, str]) -> Literal:
 

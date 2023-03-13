@@ -1,7 +1,10 @@
 import itertools
 from itertools import product
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, Set
 
+from Atom import Atom
+from BinaryPredicate import BinaryPredicate
+from Literal import Literal
 from antlr4_directory.pddlParser import pddlParser as p
 from OperationType import OperationType
 from Parameter import Parameter
@@ -99,3 +102,52 @@ class Operation:
 
     def __repr__(self):
         return str(self)
+
+    def getFunctions(self) -> Set[Atom]:
+        return self.preconditions.getFunctions() | self.effects.getFunctions()
+
+    def getPredicates(self) -> Set[Atom]:
+        return self.preconditions.getPredicates() | self.effects.getPredicates()
+
+    def getPreN(self) -> Set[Atom]:
+        atomList: Set[Atom] = set()
+        for c in self.preconditions:
+            if not isinstance(c, BinaryPredicate):
+                continue
+            atomList = atomList | {c.getAtom()}
+        return atomList
+        pass
+
+    def getPreB(self) -> Set[Atom]:
+        atomList: Set[Atom] = set()
+        for c in self.preconditions:
+            if not isinstance(c, Literal):
+                continue
+            atomList = atomList | {c.getAtom()}
+        return atomList
+        pass
+
+    def getLiteralList(self, sign: str) -> Set[Atom]:
+        atomList: Set[Atom] = set()
+        for c in self.effects:
+            if not isinstance(c, Literal) or c.sign != sign:
+                continue
+            atomList = atomList | c.getPredicates()
+        return atomList
+
+    def getModificationList(self, modificator: str) -> Set[Atom]:
+        atomList: Set[Atom] = set()
+        for c in self.effects:
+            if not isinstance(c, BinaryPredicate) or c.operator != modificator:
+                continue
+            atomList = atomList | c.getFunctions()
+        return atomList
+
+    def getAddList(self) -> Set[Atom]:
+        return self.getLiteralList("+") | self.getModificationList("increase")
+
+    def getDelList(self) -> Set[Atom]:
+        return self.getLiteralList("-") | self.getModificationList("decrease")
+
+    def getAssList(self) -> Set[Atom]:
+        return self.getModificationList("assign")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, Set, cast
 
+from Atom import Atom
 from antlr4_directory.pddlParser import pddlParser
 from Operation import Operation
 from Problem import Problem
@@ -127,8 +128,39 @@ class GroundedDomain(Domain):
         self.operations.update(self.events)
         self.operations.update(self.processes)
 
+        self.functions = set()
+        self.predicates = set()
+        self.pre: Dict[Atom, List[Operation]] = dict()
+        self.preN: Dict[Atom, List[Operation]] = dict()
+        self.preB: Dict[Atom, List[Operation]] = dict()
+        self.addList: Dict[Atom, List[Operation]] = dict()
+        self.delList: Dict[Atom, List[Operation]] = dict()
+        self.assList: Dict[Atom, List[Operation]] = dict()
+
         for op in self.operations:
             self.__operationsDict[op.planName] = op
+            self.functions = self.functions | op.getFunctions()
+            self.predicates = self.predicates | op.getPredicates()
+
+            for v in op.getPreN():
+                self.preN.setdefault(v, [])
+                self.preN[v].append(op)
+                self.pre.setdefault(v, [])
+                self.pre[v].append(op)
+            for v in op.getPreB():
+                self.preB.setdefault(v, [])
+                self.preB[v].append(op)
+                self.pre.setdefault(v, [])
+                self.pre[v].append(op)
+            for v in op.getAddList():
+                self.addList.setdefault(v, [])
+                self.addList[v].append(op)
+            for v in op.getDelList():
+                self.delList.setdefault(v, [])
+                self.delList[v].append(op)
+            for v in op.getAssList():
+                self.assList.setdefault(v, [])
+                self.assList[v].append(op)
 
     def getOperationByPlanName(self, planName) -> Operation:
         return self.__operationsDict[planName]

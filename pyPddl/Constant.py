@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Set
 
+from Atom import Atom
 from antlr4_directory.pddlParser import pddlParser
 from Predicate import Predicate
 
@@ -44,3 +45,9 @@ class Constant(Predicate):
 
     def __repr__(self):
         return str(self)
+
+    def getPredicates(self) -> Set[Atom]:
+        return set()
+
+    def getFunctions(self) -> Set[Atom]:
+        return set()

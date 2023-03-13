@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Dict
+from typing import Dict, Set
 
+from Atom import Atom
 from antlr4_directory.pddlParser import pddlParser as p
 from Constant import Constant
 from Literal import Literal
@@ -23,6 +24,7 @@ class BinaryPredicate(Predicate):
 
     def __init__(self):
         super().__init__()
+        self.__functions = None
 
     @classmethod
     def fromNode(cls, node: p.ModificationContext or p.ComparationContext or p.OperationContext) -> BinaryPredicate:
@@ -65,6 +67,19 @@ class BinaryPredicate(Predicate):
         bp.rhs = self.rhs.ground(subs)
 
         return bp
+
+    def getAtom(self) -> Atom:
+        if not isinstance(self.lhs, Literal):
+            raise Exception("Cannot get atom from Binary Predicate")
+        return self.lhs.atom
+
+    def getPredicates(self) -> Set[Atom]:
+        return set()
+
+    def getFunctions(self) -> Set[Atom]:
+        if not self.__functions:
+            self.__functions = self.lhs.getFunctions() | self.rhs.getFunctions()
+        return self.__functions
 
     def __str__(self):
         return f"({self.operator} {self.lhs} {self.rhs})"

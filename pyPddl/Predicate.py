@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Set
+
+from Atom import Atom
 
 
 class Predicate:
@@ -9,7 +11,16 @@ class Predicate:
         pass
 
     def ground(self, subs: Dict[str, str]) -> Predicate:
-        raise NotImplemented("Implementation error")
+        raise NotImplemented()
+
+    def getAtom(self) -> Atom:
+        raise NotImplemented()
+
+    def getPredicates(self) -> Set[Atom]:
+        raise NotImplemented()
+
+    def getFunctions(self) -> Set[Atom]:
+        raise NotImplemented()
 
     def __eq__(self, other):
         if not isinstance(other, Predicate):

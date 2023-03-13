@@ -38,6 +38,11 @@ class Atom:
     def __hash__(self):
         return hash(str(self))
 
+    def __eq__(self, other: Atom):
+        if not isinstance(other, Atom):
+            return False
+        return str(self) == str(other)
+
     def toFunctionName(self):
         parameters = ','.join([a for a in self.attributes])
         parenthesis = f"({parameters})" if self.attributes else ""

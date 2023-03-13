@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from itertools import chain
 from typing import Dict
 
 from antlr4_directory.pddlParser import pddlParser as p
@@ -33,6 +34,12 @@ class Conditions:
 
     def ground(self, subs: Dict[str, str]):
         raise NotImplemented()
+
+    def getFunctions(self):
+        return set(chain.from_iterable([c.getFunctions() for c in self.conditions if isinstance(c, BinaryPredicate)]))
+
+    def getPredicates(self):
+        return set(chain.from_iterable([c.getPredicates() for c in self.conditions]))
 
     def __iter__(self):
         return iter(self.conditions)
