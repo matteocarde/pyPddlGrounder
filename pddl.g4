@@ -41,22 +41,24 @@ types: LP ':types' type+ RP;
 atomName: NAME;
 groundAtomParameter: NAME;
 liftedAtomParameter: VAR;
-typedAtomParameter: liftedAtomParameter '-' typeName;
-atomParameter: liftedAtomParameter | groundAtomParameter | typedAtomParameter ;
+typedAtomParameter: liftedAtomParameter+ '-' typeName;
+atomParameter: liftedAtomParameter | groundAtomParameter ;
 
 atom: atomName atomParameter*;
+typedAtom: atomName typedAtomParameter*;
 
 //positiveLiteral: (name a b c d)
 //negativeLiteral: (not (name a b c d))
 positiveLiteral: LP (atom) RP;
+typedPositiveLiteral: LP (typedAtom) RP;
 negativeLiteral: LP 'not' positiveLiteral RP;
 booleanLiteral: positiveLiteral | negativeLiteral;
 
 //PREDICATES
-predicates: LP ':predicates' positiveLiteral+ RP;
+predicates: LP ':predicates' typedPositiveLiteral+ RP;
 
 //FUNCTIONS
-functions: LP ':functions' positiveLiteral+ RP;
+functions: LP ':functions' typedPositiveLiteral+ RP;
 
 
 modificator: 'assign'|'increase'|'decrease';
@@ -71,7 +73,7 @@ operationSide: operation | positiveLiteral | constant;
 operation: LP operator operationSide operationSide RP;
 
 assignment: LP '=' positiveLiteral assignmentSide RP;
-comparation: LP comparator positiveLiteral operationSide RP;
+comparation: LP comparator operationSide operationSide RP;
 modification: LP modificator positiveLiteral operationSide RP;
 
 precondition: booleanLiteral | comparation;

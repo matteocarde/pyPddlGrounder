@@ -32,7 +32,8 @@ class BinaryPredicate(Predicate):
         bp.rhs = bp.__assignClass(node.getChild(3))
         lhsNode = node.getChild(2)
 
-        bp.lhs = bp.__assignClass(lhsNode) if isinstance(node, p.OperationContext) else Literal.fromNode(lhsNode)
+        bp.lhs = bp.__assignClass(lhsNode) if type(node) in {p.ComparationContext,
+                                                             p.OperationContext} else Literal.fromNode(lhsNode)
 
         if isinstance(node, p.ModificationContext):
             bp.type = BinaryPredicateType.MODIFICATION

@@ -39,9 +39,16 @@ class Operation:
         for child in node.children:
             if not isinstance(child, p.TypedAtomParameterContext):
                 continue
-            varName = child.getChild(0).getText()
-            varType = child.getChild(2).getText()
-            self.parameters.append(Parameter(varName, varType))
+            varNames = []
+            varType = None
+            for x in child.children:
+                if isinstance(x, p.LiftedAtomParameterContext):
+                    varNames.append(x.getText())
+                elif isinstance(x, p.TypeNameContext):
+                    varType = x.getText()
+
+            for name in varNames:
+                self.parameters.append(Parameter(name, varType))
 
     def __addPreconditions(self, node: p.OpPreconditionContext):
         self.preconditions = Preconditions.fromNode(node.getChild(1))

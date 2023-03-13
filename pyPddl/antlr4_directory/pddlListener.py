@@ -143,12 +143,30 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#typedAtom.
+    def enterTypedAtom(self, ctx:pddlParser.TypedAtomContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#typedAtom.
+    def exitTypedAtom(self, ctx:pddlParser.TypedAtomContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#positiveLiteral.
     def enterPositiveLiteral(self, ctx:pddlParser.PositiveLiteralContext):
         pass
 
     # Exit a parse tree produced by pddlParser#positiveLiteral.
     def exitPositiveLiteral(self, ctx:pddlParser.PositiveLiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#typedPositiveLiteral.
+    def enterTypedPositiveLiteral(self, ctx:pddlParser.TypedPositiveLiteralContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#typedPositiveLiteral.
+    def exitTypedPositiveLiteral(self, ctx:pddlParser.TypedPositiveLiteralContext):
         pass
 
 
