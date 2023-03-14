@@ -114,6 +114,14 @@ class Domain:
 
 class GroundedDomain(Domain):
     __operationsDict: Dict[str, Operation] = dict()
+    functions: Set[Atom]
+    predicates: Set[Atom]
+    pre: Dict[Atom, Set[Operation]]
+    preN: Dict[Atom, Set[Operation]]
+    preB: Dict[Atom, Set[Operation]]
+    addList: Dict[Atom, Set[Operation]]
+    delList: Dict[Atom, Set[Operation]]
+    assList: Dict[Atom, Set[Operation]]
 
     def __init__(self, name: str, actions: Set[Action], events: Set[Event], process: Set[Process]):
         super().__init__()
@@ -128,39 +136,42 @@ class GroundedDomain(Domain):
         self.operations.update(self.events)
         self.operations.update(self.processes)
 
-        self.functions = set()
-        self.predicates = set()
-        self.pre: Dict[Atom, List[Operation]] = dict()
-        self.preN: Dict[Atom, List[Operation]] = dict()
-        self.preB: Dict[Atom, List[Operation]] = dict()
-        self.addList: Dict[Atom, List[Operation]] = dict()
-        self.delList: Dict[Atom, List[Operation]] = dict()
-        self.assList: Dict[Atom, List[Operation]] = dict()
+        self.functions: Set[Atom] = set()
+        self.predicates: Set[Atom] = set()
+        self.allAtoms: Set[Atom] = set()
+        self.pre: Dict[Atom, Set[Operation]] = dict()
+        self.preN: Dict[Atom, Set[Operation]] = dict()
+        self.preB: Dict[Atom, Set[Operation]] = dict()
+        self.addList: Dict[Atom, Set[Operation]] = dict()
+        self.delList: Dict[Atom, Set[Operation]] = dict()
+        self.assList: Dict[Atom, Set[Operation]] = dict()
 
         for op in self.operations:
             self.__operationsDict[op.planName] = op
-            self.functions = self.functions | op.getFunctions()
-            self.predicates = self.predicates | op.getPredicates()
+            self.functions |= op.getFunctions()
+            self.predicates |= op.getPredicates()
 
             for v in op.getPreN():
-                self.preN.setdefault(v, [])
-                self.preN[v].append(op)
-                self.pre.setdefault(v, [])
-                self.pre[v].append(op)
+                self.preN.setdefault(v, set())
+                self.preN[v].add(op)
+                self.pre.setdefault(v, set())
+                self.pre[v].add(op)
             for v in op.getPreB():
-                self.preB.setdefault(v, [])
-                self.preB[v].append(op)
-                self.pre.setdefault(v, [])
-                self.pre[v].append(op)
+                self.preB.setdefault(v, set())
+                self.preB[v].add(op)
+                self.pre.setdefault(v, set())
+                self.pre[v].add(op)
             for v in op.getAddList():
-                self.addList.setdefault(v, [])
-                self.addList[v].append(op)
+                self.addList.setdefault(v, set())
+                self.addList[v].add(op)
             for v in op.getDelList():
-                self.delList.setdefault(v, [])
-                self.delList[v].append(op)
+                self.delList.setdefault(v, set())
+                self.delList[v].add(op)
             for v in op.getAssList():
-                self.assList.setdefault(v, [])
-                self.assList[v].append(op)
+                self.assList.setdefault(v, set())
+                self.assList[v].add(op)
+
+        self.allAtoms = self.functions | self.predicates
 
     def getOperationByPlanName(self, planName) -> Operation:
         return self.__operationsDict[planName]

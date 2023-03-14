@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 import itertools
 from itertools import product
 from typing import Dict, Tuple, List, Set
 
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
+
 from Literal import Literal
+from Predicate import Predicate
 from antlr4_directory.pddlParser import pddlParser as p
 from OperationType import OperationType
 from Parameter import Parameter
@@ -22,6 +26,8 @@ class Operation:
 
     def __init__(self):
         self.parameters = list()
+        self.preconditions = Preconditions()
+        self.effects = Effects()
 
     @classmethod
     def fromNode(cls, node: p.ActionContext or p.EventContext or p.ProcessContext):
@@ -109,45 +115,69 @@ class Operation:
     def getPredicates(self) -> Set[Atom]:
         return self.preconditions.getPredicates() | self.effects.getPredicates()
 
-    def getPreN(self) -> Set[Atom]:
-        atomList: Set[Atom] = set()
-        for c in self.preconditions:
-            if not isinstance(c, BinaryPredicate):
-                continue
-            atomList = atomList | {c.getAtom()}
-        return atomList
-        pass
-
-    def getPreB(self) -> Set[Atom]:
-        atomList: Set[Atom] = set()
-        for c in self.preconditions:
-            if not isinstance(c, Literal):
-                continue
-            atomList = atomList | {c.getAtom()}
-        return atomList
-        pass
-
-    def getLiteralList(self, sign: str) -> Set[Atom]:
+    def getModifiedPredicates(self, sign: str = None) -> Set[Atom]:
         atomList: Set[Atom] = set()
         for c in self.effects:
-            if not isinstance(c, Literal) or c.sign != sign:
+            if not isinstance(c, Literal) or (sign is not None and c.sign != sign):
                 continue
             atomList = atomList | c.getPredicates()
         return atomList
 
-    def getModificationList(self, modificator: str) -> Set[Atom]:
+    def getPreconditionAtoms(self, preconditionClass) -> Set[Atom]:
+        atomList: Set[Atom] = set()
+        for c in self.preconditions:
+            if not isinstance(c, preconditionClass):
+                continue
+            atomList = atomList | {c.getAtom()}
+        return atomList
+
+    def getModifiedFunctions(self, operator: str = None) -> Set[Atom]:
         atomList: Set[Atom] = set()
         for c in self.effects:
-            if not isinstance(c, BinaryPredicate) or c.operator != modificator:
+            if not isinstance(c, BinaryPredicate) or (operator is not None and c.operator != operator):
                 continue
             atomList = atomList | c.getFunctions()
         return atomList
 
+    def getModificationOperations(self, operator: str = None) -> Dict[Atom, Predicate]:
+        modification = dict()
+        for c in self.effects:
+            if not isinstance(c, BinaryPredicate) or (operator is not None and c.operator != operator):
+                continue
+            modification[c.getAtom()] = c.rhs
+        return modification
+
+    def getPreN(self) -> Set[Atom]:
+        return self.getPreconditionAtoms(BinaryPredicate)
+
+    def getPreB(self) -> Set[Atom]:
+        return self.getPreconditionAtoms(Literal)
+
     def getAddList(self) -> Set[Atom]:
-        return self.getLiteralList("+") | self.getModificationList("increase")
+        return self.getModifiedPredicates("+")
 
     def getDelList(self) -> Set[Atom]:
-        return self.getLiteralList("-") | self.getModificationList("decrease")
+        return self.getModifiedPredicates("-")
 
     def getAssList(self) -> Set[Atom]:
-        return self.getModificationList("assign")
+        return self.getModifiedFunctions("assign")
+
+    def getInfluencedAtoms(self):
+        return self.getModifiedPredicates() | self.getModifiedFunctions()
+
+    def getIncreases(self) -> Dict[Atom, Predicate]:
+        return self.getModificationOperations("increase")
+
+    def getDecreases(self) -> Dict[Atom, Predicate]:
+        return self.getModificationOperations("decrease")
+
+    def getAssignments(self) -> Dict[Atom, Predicate]:
+        return self.getModificationOperations("assign")
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other: Operation):
+        if not isinstance(other, Operation):
+            return False
+        return self.name == other.name
