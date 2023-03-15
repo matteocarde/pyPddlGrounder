@@ -21,8 +21,11 @@ class Conditions:
         nodes: [p.PreconditionContext] = []
         if isinstance(node.getChild(0), p.AndPreconditionContext) or isinstance(node.getChild(0), p.AndEffectContext):
             nodes.extend([n.getChild(0) for n in node.getChild(0).children[2:-1]])
+        elif isinstance(node.getChild(0), p.EmptyPreconditionContext):
+            return conditions
         else:
             nodes.append(node.getChild(0))
+
 
         for node in nodes:
             if isinstance(node, p.BooleanLiteralContext):

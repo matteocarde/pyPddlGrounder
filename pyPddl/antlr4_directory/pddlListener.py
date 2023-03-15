@@ -350,6 +350,15 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#emptyPrecondition.
+    def enterEmptyPrecondition(self, ctx:pddlParser.EmptyPreconditionContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#emptyPrecondition.
+    def exitEmptyPrecondition(self, ctx:pddlParser.EmptyPreconditionContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#preconditions.
     def enterPreconditions(self, ctx:pddlParser.PreconditionsContext):
         pass

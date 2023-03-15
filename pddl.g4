@@ -81,7 +81,8 @@ effect:  booleanLiteral | modification;
 
 andPrecondition: LP 'and' precondition+ RP;
 andEffect : LP 'and' effect+ RP;
-preconditions: precondition | andPrecondition;
+emptyPrecondition: LP RP;
+preconditions: precondition | andPrecondition | emptyPrecondition;
 effects: effect | andEffect;
 
 parameters: LP typedAtomParameter* RP;
