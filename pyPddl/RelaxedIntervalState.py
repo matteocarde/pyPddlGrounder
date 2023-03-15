@@ -28,7 +28,7 @@ class RelaxedIntervalState:
     def applySupporters(self, activeSupporters: Set[Supporter]):
 
         state = RelaxedIntervalState()
-        state.__intervals = self.__intervals
+        state.__intervals = self.__intervals.copy()
 
         for supporter in activeSupporters:
             atom = supporter.effect.atom

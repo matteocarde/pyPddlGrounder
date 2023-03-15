@@ -18,6 +18,13 @@ class Literal(Predicate):
         super().__init__()
 
     @classmethod
+    def fromAtom(cls, atom: Atom, sign: str):
+        lit = cls()
+        lit.atom = atom
+        lit.sign = sign
+        return lit
+
+    @classmethod
     def fromNode(cls, node: p.PositiveLiteralContext or p.NegativeLiteralContext) -> Literal:
         literal = cls()
 

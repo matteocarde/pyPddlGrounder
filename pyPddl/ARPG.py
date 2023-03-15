@@ -12,12 +12,12 @@ class ARPG:
     __supporterLevels: List[Set[Supporter]]
     __stateLevels: List[RelaxedIntervalState]
 
-    def __init__(self, domain: Domain, problem: Problem):
+    def __init__(self, actions: Set[Action], problem: Problem):
         self.__supporterLevels = list()
         self.__stateLevels = list()
 
         supporters: Set[Supporter] = set()
-        for a in domain.actions:
+        for a in actions:
             supporters |= a.getSupporters()
 
         state: RelaxedIntervalState = RelaxedIntervalState.fromInitialCondition(problem.init)
