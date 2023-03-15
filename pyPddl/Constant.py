@@ -17,6 +17,12 @@ class Constant(Predicate):
         self.isDelta = False
 
     @classmethod
+    def fromValue(cls, value: float):
+        c = cls()
+        c.value = value
+        return c
+
+    @classmethod
     def fromNode(cls, node: pddlParser.ConstantContext or pddlParser.NumberContext) -> Constant:
 
         constant = cls()

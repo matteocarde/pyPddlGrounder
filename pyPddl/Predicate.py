@@ -3,6 +3,8 @@ from __future__ import annotations
 from typing import Dict, Set
 
 from Atom import Atom
+from MooreInterval import MooreInterval
+from Utilities import Utilities
 
 
 class Predicate:
@@ -29,3 +31,41 @@ class Predicate:
 
     def __hash__(self):
         return hash(str(self))
+
+    def __operation(self, other, operator: str):
+        from BinaryPredicate import BinaryPredicate, BinaryPredicateType
+        from Constant import Constant
+        op = BinaryPredicate()
+        op.lhs = self
+        op.rhs = Constant.fromValue(other) if isinstance(other, float) or isinstance(other, int) else other
+        op.operator = operator
+        if operator in {"+", "-", "*", "/"}:
+            op.type = BinaryPredicateType.OPERATION
+        if operator in {">", ">=", "<=", "<", "="}:
+            op.type = BinaryPredicateType.COMPARATION
+        return op
+
+    def __sub__(self, other):
+        return self.__operation(other, "-")
+
+    def __gt__(self, other):
+        return self.__operation(other, ">")
+
+    def __lt__(self, other):
+        return self.__operation(other, "<")
+
+    def substitute(self, relaxedState) -> MooreInterval:
+        from Constant import Constant
+        from BinaryPredicate import BinaryPredicate
+        from Literal import Literal
+        if isinstance(self, Constant):
+            return MooreInterval(self.value, self.value)
+        if isinstance(self, Literal):
+            return relaxedState.getAtom(self.getAtom())
+        if isinstance(self, BinaryPredicate):
+            lhs = self.lhs.substitute(relaxedState)
+            rhs = self.rhs.substitute(relaxedState)
+            return Utilities.op(self.operator, lhs, rhs)
+
+    def isSatisfiedByRelaxedState(self, relaxedState):
+        raise NotImplemented()

@@ -1,8 +1,11 @@
 # Ciao
 
 from __future__ import annotations
-from typing import List, Dict, cast
+from typing import List, Dict, cast, Set
 
+from BinaryPredicate import BinaryPredicate
+from Constant import Constant
+from Supporter import Supporter, SupporterEffect
 from antlr4_directory.pddlParser import pddlParser as p
 from Operation import Operation
 from OperationType import OperationType
@@ -32,3 +35,30 @@ class Action(Operation):
             action.planName = op.planName
             groundOps.append(action)
         return groundOps
+
+    def getSupporters(self) -> Set[Supporter]:
+        supporters: Set[Supporter] = set()
+
+        for effect in self.effects:
+            if not isinstance(effect, BinaryPredicate):
+                continue
+            if effect.operator == "assign" and isinstance(effect.rhs, Constant):
+                s = Supporter(self, self.preconditions, SupporterEffect(effect.lhs.getAtom(), effect.rhs.value))
+                supporters.add(s)
+                continue
+
+            # Additive Effects Transformation
+            if effect.operator == "assign" and isinstance(effect.rhs, BinaryPredicate):
+                effect = BinaryPredicate.additiveEffectsTransformation(effect)
+
+            dir_plus = float("+inf") if effect.operator == "increase" else float("-inf")
+            dir_minus = float("-inf") if effect.operator == "increase" else float("+inf")
+
+            pre_plus = self.preconditions + [effect.rhs > 0]
+            pre_minus = self.preconditions + [effect.rhs < 0]
+
+            e_plus = Supporter(self, pre_plus, SupporterEffect(effect.lhs.getAtom(), dir_plus))
+            e_minus = Supporter(self, pre_minus, SupporterEffect(effect.lhs.getAtom(), dir_minus))
+            supporters |= {e_plus, e_minus}
+
+        return supporters

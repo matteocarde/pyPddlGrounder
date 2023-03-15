@@ -4,10 +4,11 @@ from enum import Enum
 from typing import Dict, Set
 
 from Atom import Atom
-from antlr4_directory.pddlParser import pddlParser as p
 from Constant import Constant
 from Literal import Literal
+from MooreInterval import MooreInterval
 from Predicate import Predicate
+from antlr4_directory.pddlParser import pddlParser as p
 
 
 class BinaryPredicateType(Enum):
@@ -86,3 +87,20 @@ class BinaryPredicate(Predicate):
 
     def __repr__(self):
         return str(self)
+
+    @staticmethod
+    def additiveEffectsTransformation(effect: BinaryPredicate):
+        x = BinaryPredicate()
+        x.lhs = effect.lhs
+        x.operator = "increase"
+        x.rhs = effect.rhs - effect.lhs
+        return x
+
+    def isSatisfiedByRelaxedState(self, relaxedState):
+        if self.operator not in {">=", ">", "<=", "<", "="}:
+            raise Exception(f"Cannot check satisfaction for precondition with operator '{self.operator}'")
+
+        function: BinaryPredicate = self.lhs - self.rhs
+        interval: MooreInterval = function.substitute(relaxedState)
+
+        return interval.exists(self.operator, 0)

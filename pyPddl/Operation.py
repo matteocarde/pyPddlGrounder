@@ -1,20 +1,18 @@
 from __future__ import annotations
 
 import itertools
-from itertools import product
-from typing import Dict, Tuple, List, Set
+from typing import Dict, List, Set
 
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
-
+from Effects import Effects
 from Literal import Literal
-from Predicate import Predicate
-from antlr4_directory.pddlParser import pddlParser as p
 from OperationType import OperationType
 from Parameter import Parameter
-from Problem import Problem
-from Effects import Effects
 from Preconditions import Preconditions
+from Predicate import Predicate
+from Problem import Problem
+from antlr4_directory.pddlParser import pddlParser as p
 
 
 class Operation:

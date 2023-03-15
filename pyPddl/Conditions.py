@@ -3,10 +3,10 @@ from __future__ import annotations
 from itertools import chain
 from typing import Dict
 
-from antlr4_directory.pddlParser import pddlParser as p
-from Predicate import Predicate
 from BinaryPredicate import BinaryPredicate
 from Literal import Literal
+from Predicate import Predicate
+from antlr4_directory.pddlParser import pddlParser as p
 
 
 class Conditions:
@@ -25,7 +25,6 @@ class Conditions:
             return conditions
         else:
             nodes.append(node.getChild(0))
-
 
         for node in nodes:
             if isinstance(node, p.BooleanLiteralContext):
@@ -52,3 +51,16 @@ class Conditions:
 
     def __repr__(self):
         return str(self.conditions)
+
+    def __add__(self, other):
+        c = Conditions()
+        c.conditions = self.conditions + other
+        return c
+
+    def areSatisfiedBy(self, state) -> bool:
+        satisfied = True
+        for pre in self.conditions:
+            if not pre.isSatisfiedByRelaxedState(state):
+                return False
+
+        return satisfied

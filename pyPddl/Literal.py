@@ -70,3 +70,6 @@ class Literal(Predicate):
 
     def __hash__(self):
         return hash(self.sign + str(self.atom))
+
+    def isSatisfiedByRelaxedState(self, relaxedState):
+        return True

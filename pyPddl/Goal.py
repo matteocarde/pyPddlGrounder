@@ -14,3 +14,6 @@ class Goal(Preconditions):
     @classmethod
     def fromNode(cls, node: pddlParser.GoalContext) -> Goal:
         return cast(Goal, super().fromNode(node.getChild(2)))
+
+    def isSatisfiedBy(self, state) -> bool:
+        return self.areSatisfiedBy(state)

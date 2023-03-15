@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, cast
 
-from antlr4_directory.pddlParser import pddlParser
 from Conditions import Conditions
+from antlr4_directory.pddlParser import pddlParser
 
 
 class Preconditions(Conditions):
@@ -20,3 +20,4 @@ class Preconditions(Conditions):
         p.conditions = [predicate.ground(sub) for predicate in self.conditions]
 
         return p
+
