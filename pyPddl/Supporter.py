@@ -27,7 +27,7 @@ class Supporter:
         pass
 
     def isSatisfiedBy(self, state) -> bool:
-        return self.preconditions.areSatisfiedBy(state)
+        return state.satisfies(self.preconditions)
 
     def __str__(self):
         return f"<{self.preconditions}, {self.effect}>"

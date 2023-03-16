@@ -57,10 +57,3 @@ class Conditions:
         c.conditions = self.conditions + other
         return c
 
-    def areSatisfiedBy(self, state) -> bool:
-        satisfied = True
-        for pre in self.conditions:
-            if not pre.isSatisfiedByRelaxedState(state):
-                return False
-
-        return satisfied

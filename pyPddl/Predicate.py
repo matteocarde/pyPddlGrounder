@@ -53,19 +53,3 @@ class Predicate:
 
     def __lt__(self, other):
         return self.__operation(other, "<")
-
-    def substitute(self, relaxedState) -> MooreInterval:
-        from Constant import Constant
-        from BinaryPredicate import BinaryPredicate
-        from Literal import Literal
-        if isinstance(self, Constant):
-            return MooreInterval(self.value, self.value)
-        if isinstance(self, Literal):
-            return relaxedState.getAtom(self.getAtom())
-        if isinstance(self, BinaryPredicate):
-            lhs = self.lhs.substitute(relaxedState)
-            rhs = self.rhs.substitute(relaxedState)
-            return Utilities.op(self.operator, lhs, rhs)
-
-    def isSatisfiedByRelaxedState(self, relaxedState):
-        raise NotImplemented()

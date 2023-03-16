@@ -95,12 +95,3 @@ class BinaryPredicate(Predicate):
         x.operator = "increase"
         x.rhs = effect.rhs - effect.lhs
         return x
-
-    def isSatisfiedByRelaxedState(self, relaxedState):
-        if self.operator not in {">=", ">", "<=", "<", "="}:
-            raise Exception(f"Cannot check satisfaction for precondition with operator '{self.operator}'")
-
-        function: BinaryPredicate = self.lhs - self.rhs
-        interval: MooreInterval = function.substitute(relaxedState)
-
-        return interval.exists(self.operator, 0)

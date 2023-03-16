@@ -6,11 +6,19 @@ from antlr4 import *
 from antlr4_directory.pddlLexer import pddlLexer
 from antlr4_directory.pddlParser import pddlParser
 
-OPS = {
+OPERATORS = {
     "+": operator.add,
     "-": operator.sub,
     "*": operator.mul,
     "/": operator.truediv
+}
+
+COMPARATORS = {
+    ">=": operator.ge,
+    "<=": operator.le,
+    ">": operator.gt,
+    "<": operator.lt,
+    "=": operator.eq,
 }
 
 
@@ -29,4 +37,8 @@ class Utilities:
 
     @staticmethod
     def op(op: str, left, right):
-        return OPS[op](left, right)
+        return OPERATORS[op](left, right)
+
+    @staticmethod
+    def compare(op: str, left, right):
+        return COMPARATORS[op](left, right)
