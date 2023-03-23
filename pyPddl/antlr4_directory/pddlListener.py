@@ -305,21 +305,21 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#negatedComparation.
+    def enterNegatedComparation(self, ctx:pddlParser.NegatedComparationContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#negatedComparation.
+    def exitNegatedComparation(self, ctx:pddlParser.NegatedComparationContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#modification.
     def enterModification(self, ctx:pddlParser.ModificationContext):
         pass
 
     # Exit a parse tree produced by pddlParser#modification.
     def exitModification(self, ctx:pddlParser.ModificationContext):
-        pass
-
-
-    # Enter a parse tree produced by pddlParser#precondition.
-    def enterPrecondition(self, ctx:pddlParser.PreconditionContext):
-        pass
-
-    # Exit a parse tree produced by pddlParser#precondition.
-    def exitPrecondition(self, ctx:pddlParser.PreconditionContext):
         pass
 
 
@@ -332,12 +332,21 @@ class pddlListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#andPrecondition.
-    def enterAndPrecondition(self, ctx:pddlParser.AndPreconditionContext):
+    # Enter a parse tree produced by pddlParser#andClause.
+    def enterAndClause(self, ctx:pddlParser.AndClauseContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#andPrecondition.
-    def exitAndPrecondition(self, ctx:pddlParser.AndPreconditionContext):
+    # Exit a parse tree produced by pddlParser#andClause.
+    def exitAndClause(self, ctx:pddlParser.AndClauseContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#orClause.
+    def enterOrClause(self, ctx:pddlParser.OrClauseContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#orClause.
+    def exitOrClause(self, ctx:pddlParser.OrClauseContext):
         pass
 
 

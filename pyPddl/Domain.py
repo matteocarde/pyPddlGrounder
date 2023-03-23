@@ -139,8 +139,6 @@ class GroundedDomain(Domain):
         self.functions: Set[Atom] = set()
         self.predicates: Set[Atom] = set()
         self.allAtoms: Set[Atom] = set()
-        self.pre: Dict[Atom, Set[Operation]] = dict()
-        self.preN: Dict[Atom, Set[Operation]] = dict()
         self.preB: Dict[Atom, Set[Operation]] = dict()
         self.addList: Dict[Atom, Set[Operation]] = dict()
         self.delList: Dict[Atom, Set[Operation]] = dict()
@@ -151,16 +149,9 @@ class GroundedDomain(Domain):
             self.functions |= op.getFunctions()
             self.predicates |= op.getPredicates()
 
-            for v in op.getPreN():
-                self.preN.setdefault(v, set())
-                self.preN[v].add(op)
-                self.pre.setdefault(v, set())
-                self.pre[v].add(op)
             for v in op.getPreB():
                 self.preB.setdefault(v, set())
                 self.preB[v].add(op)
-                self.pre.setdefault(v, set())
-                self.pre[v].add(op)
             for v in op.getAddList():
                 self.addList.setdefault(v, set())
                 self.addList[v].add(op)

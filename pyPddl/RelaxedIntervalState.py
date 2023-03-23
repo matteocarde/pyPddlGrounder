@@ -2,7 +2,7 @@ from typing import Dict, Set
 
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
-from Conditions import Conditions
+from Formula import Formula
 from Constant import Constant
 from Literal import Literal
 from MooreInterval import MooreInterval
@@ -42,7 +42,7 @@ class RelaxedIntervalState:
 
         return state
 
-    def satisfies(self, c: Conditions) -> bool:
+    def satisfies(self, c: Formula) -> bool:
         satisfied = True
         for pre in c.conditions:
             if not self.satisfiesPredicate(pre):

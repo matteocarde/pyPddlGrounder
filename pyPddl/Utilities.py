@@ -19,6 +19,16 @@ COMPARATORS = {
     ">": operator.gt,
     "<": operator.lt,
     "=": operator.eq,
+    "!=": operator.ne
+}
+
+INVERSE_COMPARATORS = {
+    ">=": "<",
+    "<=": ">",
+    ">": "<=",
+    "<": ">=",
+    "=": "!=",
+    "!=": "="
 }
 
 
@@ -42,3 +52,7 @@ class Utilities:
     @staticmethod
     def compare(op: str, left, right):
         return COMPARATORS[op](left, right)
+
+    @classmethod
+    def inverted(cls, op: str):
+        return INVERSE_COMPARATORS[op]

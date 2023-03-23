@@ -74,15 +74,16 @@ operation: LP operator operationSide operationSide RP;
 
 assignment: LP '=' positiveLiteral assignmentSide RP;
 comparation: LP comparator operationSide operationSide RP;
+negatedComparation: LP 'not' comparation RP;
 modification: LP modificator positiveLiteral operationSide RP;
 
-precondition: booleanLiteral | comparation;
 effect:  booleanLiteral | modification;
 
-andPrecondition: LP 'and' precondition+ RP;
+andClause: LP 'and' (andClause | orClause | booleanLiteral | negatedComparation | comparation)+ RP;
+orClause: LP 'or' (andClause | orClause | booleanLiteral | negatedComparation | comparation)+ RP;
 andEffect : LP 'and' effect+ RP;
 emptyPrecondition: LP RP;
-preconditions: precondition | andPrecondition | emptyPrecondition;
+preconditions: andClause | orClause | booleanLiteral | negatedComparation | comparation | emptyPrecondition;
 effects: effect | andEffect;
 
 parameters: LP typedAtomParameter* RP;

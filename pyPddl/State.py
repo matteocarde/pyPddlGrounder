@@ -3,7 +3,7 @@ from typing import Dict, Set
 from Action import Action
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
-from Conditions import Conditions
+from Formula import Formula
 from Constant import Constant
 from InitialCondition import InitialCondition
 from Literal import Literal
@@ -47,7 +47,7 @@ class State:
 
         return state
 
-    def satisfies(self, c: Conditions) -> bool:
+    def satisfies(self, c: Formula) -> bool:
         satisfied = True
         for pre in c.conditions:
             if not self.satisfiesPredicate(pre):

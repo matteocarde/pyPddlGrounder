@@ -1,58 +1,31 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Dict, Set
+from typing import Dict, Set, List
 
 from Atom import Atom
+from BinaryPredicate import BinaryPredicate
 from Constant import Constant
 from Literal import Literal
 from MooreInterval import MooreInterval
 from Predicate import Predicate
-from Utilities import Utilities
 from antlr4_directory.pddlParser import pddlParser as p
 
 
-class BinaryPredicateType(Enum):
-    MODIFICATION = "modification"
-    OPERATION = "operation"
-    COMPARATION = "comparation"
-
-
-class BinaryPredicate(Predicate):
+class ListPredicate(Predicate):
     operator: str
-    lhs: BinaryPredicate or Literal or Constant
-    rhs: BinaryPredicate or Literal or Constant
-    type: BinaryPredicateType
+    list: List[Predicate]
 
     def __init__(self):
         super().__init__()
         self.__functions = None
 
     @classmethod
-    def fromNode(cls, node: p.ModificationContext or p.ComparationContext or p.OperationContext) -> BinaryPredicate:
-        bp = cls()
+    def fromNode(cls, node: p.OrClauseContext or p.AndClauseContext) -> BinaryPredicate:
+        if not isinstance(node, p.OrClauseContext) or not isinstance(node, p.AndClauseContext):
+            raise Exception("Expected OR or AND")
 
-        if isinstance(node, p.NegatedComparationContext):
-            bp = BinaryPredicate.fromNode(node.getChild(2))
-            bp.operator = Utilities.inverted(bp.operator)
-            return bp
-
-        if type(node) not in {p.ModificationContext, p.ComparationContext, p.OperationContext, p.AssignmentContext}:
-            raise Exception("Incorrect Binary Predicate Type: ", type(node))
-
-        bp.operator = node.getChild(1).getText()
-        bp.rhs = bp.__assignClass(node.getChild(3))
-        lhsNode = node.getChild(2)
-
-        bp.lhs = bp.__assignClass(lhsNode) if type(node) in {p.ComparationContext,
-                                                             p.OperationContext} else Literal.fromNode(lhsNode)
-
-        if type(node) in {p.ModificationContext, p.AssignmentContext}:
-            bp.type = BinaryPredicateType.MODIFICATION
-        elif isinstance(node, p.ComparationContext):
-            bp.type = BinaryPredicateType.COMPARATION
-        elif isinstance(node, p.OperationContext):
-            bp.type = BinaryPredicateType.OPERATION
+        lp = cls()
 
         return bp
 
