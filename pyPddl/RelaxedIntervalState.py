@@ -42,17 +42,39 @@ class RelaxedIntervalState:
 
         return state
 
-    def satisfies(self, c: Formula) -> bool:
+    def __satisfiesAnd(self, formula: Formula):
         satisfied = True
-        for pre in c.conditions:
-            if not self.satisfiesPredicate(pre):
+        for c in formula.conditions:
+            if isinstance(c, Predicate) and not self.satisfiesPredicate(c):
+                return False
+            if isinstance(c, Formula) and c.type == "AND" and not self.__satisfiesAnd(c):
+                return False
+            if isinstance(c, Formula) and c.type == "OR" and not self.__satisfiesOr(c):
                 return False
 
         return satisfied
 
+    def __satisfiesOr(self, formula: Formula):
+        satisfied = False
+        for c in formula.conditions:
+            if isinstance(c, Predicate) and self.satisfiesPredicate(c):
+                return True
+            if isinstance(c, Formula) and c.type == "AND" and self.__satisfiesAnd(c):
+                return True
+            if isinstance(c, Formula) and c.type == "OR" and self.__satisfiesOr(c):
+                return True
+
+        return satisfied
+
+    def satisfies(self, c: Formula) -> bool:
+        return self.__satisfiesAnd(c) if c.type == "AND" else self.__satisfiesOr(c)
+
     def satisfiesPredicate(self, p: Predicate):
 
         if isinstance(p, Literal) or not isinstance(p, BinaryPredicate):
+            return True
+
+        if p.operator == "!=":
             return True
 
         if p.operator not in {">=", ">", "<=", "<", "="}:

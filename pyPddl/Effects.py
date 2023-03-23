@@ -36,7 +36,7 @@ class Effects:
 
     def ground(self, sub: Dict[str, str]) -> Effects:
         e = Effects()
-        e.conditions = [predicate.ground(sub) for predicate in self.assignments]
+        e.assignments = [predicate.ground(sub) for predicate in self.assignments]
         return e
 
     def getFunctions(self):

@@ -15,6 +15,7 @@ class Formula:
     conditions: [Formula or Predicate]
 
     def __init__(self):
+        self.type = "AND"
         self.conditions = list()
 
     @classmethod
@@ -27,8 +28,9 @@ class Formula:
         clauses = []
 
         formulaComponent = node.getChild(0) if type(node) == p.PreconditionsContext else node
+        formula.type = "OR" if type(formulaComponent) == p.OrClauseContext else "AND"
         if isinstance(formulaComponent, p.BooleanLiteralContext):
-            clauses.append(formulaComponent.getChild(0))
+            clauses.append(formulaComponent)
         elif type(formulaComponent) in {p.ComparationContext, p.NegatedComparationContext}:
             clauses.append(formulaComponent)
         elif type(formulaComponent) in {p.AndClauseContext, p.OrClauseContext}:
@@ -40,7 +42,7 @@ class Formula:
             if type(clause) in {p.AndClauseContext, p.OrClauseContext}:
                 formula.conditions.append(Formula.fromNode(clause))
             elif isinstance(clause, p.BooleanLiteralContext):
-                formula.conditions.append(Literal.fromNode(clause))
+                formula.conditions.append(Literal.fromNode(clause.getChild(0)))
             elif type(clause) in {p.ComparationContext, p.NegatedComparationContext}:
                 formula.conditions.append(BinaryPredicate.fromNode(clause))
 
@@ -67,7 +69,7 @@ class Formula:
         return iter(self.conditions)
 
     def __str__(self):
-        return str(self.conditions)
+        return f"{self.type}({self.conditions})"
 
     def __repr__(self):
         return str(self.conditions)
