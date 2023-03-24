@@ -115,5 +115,16 @@ class BinaryPredicate(Predicate):
         x.operator = self.operator
         x.rhs = self.rhs.substitute(subs, default)
         x.type = self.type
+        x.__functions = self.__functions
 
         return x
+
+    def getLinearIncrement(self) -> float:
+        li = 0
+        if self.type != BinaryPredicateType.OPERATION:
+            raise Exception("Cannot get linear increment since Binary Predicate is not an operation")
+
+        if len(self.lhs.getFunctions()) > 0 and len(self.rhs.getFunctions()) > 0 and self.operator in {"*", "/"}:
+            raise Exception("Cannot get linear increment in a non linear function ", self)
+
+        return Utilities.op(self.operator, self.lhs.getLinearIncrement(), self.rhs.getLinearIncrement())

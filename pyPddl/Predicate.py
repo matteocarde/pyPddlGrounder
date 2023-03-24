@@ -56,3 +56,6 @@ class Predicate:
 
     def substitute(self, subs: Dict[Atom, float], default=None) -> Predicate:
         raise NotImplemented()
+
+    def getLinearIncrement(self) -> float:
+        raise NotImplemented

@@ -90,3 +90,6 @@ class Literal(Predicate):
             c = Constant()
             c.value = subs[self.atom]
             return c
+
+    def getLinearIncrement(self) -> float:
+        return 0
