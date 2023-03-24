@@ -6,6 +6,7 @@ from typing import List, Dict, cast, Set
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
 from Constant import Constant
+from MooreInterval import MooreInterval
 from Supporter import Supporter, SupporterEffect
 from antlr4_directory.pddlParser import pddlParser as p
 from Operation import Operation
@@ -41,6 +42,20 @@ class Action(Operation):
     def getSupporters(self) -> Set[Supporter]:
         supporters: Set[Supporter] = set()
 
+        simpleIntervals: Dict[Atom, MooreInterval] = dict()
+        for c in self.preconditions:
+            if not isinstance(c, BinaryPredicate) or len(c.getFunctions()) > 1:
+                continue
+            atom = c.getFunctions().pop()
+            interval = c.getIntervalFromSimpleCondition()
+            if not interval:
+                continue
+            if atom in simpleIntervals:
+                other = simpleIntervals[atom]
+                simpleIntervals[atom] = other.intersecate(interval)
+            else:
+                simpleIntervals[atom] = interval
+
         for effect in self.effects:
             if not isinstance(effect, BinaryPredicate):
                 continue
@@ -53,14 +68,24 @@ class Action(Operation):
             if effect.operator == "assign" and isinstance(effect.rhs, BinaryPredicate):
                 effect = BinaryPredicate.additiveEffectsTransformation(effect)
 
-            dir_plus = float("+inf") if effect.operator == "increase" else float("-inf")
-            dir_minus = float("-inf") if effect.operator == "increase" else float("+inf")
+            atom = effect.getAtom()
+            interval = MooreInterval()
+
+            if atom in simpleIntervals and len(effect.rhs.getFunctions()) == 0:
+                interval = simpleIntervals[atom]
+                if effect.operator == "increase":
+                    interval.ub = float(interval.ub + effect.rhs.toExpression())
+                if effect.operator == "decrease":
+                    interval.lb = float(interval.lb - effect.rhs.toExpression())
+
+            dir_plus = interval.ub if effect.operator == "increase" else interval.lb
+            dir_minus = interval.lb if effect.operator == "increase" else interval.ub
 
             pre_plus = self.preconditions + [effect.rhs > 0]
             pre_minus = self.preconditions + [effect.rhs < 0]
 
-            e_plus = Supporter(self, pre_plus, SupporterEffect(effect.lhs.getAtom(), dir_plus))
-            e_minus = Supporter(self, pre_minus, SupporterEffect(effect.lhs.getAtom(), dir_minus))
+            e_plus = Supporter(self, pre_plus, SupporterEffect(atom, dir_plus))
+            e_minus = Supporter(self, pre_minus, SupporterEffect(atom, dir_minus))
             supporters |= {e_plus, e_minus}
 
         return supporters

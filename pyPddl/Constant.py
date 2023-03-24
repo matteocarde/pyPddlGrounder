@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, Set
 
+from sympy import Expr
+
 from Atom import Atom
 from antlr4_directory.pddlParser import pddlParser
 from Predicate import Predicate
@@ -11,9 +13,9 @@ class Constant(Predicate):
     value: float
     isDelta: bool
 
-    def __init__(self):
+    def __init__(self, value=0):
         super().__init__()
-        self.value = 0
+        self.value = value
         self.isDelta = False
 
     @classmethod
@@ -62,4 +64,7 @@ class Constant(Predicate):
         return self
 
     def getLinearIncrement(self) -> float:
+        return self.value
+
+    def toExpression(self) -> Expr or float:
         return self.value

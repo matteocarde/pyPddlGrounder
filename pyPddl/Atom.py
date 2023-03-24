@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Dict
 
+from sympy import Symbol, Expr
+
 from antlr4_directory.pddlParser import pddlParser as p
 
 
@@ -52,3 +54,6 @@ class Atom:
         parameters = ','.join([a for a in self.attributes])
         parenthesis = f"({parameters})" if self.attributes else ""
         return f"\\alpha_{{{self.name}}}{parenthesis}"
+
+    def toExpression(self) -> Expr:
+        return Symbol(self.toFunctionName())

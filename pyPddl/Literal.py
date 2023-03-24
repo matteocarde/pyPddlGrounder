@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from typing import Dict, Set
 
 from antlr4 import InputStream, CommonTokenStream
+from sympy import Expr, Symbol
 
 from Constant import Constant
 from antlr4_directory.pddlLexer import pddlLexer
@@ -93,3 +95,6 @@ class Literal(Predicate):
 
     def getLinearIncrement(self) -> float:
         return 0
+
+    def toExpression(self) -> Expr:
+        return self.atom.toExpression()

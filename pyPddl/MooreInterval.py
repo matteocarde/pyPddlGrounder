@@ -41,6 +41,9 @@ class MooreInterval:
     def merge(self, other: MooreInterval):
         return MooreInterval(min(self.lb, other.lb), max(self.ub, other.ub))
 
+    def intersecate(self, other: MooreInterval):
+        return MooreInterval(max(self.lb, other.lb), min(self.ub, other.ub))
+
     def exists(self, operator: str, value: float):
         if operator == ">":
             return self.ub > value
@@ -56,10 +59,10 @@ class MooreInterval:
             return self.lb >= value >= self.ub
 
     def getExtended(self, eff) -> MooreInterval:
-        if eff.value == float("+inf"):
-            return self.merge(MooreInterval(self.lb, float("+inf")))
-        if eff.value == float("-inf"):
-            return self.merge(MooreInterval(float("-inf"), self.ub))
+        if eff.value > self.lb:
+            return self.merge(MooreInterval(self.lb, eff.value))
+        if eff.value < self.ub:
+            return self.merge(MooreInterval(eff.value, self.ub))
         return self.merge(MooreInterval(eff.value, eff.value))
 
     def __str__(self):

@@ -3,6 +3,8 @@ from __future__ import annotations
 from enum import Enum
 from typing import Dict, Set
 
+from sympy import Expr, diff
+
 from Atom import Atom
 from Constant import Constant
 from Literal import Literal
@@ -94,6 +96,10 @@ class BinaryPredicate(Predicate):
             self.__functions = self.lhs.getFunctions() | self.rhs.getFunctions()
         return self.__functions
 
+    def getFunctionsOverwrite(self) -> Set[Atom]:
+        self.__functions = self.lhs.getFunctions() | self.rhs.getFunctions()
+        return self.__functions
+
     def __str__(self):
         return f"({self.operator} {self.lhs} {self.rhs})"
 
@@ -115,7 +121,7 @@ class BinaryPredicate(Predicate):
         x.operator = self.operator
         x.rhs = self.rhs.substitute(subs, default)
         x.type = self.type
-        x.__functions = self.__functions
+        x.__functions = x.getFunctionsOverwrite()
 
         return x
 
@@ -128,3 +134,39 @@ class BinaryPredicate(Predicate):
             raise Exception("Cannot get linear increment in a non linear function ", self)
 
         return Utilities.op(self.operator, self.lhs.getLinearIncrement(), self.rhs.getLinearIncrement())
+
+    def simplify(self):
+        if self.type == BinaryPredicateType.MODIFICATION:
+            raise Exception("Cannot simplify a modification of the form", self)
+        if self.type == BinaryPredicateType.COMPARATION:
+            bp = BinaryPredicate()
+            bp.type = self.type
+            bp.lhs = (self.lhs - self.rhs).simplify()
+            bp.rhs = Constant(0)
+            bp.operator = self.operator
+            return bp
+        if self.type == BinaryPredicateType.OPERATION:
+            raise NotImplemented("TODO")
+
+    def toExpression(self) -> Expr:
+        if self.type != BinaryPredicateType.OPERATION:
+            raise Exception("Cannot transform to expression ", self.type)
+        return Utilities.op(self.operator, self.lhs.toExpression(), self.rhs.toExpression())
+
+    def getIntervalFromSimpleCondition(self) -> MooreInterval or None:
+        if len(self.getFunctions()) > 1:
+            return None
+
+        var = self.getFunctions().pop().toExpression()
+        func = self.lhs - self.rhs
+
+        # f = mx + q
+        f: Expr = func.toExpression()
+
+        m = diff(f, var)  # m = df/dx
+        q = f.subs(var, 0)  # q = f | 0
+
+        lb = float(-q / m) if self.operator in {">=", ">", "=", "!="} else float("-inf")
+        ub = float(-q / m) if self.operator in {"<=", "<", "=", "!="} else float("+inf")
+
+        return MooreInterval(lb, ub)

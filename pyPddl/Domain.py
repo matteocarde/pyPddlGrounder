@@ -60,6 +60,7 @@ class Domain:
         constants: Dict[Atom, float] = arpg.getConstantAtoms()
 
         gDomain = gDomain.substitute(constants)
+        gDomain.arpg = ARPG(gDomain.actions, problem)
         return gDomain
 
     @classmethod
@@ -178,6 +179,7 @@ class GroundedDomain(Domain):
                 self.assList[v].add(op)
 
         self.allAtoms = self.functions | self.predicates
+        self.arpg = None
 
     def getOperationByPlanName(self, planName) -> Operation:
         return self.__operationsDict[planName]
@@ -186,3 +188,6 @@ class GroundedDomain(Domain):
         subActions: Set[Action] = {a.substitute(sub, default) for a in self.actions}
 
         return GroundedDomain(self.name, subActions, self.events, self.processes)
+
+    def getARPG(self):
+        return self.arpg

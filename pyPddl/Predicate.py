@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, Set
 
+from sympy import Expr
+
 from Atom import Atom
 from MooreInterval import MooreInterval
 from Utilities import Utilities
@@ -58,4 +60,7 @@ class Predicate:
         raise NotImplemented()
 
     def getLinearIncrement(self) -> float:
-        raise NotImplemented
+        raise NotImplemented()
+
+    def toExpression(self) -> Expr or float:
+        raise NotImplemented()
