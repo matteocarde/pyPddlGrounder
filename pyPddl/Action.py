@@ -3,6 +3,7 @@
 from __future__ import annotations
 from typing import List, Dict, cast, Set
 
+from Atom import Atom
 from BinaryPredicate import BinaryPredicate
 from Constant import Constant
 from Supporter import Supporter, SupporterEffect
@@ -15,6 +16,7 @@ from Type import Type
 class Action(Operation):
 
     def __init__(self):
+        self.isFake = False
         super().__init__()
 
     @classmethod
@@ -62,3 +64,11 @@ class Action(Operation):
             supporters |= {e_plus, e_minus}
 
         return supporters
+
+    def substitute(self, sub: Dict[Atom, float], default=None) -> Action:
+        action = Action()
+        action.name = self.name
+        action.preconditions = self.preconditions.substitute(sub, default)
+        action.effects = self.effects.substitute(sub, default)
+        action.planName = self.planName
+        return action

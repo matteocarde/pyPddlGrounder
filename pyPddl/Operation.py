@@ -172,6 +172,9 @@ class Operation:
     def getAssignments(self) -> Dict[Atom, Predicate]:
         return self.getModificationOperations("assign")
 
+    def substitute(self, sub: Dict[Atom, float], default=None) -> Operation:
+        raise NotImplemented()
+
     def __hash__(self):
         return hash(self.name)
 

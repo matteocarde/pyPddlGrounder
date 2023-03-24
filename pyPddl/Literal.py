@@ -3,6 +3,7 @@ from typing import Dict, Set
 
 from antlr4 import InputStream, CommonTokenStream
 
+from Constant import Constant
 from antlr4_directory.pddlLexer import pddlLexer
 from antlr4_directory.pddlParser import pddlParser as p, pddlParser
 from Atom import Atom
@@ -77,3 +78,15 @@ class Literal(Predicate):
 
     def __hash__(self):
         return hash(self.sign + str(self.atom))
+
+    def substitute(self, subs: Dict[Atom, float], default=None) -> Predicate:
+        if self.atom not in subs and default is None:
+            return self
+        if self.atom not in subs and default is not None:
+            c = Constant()
+            c.value = default
+            return c
+        if self.atom in subs:
+            c = Constant()
+            c.value = subs[self.atom]
+            return c

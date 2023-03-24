@@ -53,6 +53,8 @@ class BinaryPredicate(Predicate):
             bp.type = BinaryPredicateType.COMPARATION
         elif isinstance(node, p.OperationContext):
             bp.type = BinaryPredicateType.OPERATION
+        else:
+            raise Exception("I don't know what this is")
 
         return bp
 
@@ -75,6 +77,7 @@ class BinaryPredicate(Predicate):
         bp.operator = self.operator
         bp.lhs = self.lhs.ground(subs)
         bp.rhs = self.rhs.ground(subs)
+        bp.type = self.type
 
         return bp
 
@@ -103,4 +106,14 @@ class BinaryPredicate(Predicate):
         x.lhs = effect.lhs
         x.operator = "increase"
         x.rhs = effect.rhs - effect.lhs
+        x.type = effect.type
+        return x
+
+    def substitute(self, subs: Dict[Atom, float], default=None) -> Predicate:
+        x = BinaryPredicate()
+        x.lhs = self.lhs.substitute(subs, default)
+        x.operator = self.operator
+        x.rhs = self.rhs.substitute(subs, default)
+        x.type = self.type
+
         return x

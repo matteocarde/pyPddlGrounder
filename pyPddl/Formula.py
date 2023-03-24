@@ -65,6 +65,12 @@ class Formula:
     def getPredicates(self):
         return set(chain.from_iterable([c.getPredicates() for c in self.conditions]))
 
+    def substitute(self, subs: Dict[Atom, float], default=None) -> Formula:
+        x = Formula()
+        x.type = self.type
+        x.conditions = [c.substitute(subs, default) for c in self.conditions]
+        return x
+
     def __iter__(self):
         return iter(self.conditions)
 

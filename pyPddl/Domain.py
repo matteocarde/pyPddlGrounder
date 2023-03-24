@@ -39,13 +39,28 @@ class Domain:
         self.constants = set()
         pass
 
-    def ground(self, problem: Problem) -> GroundedDomain:
+    def ground(self, problem: Problem, avoidSimplification=False) -> GroundedDomain:
 
         gActions: Set[Action] = set([g for action in self.actions for g in action.ground(problem)])
         gEvents: Set[Event] = set([g for event in self.events for g in event.ground(problem)])
         gProcess: Set[Process] = set([g for process in self.processes for g in process.ground(problem)])
 
-        return GroundedDomain(self.name, gActions, gEvents, gProcess)
+        gDomain = GroundedDomain(self.name, gActions, gEvents, gProcess)
+
+        if avoidSimplification:
+            return gDomain
+
+        from RPG import RPG
+        from ARPG import ARPG
+
+        rpg = RPG(gDomain, problem)
+        arpg = ARPG(rpg.getReachableActions(), problem)
+
+        self.actions = rpg.getReachableActions()
+        constants: Dict[Atom, float] = arpg.getConstantAtoms()
+
+        gDomain = gDomain.substitute(constants)
+        return gDomain
 
     @classmethod
     def fromNode(cls, node: pddlParser.DomainContext) -> Domain:
@@ -166,3 +181,8 @@ class GroundedDomain(Domain):
 
     def getOperationByPlanName(self, planName) -> Operation:
         return self.__operationsDict[planName]
+
+    def substitute(self, sub: Dict[Atom, float], default=None) -> GroundedDomain:
+        subActions: Set[Action] = {a.substitute(sub, default) for a in self.actions}
+
+        return GroundedDomain(self.name, subActions, self.events, self.processes)

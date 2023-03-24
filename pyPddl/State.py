@@ -81,7 +81,7 @@ class State:
         if not isinstance(p, BinaryPredicate):
             raise "Precondition can only be BinaryPredicate or Literal"
 
-        if p.operator not in {">=", ">", "<=", "<", "="}:
+        if p.operator not in {">=", ">", "<=", "<", "=", "!="}:
             raise Exception(f"Cannot check satisfaction for precondition with operator '{p.operator}'")
 
         function: BinaryPredicate = p.lhs - p.rhs

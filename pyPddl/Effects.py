@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from itertools import chain
-from typing import Dict, cast, Literal, List
+from typing import Dict, cast, List
 
+from Atom import Atom
 from BinaryPredicate import BinaryPredicate
+from Literal import Literal
 from antlr4_directory.pddlParser import pddlParser
 from antlr4_directory.pddlParser import pddlParser as p
 
@@ -44,6 +46,11 @@ class Effects:
 
     def getPredicates(self):
         return set(chain.from_iterable([c.getPredicates() for c in self.assignments]))
+
+    def substitute(self, sub: Dict[Atom, float], default=None):
+        e = Effects()
+        e.assignments = [predicate.substitute(sub, default) for predicate in self.assignments]
+        return e
 
     def __iter__(self):
         return iter(self.assignments)

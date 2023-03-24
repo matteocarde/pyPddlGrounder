@@ -57,3 +57,6 @@ class Constant(Predicate):
 
     def getFunctions(self) -> Set[Atom]:
         return set()
+
+    def substitute(self, subs: Dict[Atom, float], default=None) -> Predicate:
+        return self

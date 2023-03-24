@@ -53,3 +53,6 @@ class Predicate:
 
     def __lt__(self, other):
         return self.__operation(other, "<")
+
+    def substitute(self, subs: Dict[Atom, float], default=None) -> Predicate:
+        raise NotImplemented()

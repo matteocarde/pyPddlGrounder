@@ -1,6 +1,7 @@
-from typing import Set, List
+from typing import Set, List, Dict
 
 from Action import Action
+from Atom import Atom
 from Domain import Domain
 from PDDLException import PDDLException
 from Problem import Problem
@@ -47,3 +48,11 @@ class ARPG:
                 usedActions.add(supporter.originatingAction)
 
         return order
+
+    def getConstantAtoms(self) -> Dict[Atom, float]:
+        lastLevel: RelaxedIntervalState = self.stateLevels[-1]
+        subs: Dict[Atom, float] = dict()
+        for (atom, interval) in lastLevel.intervals.items():
+            if interval.lb == interval.ub:
+                subs[atom] = interval.lb
+        return subs

@@ -17,6 +17,16 @@ class RelaxedIntervalState:
     def __init__(self):
         self.__intervals = dict()
 
+    def __repr__(self):
+        return repr(self.__intervals)
+
+    def __iter__(self):
+        return iter(self.__intervals)
+
+    @property
+    def intervals(self) -> Dict[Atom, MooreInterval]:
+        return self.__intervals
+
     @classmethod
     def fromInitialCondition(cls, init):
         ris = cls()
@@ -27,9 +37,6 @@ class RelaxedIntervalState:
 
     def getAtom(self, atom: Atom) -> MooreInterval:
         return self.__intervals[atom]
-
-    def __repr__(self):
-        return repr(self.__intervals)
 
     def applySupporters(self, activeSupporters: Set[Supporter]):
 
