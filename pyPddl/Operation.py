@@ -17,12 +17,15 @@ from antlr4_directory.pddlParser import pddlParser as p
 
 class Operation:
     name: str
+    valName: str
     planName: str
     parameters: List[Parameter]
     preconditions: Preconditions
     effects: Effects
 
     def __init__(self):
+        self.name: str
+        self.valName: str
         self.parameters = list()
         self.preconditions = Preconditions()
         self.effects = Effects()
@@ -91,7 +94,7 @@ class Operation:
 
     def __getGroundedName(self, sub: Dict[str, str]) -> str:
         parts = [self.name] + [c[1] for c in sub.items()]
-        return "_".join(parts)
+        return " ".join(parts)
 
     def __getGroundedPlanName(self, sub: Dict[str, str]):
         parts = [self.name] + [c[1] for c in sub.items()]

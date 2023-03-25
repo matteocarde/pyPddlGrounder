@@ -13,6 +13,9 @@ class NumericPlan:
         self.__plan: List[Tuple[Action, int]] = list()
         self.__rolledPlan: List[Action] = list()
 
+    def __len__(self):
+        return len(self.__rolledPlan)
+
     def addRepeatedAction(self, action: Action, repetitions: int):
         self.__plan.append((action, repetitions))
         for i in range(0, repetitions):
@@ -43,10 +46,14 @@ class NumericPlan:
     def print(self):
         print(str(self))
 
-    def printWithRepetitions(self):
+    def toValString(self):
         string = ""
+        t = 0
         for a in self.__plan:
             for i in range(0, a[1]):
-                string += str(a[0]) + "\n"
+                string += f"{t}: ({a[0]})\n"
+                t += 1
+        return string
 
-        print(string)
+    def printWithRepetitions(self):
+        print(self.toValString())

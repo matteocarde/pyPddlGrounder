@@ -56,7 +56,7 @@ class Domain:
         rpg = RPG(gDomain, problem)
         arpg = ARPG(rpg.getReachableActions(), problem)
 
-        self.actions = rpg.getReachableActions()
+        gDomain.actions = rpg.getReachableActions()
         constants: Dict[Atom, float] = arpg.getConstantAtoms()
 
         gDomain = gDomain.substitute(constants)
