@@ -15,7 +15,7 @@ class Constant(Predicate):
 
     def __init__(self, value=0):
         super().__init__()
-        self.value = value
+        self.value = float(value)
         self.isDelta = False
 
     @classmethod

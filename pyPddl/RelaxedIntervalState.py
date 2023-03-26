@@ -30,8 +30,8 @@ class RelaxedIntervalState:
     @classmethod
     def fromInitialCondition(cls, init):
         ris = cls()
-        for (literal, value) in init.numericAssignments.items():
-            ris.__intervals[literal.getAtom()] = MooreInterval(value, value)
+        for (atom, value) in init.numericAssignments.items():
+            ris.__intervals[atom] = MooreInterval(value, value)
 
         return ris
 

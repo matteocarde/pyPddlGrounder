@@ -6,6 +6,7 @@ from antlr4 import InputStream, CommonTokenStream
 from sympy import Expr, Symbol
 
 from Constant import Constant
+from Utilities import Utilities
 from antlr4_directory.pddlLexer import pddlLexer
 from antlr4_directory.pddlParser import pddlParser as p, pddlParser
 from Atom import Atom
@@ -72,11 +73,12 @@ class Literal(Predicate):
         return str(self)
 
     @classmethod
-    def fromString(cls, string: str) -> Literal:
-        lexer = pddlLexer(InputStream(string))
-        token_stream = CommonTokenStream(lexer)
-        node = pddlParser(token_stream).positiveLiteral()
-        return cls.fromNode(node)
+    def fromPositiveString(cls, string: str) -> Literal:
+        return cls.fromNode(Utilities.getParseTree(string).positiveLiteral())
+
+    @classmethod
+    def fromNegativeString(cls, string: str) -> Literal:
+        return cls.fromNode(Utilities.getParseTree(string).negativeLiteral())
 
     def __hash__(self):
         return hash(self.sign + str(self.atom))
@@ -85,13 +87,9 @@ class Literal(Predicate):
         if self.atom not in subs and default is None:
             return self
         if self.atom not in subs and default is not None:
-            c = Constant()
-            c.value = default
-            return c
+            return Constant(default)
         if self.atom in subs:
-            c = Constant()
-            c.value = subs[self.atom]
-            return c
+            return Constant(subs[self.atom])
 
     def getLinearIncrement(self) -> float:
         return 0

@@ -7,6 +7,7 @@ from Atom import Atom
 from BinaryPredicate import BinaryPredicate
 from Literal import Literal
 from Predicate import Predicate
+from Utilities import Utilities
 from antlr4_directory.pddlParser import pddlParser as p
 
 
@@ -48,11 +49,16 @@ class Formula:
 
         return formula
 
+    @classmethod
+    def fromString(cls, string: str) -> Formula:
+        return Formula.fromNode(Utilities.getParseTree(string).preconditions())
+
     def ground(self, subs: Dict[str, str]):
-        groundFormula = Formula()
+        gFormula = Formula()
+        gFormula.type = self.type
         for condition in self.conditions:
-            groundFormula.conditions.append(condition.ground(subs))
-        return groundFormula
+            gFormula.conditions.append(condition.ground(subs))
+        return gFormula
 
     def getFunctions(self) -> Set[Atom]:
         functions = set()
@@ -75,7 +81,10 @@ class Formula:
         return iter(self.conditions)
 
     def __str__(self):
-        return f"{self.type}({self.conditions})"
+        return f"({self.type.lower()} {' '.join([str(c) for c in self.conditions])})"
+
+    def __eq__(self, other):
+        return str(self) == str(other)
 
     def __repr__(self):
         return str(self.conditions)
@@ -84,3 +93,6 @@ class Formula:
         c = Formula()
         c.conditions = self.conditions + other
         return c
+
+    def __len__(self):
+        return len(self.conditions)

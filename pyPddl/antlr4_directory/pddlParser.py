@@ -276,7 +276,7 @@ class pddlParser ( Parser ):
                    "typedPositiveLiteral", "negativeLiteral", "booleanLiteral", 
                    "predicates", "functions", "modificator", "operator", 
                    "comparator", "number", "delta", "constant", "assignmentSide", 
-                   "operationSide", "operation", "assignment", "comparation", 
+                   "operationSide", "operation", "assignments", "comparation",
                    "negatedComparation", "modification", "effect", "andClause", 
                    "orClause", "andEffect", "emptyPrecondition", "preconditions", 
                    "effects", "parameters", "opName", "opParameters", "opPrecondition", 

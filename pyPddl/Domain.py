@@ -7,7 +7,6 @@ from Operation import Operation
 from Problem import Problem
 
 from Utilities import Utilities
-from Variable import Variable
 from Action import Action
 from Event import Event
 from Process import Process
@@ -25,7 +24,6 @@ class Domain:
     actions: set[Action]
     events: set[Event]
     processes: set[Process]
-    constants: set[Variable]
     __operationsDict: Dict[str, Operation]
 
     def __init__(self):

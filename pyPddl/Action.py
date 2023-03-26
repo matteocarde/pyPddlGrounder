@@ -1,17 +1,18 @@
 # Ciao
 
 from __future__ import annotations
-from typing import List, Dict, cast, Set
+
+from typing import List, Dict, Set
 
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
 from Constant import Constant
 from MooreInterval import MooreInterval
-from Supporter import Supporter, SupporterEffect
-from antlr4_directory.pddlParser import pddlParser as p
 from Operation import Operation
 from OperationType import OperationType
-from Type import Type
+from Supporter import Supporter, SupporterEffect
+from Utilities import Utilities
+from antlr4_directory.pddlParser import pddlParser as p
 
 
 class Action(Operation):
@@ -23,6 +24,10 @@ class Action(Operation):
     @classmethod
     def fromNode(cls, node: p.ActionContext):
         return super().fromNode(node)
+
+    @classmethod
+    def fromString(cls, string: str) -> Action:
+        return cls.fromNode(Utilities.getParseTree(string).action())
 
     @property
     def type(self):

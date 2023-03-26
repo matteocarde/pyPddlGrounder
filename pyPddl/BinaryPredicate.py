@@ -85,7 +85,7 @@ class BinaryPredicate(Predicate):
 
     def getAtom(self) -> Atom:
         if not isinstance(self.lhs, Literal):
-            raise Exception("Cannot get atom from Binary Predicate")
+            raise Exception("Cannot get atom from Binary Predicate", self)
         return self.lhs.atom
 
     def getPredicates(self) -> Set[Atom]:
@@ -105,6 +105,11 @@ class BinaryPredicate(Predicate):
 
     def __repr__(self):
         return str(self)
+
+    def __eq__(self, other):
+        if not isinstance(other, BinaryPredicate):
+            return False
+        return str(self) == str(other)
 
     @staticmethod
     def additiveEffectsTransformation(effect: BinaryPredicate):
@@ -126,7 +131,6 @@ class BinaryPredicate(Predicate):
         return x
 
     def getLinearIncrement(self) -> float:
-        li = 0
         if self.type != BinaryPredicateType.OPERATION:
             raise Exception("Cannot get linear increment since Binary Predicate is not an operation")
 
@@ -170,3 +174,23 @@ class BinaryPredicate(Predicate):
         ub = float(-q / m) if self.operator in {"<=", "<", "=", "!="} else float("+inf")
 
         return MooreInterval(lb, ub)
+
+    @classmethod
+    def fromOperationString(cls, string: str):
+        return cls.fromNode(Utilities.getParseTree(string).operation())
+
+    @classmethod
+    def fromModificationString(cls, string: str):
+        return cls.fromNode(Utilities.getParseTree(string).modification())
+
+    @classmethod
+    def fromAssignmentString(cls, string: str):
+        return cls.fromNode(Utilities.getParseTree(string).assignment())
+
+    @classmethod
+    def fromComparationString(cls, string: str):
+        return cls.fromNode(Utilities.getParseTree(string).comparation())
+
+    @classmethod
+    def fromNegatedComparationString(cls, string: str):
+        return cls.fromNode(Utilities.getParseTree(string).negatedComparation())

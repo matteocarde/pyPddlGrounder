@@ -66,7 +66,7 @@ class Operation:
     def __addEffects(self, node: p.OpEffectContext):
         self.effects = Effects.fromNode(node.getChild(1))
 
-    def __getCombinations(self, problem: Problem) -> List[Dict[str, str]]:
+    def getCombinations(self, problem: Problem) -> List[Dict[str, str]]:
         subs: List[List[str]] = list()
         for parameter in self.parameters:
             subs.append(problem.objectsByType[parameter.type])
@@ -81,7 +81,7 @@ class Operation:
         return combinations
 
     def getGroundedOperations(self, problem):
-        combinations: List[Dict[str, str]] = self.__getCombinations(problem)
+        combinations: List[Dict[str, str]] = self.getCombinations(problem)
         gOperations = []
         for subs in combinations:
             operation: Operation = Operation()
@@ -137,7 +137,7 @@ class Operation:
         for c in self.effects:
             if not isinstance(c, BinaryPredicate) or (operator is not None and c.operator != operator):
                 continue
-            atomList = atomList | c.getFunctions()
+            atomList = atomList | {c.getAtom()}
         return atomList
 
     def getModificationOperations(self, operator: str = None) -> Dict[Atom, Predicate]:
@@ -147,9 +147,6 @@ class Operation:
                 continue
             modification[c.getAtom()] = c.rhs
         return modification
-
-    def getPreN(self) -> Set[Atom]:
-        return self.getPreconditionAtoms(BinaryPredicate)
 
     def getPreB(self) -> Set[Atom]:
         return self.getPreconditionAtoms(Literal)

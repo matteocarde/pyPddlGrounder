@@ -56,3 +56,4 @@ class Utilities:
     @classmethod
     def inverted(cls, op: str):
         return INVERSE_COMPARATORS[op]
+

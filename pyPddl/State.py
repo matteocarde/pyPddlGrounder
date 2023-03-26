@@ -17,20 +17,22 @@ class State:
     __assignments: Dict[Atom, bool or float]
 
     def __init__(self):
-        self.__assignments = dict()
+        self.__assignments: Dict[Atom, bool or float] = dict()
 
     @classmethod
     def fromInitialCondition(cls, init: InitialCondition):
         state = cls()
 
         assignment: Predicate
-        for assignment in init.assignment:
+        for assignment in init.assignments:
             atom = assignment.getAtom()
             state.__assignments[atom] = state.getRealization(assignment)
 
         return state
 
-    def getAtom(self, atom: Atom) -> MooreInterval:
+    def getAtom(self, atom: Atom) -> bool or float:
+        if atom not in self.__assignments:
+            return False
         return self.__assignments[atom]
 
     def __repr__(self):
@@ -40,6 +42,9 @@ class State:
 
         state = State()
         state.__assignments = self.__assignments.copy()
+
+        if not state.satisfies(action.preconditions):
+            raise Exception(f"Tried to apply action {action} to a state in which its preconditions are note satisfied")
 
         effect: Predicate
         for effect in action.effects:

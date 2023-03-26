@@ -4,6 +4,7 @@ from typing import Dict
 
 from sympy import Symbol, Expr
 
+from Utilities import Utilities
 from antlr4_directory.pddlParser import pddlParser as p
 
 
@@ -57,3 +58,7 @@ class Atom:
 
     def toExpression(self) -> Expr:
         return Symbol(self.toFunctionName())
+
+    @classmethod
+    def fromString(cls, string):
+        return cls.fromNode(Utilities.getParseTree(string).atom())

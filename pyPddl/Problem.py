@@ -1,6 +1,9 @@
-import json
+from __future__ import annotations
 from typing import Dict, List
 
+from antlr4 import InputStream, CommonTokenStream
+
+from antlr4_directory.pddlLexer import pddlLexer
 from antlr4_directory.pddlParser import pddlParser
 from InitialCondition import InitialCondition
 from Goal import Goal
@@ -14,21 +17,28 @@ class Problem:
     init: InitialCondition
     goal: Goal
 
-    def __init__(self, node: pddlParser.ProblemContext):
-
+    def __init__(self):
         self.objectsByType = dict()
+
+    @classmethod
+    def fromNode(cls, node: pddlParser.ProblemContext) -> Problem:
+        problem = cls()
         for node in node.getChildren():
             if isinstance(node, pddlParser.ProblemNameContext):
-                self.__setProblemName(node)
+                problem.__setProblemName(node)
             if isinstance(node, pddlParser.ProblemDomainContext):
-                self.__setDomainName(node)
+                problem.__setDomainName(node)
             if isinstance(node, pddlParser.ObjectsContext):
-                self.__addObjects(node)
+                problem.__addObjects(node)
             if isinstance(node, pddlParser.InitContext):
-                self.init = InitialCondition.fromNode(node)
+                problem.init = InitialCondition.fromNode(node)
             if isinstance(node, pddlParser.GoalContext):
-                self.goal = Goal.fromNode(node)
-            pass
+                problem.goal = Goal.fromNode(node)
+        return problem
+
+    @classmethod
+    def fromString(cls, string: str):
+        return cls.fromNode(Utilities.getParseTree(string).problem())
 
     def __setProblemName(self, node: pddlParser.ProblemNameContext):
         self.name = node.getChild(2).getText()
@@ -58,4 +68,4 @@ class Problem:
         domainString = Utilities.removeComments(domainString)
 
         parseTree: pddlParser = Utilities.getParseTree(domainString)
-        return cls(parseTree.problem())
+        return Problem.fromNode(parseTree.problem())

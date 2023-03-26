@@ -17,7 +17,7 @@ class RPG:
 
         self.actions = domain.actions
 
-        literals = {lit for lit in problem.init.assignment if isinstance(lit, Literal)}
+        literals = {lit for lit in problem.init.assignments if isinstance(lit, Literal)}
         for atom in domain.predicates:
             posLit = Literal.fromAtom(atom, "+")
             negLit = Literal.fromAtom(atom, "-")

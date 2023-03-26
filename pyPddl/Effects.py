@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from itertools import chain
-from typing import Dict, cast, List
+from typing import Dict, List
 
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
@@ -60,3 +60,6 @@ class Effects:
 
     def __repr__(self):
         return str(self.assignments)
+
+    def __len__(self):
+        return len(self.assignments)

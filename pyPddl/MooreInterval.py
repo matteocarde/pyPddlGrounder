@@ -56,7 +56,7 @@ class MooreInterval:
         if operator == "=":
             return self.lb <= value <= self.ub
         if operator == "!=":
-            return self.lb >= value >= self.ub
+            return value < self.lb or value > self.ub
 
     def getExtended(self, eff) -> MooreInterval:
         if eff.value > self.lb:
