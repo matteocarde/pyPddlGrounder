@@ -8,10 +8,13 @@ from State import State
 
 
 class NumericPlan:
+    quality: float
 
     def __init__(self):
         self.__plan: List[Tuple[Action, int]] = list()
         self.__rolledPlan: List[Action] = list()
+        self.quality: float
+        self.optimal = False
 
     def __len__(self):
         return len(self.__rolledPlan)
@@ -57,3 +60,9 @@ class NumericPlan:
 
     def printWithRepetitions(self):
         print(self.toValString())
+
+    def getMetric(self, problem: Problem):
+        if not problem.metric:
+            return len(self.__rolledPlan)
+
+        raise Exception("Not yet implemented")

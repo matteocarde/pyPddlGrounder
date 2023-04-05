@@ -287,11 +287,11 @@ class pddlListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by pddlParser#assignments.
+    # Enter a parse tree produced by pddlParser#assignment.
     def enterAssignment(self, ctx:pddlParser.AssignmentContext):
         pass
 
-    # Exit a parse tree produced by pddlParser#assignments.
+    # Exit a parse tree produced by pddlParser#assignment.
     def exitAssignment(self, ctx:pddlParser.AssignmentContext):
         pass
 

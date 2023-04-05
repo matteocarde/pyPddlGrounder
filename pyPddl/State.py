@@ -81,7 +81,11 @@ class State:
 
     def satisfiesPredicate(self, p: Predicate):
         if isinstance(p, Literal):
-            return p.sign == "+" and p.getAtom() in self.__assignments and self.__assignments[p.getAtom()] is True
+            atom = p.getAtom()
+            if p.sign == "+":
+                return atom in self.__assignments and self.__assignments[atom]
+            else:
+                return atom not in self.__assignments or not self.__assignments[atom]
 
         if not isinstance(p, BinaryPredicate):
             raise "Precondition can only be BinaryPredicate or Literal"

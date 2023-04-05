@@ -61,5 +61,12 @@ class RPG:
 
         return actions
 
-    def getReachableActions(self) -> Set[Action]:
-        return self.__actionLayers[-1]
+    def getActionsOrder(self) -> List[Action]:
+        usedActions = set()
+        orderedActions = list()
+        for layer in self.__actionLayers:
+            newActions = layer - usedActions
+            orderedActions += list(newActions)
+            usedActions |= layer
+
+        return orderedActions

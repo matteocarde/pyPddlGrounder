@@ -3,6 +3,7 @@ from typing import Dict, List
 
 from antlr4 import InputStream, CommonTokenStream
 
+from BinaryPredicate import BinaryPredicate
 from antlr4_directory.pddlLexer import pddlLexer
 from antlr4_directory.pddlParser import pddlParser
 from InitialCondition import InitialCondition
@@ -15,6 +16,7 @@ class Problem:
     domainName: str
     objectsByType: Dict[str, List[str]]
     init: InitialCondition
+    metric: BinaryPredicate or None = None
     goal: Goal
 
     def __init__(self):
@@ -34,6 +36,8 @@ class Problem:
                 problem.init = InitialCondition.fromNode(node)
             if isinstance(node, pddlParser.GoalContext):
                 problem.goal = Goal.fromNode(node)
+            if isinstance(node, pddlParser.MetricContext):
+                problem.__setMetric(node)
         return problem
 
     @classmethod
@@ -69,3 +73,10 @@ class Problem:
 
         parseTree: pddlParser = Utilities.getParseTree(domainString)
         return Problem.fromNode(parseTree.problem())
+
+    def __setMetric(self, node: pddlParser.MetricContext):
+        if node.sign.text == "maximize":
+            raise Exception("Maximize not supported")
+
+        self.metric = BinaryPredicate.fromNode(node.op)
+        return

@@ -160,6 +160,12 @@ class Operation:
     def getAssList(self) -> Set[Atom]:
         return self.getModifiedFunctions("assign")
 
+    def getIncrList(self) -> Set[Atom]:
+        return self.getModifiedFunctions("increase")
+
+    def getDecrList(self) -> Set[Atom]:
+        return self.getModifiedFunctions("decrease")
+
     def getInfluencedAtoms(self):
         return self.getModifiedPredicates() | self.getModifiedFunctions()
 
@@ -171,6 +177,9 @@ class Operation:
 
     def getAssignments(self) -> Dict[Atom, Predicate]:
         return self.getModificationOperations("assign")
+
+    def couldBeRepeated(self) -> bool:
+        return len(self.getIncrList() | self.getDecrList()) > 0
 
     def substitute(self, sub: Dict[Atom, float], default=None) -> Operation:
         raise NotImplemented()

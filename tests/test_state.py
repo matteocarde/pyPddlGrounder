@@ -80,6 +80,18 @@ ACTION_OR = """
     ))
 """
 
+ACTION_NOT = """
+(:action action-3
+    :parameters ()
+    :precondition (or 
+        (at x y)
+        (not (at z w))
+    )
+    :effect (and
+        (decrease (number x) 10)
+        (increase (number y) 20)
+    ))
+"""
 
 
 class TestState(TestCase):
@@ -91,6 +103,7 @@ class TestState(TestCase):
         self.action3 = Action.fromString(ACTION3)
         self.actionAnd = Action.fromString(ACTION_AND)
         self.actionOr = Action.fromString(ACTION_OR)
+        self.actionNot = Action.fromString(ACTION_NOT)
 
     def test_shouldUpdateStatesCorrectly(self):
         state0 = State.fromInitialCondition(self.init)
@@ -105,6 +118,7 @@ class TestState(TestCase):
         self.assertEqual(state0.satisfies(self.action1.preconditions), True)
         self.assertEqual(state0.satisfies(self.action2.preconditions), False)
         self.assertEqual(state0.satisfies(self.action3.preconditions), True)
+        self.assertEqual(state0.satisfies(self.actionNot.preconditions), True)
 
         self.assertEqual(state1.getAtom(Atom.fromString("at x y")), False)
         self.assertEqual(state1.getAtom(Atom.fromString("at z w")), True)

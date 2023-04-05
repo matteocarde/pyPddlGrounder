@@ -13,9 +13,12 @@ class ARPG:
     supporterLevels: List[Set[Supporter]]
     stateLevels: List[RelaxedIntervalState]
 
-    def __init__(self, actions: Set[Action], problem: Problem):
+    def __init__(self, actions: List[Action], problem: Problem):
         self.supporterLevels = list()
         self.stateLevels = list()
+        self.actions: List[Action] = actions
+
+        self.originalOrder = dict([(action, i) for (i, action) in enumerate(self.actions)])
 
         supporters: Set[Supporter] = set()
         for a in actions:
@@ -42,11 +45,13 @@ class ARPG:
         order: List[Action] = list()
         usedActions: Set[Action] = set()
         for supporters in self.supporterLevels:
+            partialOrder = set()
             for supporter in supporters:
                 if supporter.originatingAction not in usedActions:
-                    order.append(supporter.originatingAction)
+                    partialOrder.add(supporter.originatingAction)
                 usedActions.add(supporter.originatingAction)
-
+            order += sorted(partialOrder, key=lambda x: self.originalOrder[x])
+        order += sorted(set(self.actions) - usedActions, key=lambda x: self.originalOrder[x])
         return order
 
     def getConstantAtoms(self) -> Dict[Atom, float]:

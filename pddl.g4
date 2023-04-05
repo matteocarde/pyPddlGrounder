@@ -28,7 +28,7 @@ domain : LP 'define' domainName requirements? types? predicates? functions? (act
 domainName: LP 'domain' NAME RP;
 
 //REQUIREMENTS
-requireKey: ':typing' | ':duration-inequalities' | ':time' | ':fluents' | ':adl' | ':durative-actions';
+requireKey: ':' NAME;
 requirements: LP ':requirements' requireKey* RP;
 
 //TYPES
@@ -134,4 +134,4 @@ init: LP ':init' (positiveLiteral|assignment)+ RP;
 goal : LP ':goal' preconditions RP;
 
 //Metric
-metric : LP ':metric' ('maximize'|'minimize') operation RP;
+metric : LP ':metric' sign=('maximize'|'minimize') op=operation RP;

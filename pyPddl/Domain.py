@@ -52,13 +52,16 @@ class Domain:
         from ARPG import ARPG
 
         rpg = RPG(gDomain, problem)
-        arpg = ARPG(rpg.getReachableActions(), problem)
+        orderedActions = rpg.getActionsOrder()
+        arpg = ARPG(orderedActions, problem)
 
-        gDomain.actions = rpg.getReachableActions()
+        gDomain.actions = orderedActions
         constants: Dict[Atom, float] = arpg.getConstantAtoms()
 
         gDomain = gDomain.substitute(constants)
-        gDomain.arpg = ARPG(gDomain.actions, problem)
+        orderedActions = [a.substitute(constants) for a in orderedActions]
+
+        gDomain.arpg = ARPG(orderedActions, problem)
         return gDomain
 
     @classmethod
