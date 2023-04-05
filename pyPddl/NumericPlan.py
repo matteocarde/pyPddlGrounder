@@ -24,15 +24,19 @@ class NumericPlan:
         for i in range(0, repetitions):
             self.__rolledPlan.append(action)
 
-    def validate(self, problem: Problem) -> bool:
+    def validate(self, problem: Problem, avoidRaising=False) -> bool:
 
         state = State.fromInitialCondition(problem.init)
         for action in self.__rolledPlan:
             if not state.satisfies(action.preconditions):
+                if avoidRaising:
+                    return False
                 raise PDDLException.InvalidPlan(f"Plan doesn't satisfies action {action}")
             state = state.applyAction(action)
 
         if not state.satisfies(problem.goal):
+            if avoidRaising:
+                return False
             raise PDDLException.InvalidPlan(f"Plan doesn't satisfies goal")
 
         return True

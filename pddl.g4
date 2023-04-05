@@ -134,4 +134,4 @@ init: LP ':init' (positiveLiteral|assignment)+ RP;
 goal : LP ':goal' preconditions RP;
 
 //Metric
-metric : LP ':metric' sign=('maximize'|'minimize') op=operation RP;
+metric : LP ':metric' sign=('maximize'|'minimize') op=operationSide RP;

@@ -30,7 +30,9 @@ class ARPG:
         self.supporterLevels.append(activeSupporters)
         self.stateLevels.append(state)
 
-        while activeSupporters and not state.satisfies(problem.goal):
+        fullBooleanGoal = len(problem.goal.getFunctions()) == 0
+
+        while activeSupporters and (fullBooleanGoal or not state.satisfies(problem.goal)):
             supporters = supporters - activeSupporters
             state = state.applySupporters(activeSupporters)
             activeSupporters = {s for s in supporters if s.isSatisfiedBy(state)}
@@ -38,7 +40,7 @@ class ARPG:
             self.supporterLevels.append(activeSupporters)
             self.stateLevels.append(state)
 
-        if not state.satisfies(problem.goal):
+        if not fullBooleanGoal and not state.satisfies(problem.goal):
             raise PDDLException.GoalNotReachable()
 
     def getActionsOrder(self) -> List[Action]:

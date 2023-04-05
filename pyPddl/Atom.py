@@ -10,6 +10,10 @@ from antlr4_directory.pddlParser import pddlParser as p
 
 class Atom:
     name: str
+    __string: str
+    __hash: int
+    __functionName: str
+    __alphaFunctionName: str
     attributes: list[str]
 
     def __init__(self):
@@ -23,17 +27,29 @@ class Atom:
         node: p.GroundAtomParameterContext or p.LiftedAtomParameterContext
         for attr in node.children[1:]:
             atom.attributes.append(attr.getText())
+
+        atom.__setProperties()
+
         return atom
+
+    def __setProperties(self):
+        parts = [self.name] + [a for a in self.attributes]
+        self.__string = " ".join(parts)
+        self.__hash = hash(self.__string)
+        parameters = ','.join([a for a in self.attributes])
+        parenthesis = f"({parameters})" if self.attributes else ""
+        self.__functionName = f"{self.name}{parenthesis}"
+        self.__alphaFunctionName = f"\\alpha_{{{self.name}}}{parenthesis}"
 
     def ground(self, subs: Dict[str, str]) -> Atom:
         atom = Atom()
         atom.name = self.name
         atom.attributes = [subs[attr] for attr in self.attributes]
+        atom.__setProperties()
         return atom
 
     def __str__(self):
-        parts = [self.name] + [a for a in self.attributes]
-        return " ".join(parts)
+        return self.__string
 
     def __repr__(self):
         return str(self)
@@ -44,20 +60,16 @@ class Atom:
     def __eq__(self, other: Atom):
         if not isinstance(other, Atom):
             return False
-        return str(self) == str(other)
+        return self.__string == other.__string
 
     def toFunctionName(self):
-        parameters = ','.join([a for a in self.attributes])
-        parenthesis = f"({parameters})" if self.attributes else ""
-        return f"{self.name}{parenthesis}"
+        return self.__functionName
 
     def toAlphaFunctionName(self):
-        parameters = ','.join([a for a in self.attributes])
-        parenthesis = f"({parameters})" if self.attributes else ""
-        return f"\\alpha_{{{self.name}}}{parenthesis}"
+        return self.__alphaFunctionName
 
     def toExpression(self) -> Expr:
-        return Symbol(self.toFunctionName())
+        return Symbol(self.__functionName)
 
     @classmethod
     def fromString(cls, string):

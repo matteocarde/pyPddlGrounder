@@ -4,6 +4,8 @@ from typing import Dict, List
 from antlr4 import InputStream, CommonTokenStream
 
 from BinaryPredicate import BinaryPredicate
+from Literal import Literal
+from Predicate import Predicate
 from antlr4_directory.pddlLexer import pddlLexer
 from antlr4_directory.pddlParser import pddlParser
 from InitialCondition import InitialCondition
@@ -16,7 +18,7 @@ class Problem:
     domainName: str
     objectsByType: Dict[str, List[str]]
     init: InitialCondition
-    metric: BinaryPredicate or None = None
+    metric: Predicate or None = None
     goal: Goal
 
     def __init__(self):
@@ -75,8 +77,14 @@ class Problem:
         return Problem.fromNode(parseTree.problem())
 
     def __setMetric(self, node: pddlParser.MetricContext):
-        if node.sign.text == "maximize":
-            raise Exception("Maximize not supported")
-
-        self.metric = BinaryPredicate.fromNode(node.op)
         return
+        # To implement
+        # if node.sign.text == "maximize":
+        #     raise Exception("Maximize not supported")
+        #
+        # predicate = node.op.getChild(0)
+        # if isinstance(predicate, BinaryPredicate):
+        #     self.metric = BinaryPredicate.fromNode(predicate)
+        # else:
+        #     self.metric = Literal.fromNode(predicate)
+        # return

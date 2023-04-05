@@ -169,7 +169,7 @@ def serializedATN():
         0,0,0,458,459,1,0,0,0,459,457,1,0,0,0,459,460,1,0,0,0,460,461,1,
         0,0,0,461,462,5,39,0,0,462,111,1,0,0,0,463,464,5,38,0,0,464,465,
         5,34,0,0,465,466,3,80,40,0,466,467,5,39,0,0,467,113,1,0,0,0,468,
-        469,5,38,0,0,469,470,5,35,0,0,470,471,7,3,0,0,471,472,3,60,30,0,
+        469,5,38,0,0,469,470,5,35,0,0,470,471,7,3,0,0,471,472,3,58,29,0,
         472,473,5,39,0,0,473,115,1,0,0,0,40,118,124,127,130,133,138,140,
         158,172,180,193,200,206,213,231,238,247,263,270,303,312,314,325,
         327,336,349,353,359,379,382,391,394,403,406,416,421,438,448,457,
@@ -3882,7 +3882,7 @@ class pddlParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.sign = None # Token
-            self.op = None # OperationContext
+            self.op = None # OperationSideContext
 
         def LP(self):
             return self.getToken(pddlParser.LP, 0)
@@ -3890,8 +3890,8 @@ class pddlParser ( Parser ):
         def RP(self):
             return self.getToken(pddlParser.RP, 0)
 
-        def operation(self):
-            return self.getTypedRuleContext(pddlParser.OperationContext,0)
+        def operationSide(self):
+            return self.getTypedRuleContext(pddlParser.OperationSideContext,0)
 
 
         def getRuleIndex(self):
@@ -3928,7 +3928,7 @@ class pddlParser ( Parser ):
                 self._errHandler.reportMatch(self)
                 self.consume()
             self.state = 471
-            localctx.op = self.operation()
+            localctx.op = self.operationSide()
             self.state = 472
             self.match(pddlParser.RP)
         except RecognitionException as re:

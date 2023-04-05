@@ -29,6 +29,18 @@ class Operation:
         self.parameters = list()
         self.preconditions = Preconditions()
         self.effects = Effects()
+        self.functions = set()
+        self.predicates = set()
+        self.preB = set()
+        self.addList = set()
+        self.delList = set()
+        self.assList = set()
+        self.incrList = set()
+        self.decrList = set()
+        self.influencedAtoms = set()
+        self.increases = dict()
+        self.decreases = dict()
+        self.assignments = dict()
 
     @classmethod
     def fromNode(cls, node: p.ActionContext or p.EventContext or p.ProcessContext):
@@ -43,6 +55,17 @@ class Operation:
             elif isinstance(child, p.OpEffectContext):
                 operation.__addEffects(child)
 
+        operation.__cacheLists()
+        return operation
+
+    @classmethod
+    def fromProperties(cls, name: str, preconditions: Preconditions, effects: Effects, planName: str):
+        operation = cls()
+        operation.name = name
+        operation.preconditions = preconditions
+        operation.effects = effects
+        operation.planName = planName
+        operation.__cacheLists()
         return operation
 
     def __setParameters(self, node: p.ParametersContext):
@@ -84,11 +107,11 @@ class Operation:
         combinations: List[Dict[str, str]] = self.getCombinations(problem)
         gOperations = []
         for subs in combinations:
-            operation: Operation = Operation()
-            operation.name = self.__getGroundedName(subs)
-            operation.preconditions = self.preconditions.ground(subs)
-            operation.effects = self.effects.ground(subs)
-            operation.planName = self.__getGroundedPlanName(subs)
+            name = self.__getGroundedName(subs)
+            preconditions = self.preconditions.ground(subs)
+            effects = self.effects.ground(subs)
+            planName = self.__getGroundedPlanName(subs)
+            operation: Operation = Operation.fromProperties(name, preconditions, effects, planName)
             gOperations.append(operation)
         return gOperations
 
@@ -110,13 +133,13 @@ class Operation:
     def __repr__(self):
         return str(self)
 
-    def getFunctions(self) -> Set[Atom]:
+    def __getFunctions(self) -> Set[Atom]:
         return self.preconditions.getFunctions() | self.effects.getFunctions()
 
-    def getPredicates(self) -> Set[Atom]:
+    def __getPredicates(self) -> Set[Atom]:
         return self.preconditions.getPredicates() | self.effects.getPredicates()
 
-    def getModifiedPredicates(self, sign: str = None) -> Set[Atom]:
+    def __getModifiedPredicates(self, sign: str = None) -> Set[Atom]:
         atomList: Set[Atom] = set()
         for c in self.effects:
             if not isinstance(c, Literal) or (sign is not None and c.sign != sign):
@@ -124,7 +147,7 @@ class Operation:
             atomList = atomList | c.getPredicates()
         return atomList
 
-    def getPreconditionAtoms(self, preconditionClass) -> Set[Atom]:
+    def __getPreconditionAtoms(self, preconditionClass) -> Set[Atom]:
         atomList: Set[Atom] = set()
         for c in self.preconditions:
             if not isinstance(c, preconditionClass):
@@ -132,7 +155,7 @@ class Operation:
             atomList = atomList | {c.getAtom()}
         return atomList
 
-    def getModifiedFunctions(self, operator: str = None) -> Set[Atom]:
+    def __getModifiedFunctions(self, operator: str = None) -> Set[Atom]:
         atomList: Set[Atom] = set()
         for c in self.effects:
             if not isinstance(c, BinaryPredicate) or (operator is not None and c.operator != operator):
@@ -140,7 +163,7 @@ class Operation:
             atomList = atomList | {c.getAtom()}
         return atomList
 
-    def getModificationOperations(self, operator: str = None) -> Dict[Atom, Predicate]:
+    def __getModificationOperations(self, operator: str = None) -> Dict[Atom, Predicate]:
         modification = dict()
         for c in self.effects:
             if not isinstance(c, BinaryPredicate) or (operator is not None and c.operator != operator):
@@ -148,41 +171,92 @@ class Operation:
             modification[c.getAtom()] = c.rhs
         return modification
 
+    def __getPreB(self) -> Set[Atom]:
+        return self.__getPreconditionAtoms(Literal)
+
+    def __getAddList(self) -> Set[Atom]:
+        return self.__getModifiedPredicates("+")
+
+    def __getDelList(self) -> Set[Atom]:
+        return self.__getModifiedPredicates("-")
+
+    def __getAssList(self) -> Set[Atom]:
+        return self.__getModifiedFunctions("assign")
+
+    def __getIncrList(self) -> Set[Atom]:
+        return self.__getModifiedFunctions("increase")
+
+    def __getDecrList(self) -> Set[Atom]:
+        return self.__getModifiedFunctions("decrease")
+
+    def __getInfluencedAtoms(self):
+        return self.__getModifiedPredicates() | self.__getModifiedFunctions()
+
+    def __getIncreases(self) -> Dict[Atom, Predicate]:
+        return self.__getModificationOperations("increase")
+
+    def __getDecreases(self) -> Dict[Atom, Predicate]:
+        return self.__getModificationOperations("decrease")
+
+    def __getAssignments(self) -> Dict[Atom, Predicate]:
+        return self.__getModificationOperations("assign")
+
+    def getFunctions(self) -> Set[Atom]:
+        return self.functions
+
+    def getPredicates(self) -> Set[Atom]:
+        return self.predicates
+
     def getPreB(self) -> Set[Atom]:
-        return self.getPreconditionAtoms(Literal)
+        return self.preB
 
     def getAddList(self) -> Set[Atom]:
-        return self.getModifiedPredicates("+")
+        return self.addList
 
     def getDelList(self) -> Set[Atom]:
-        return self.getModifiedPredicates("-")
+        return self.delList
 
     def getAssList(self) -> Set[Atom]:
-        return self.getModifiedFunctions("assign")
+        return self.assList
 
     def getIncrList(self) -> Set[Atom]:
-        return self.getModifiedFunctions("increase")
+        return self.incrList
 
     def getDecrList(self) -> Set[Atom]:
-        return self.getModifiedFunctions("decrease")
+        return self.decrList
 
     def getInfluencedAtoms(self):
-        return self.getModifiedPredicates() | self.getModifiedFunctions()
+        return self.influencedAtoms
 
     def getIncreases(self) -> Dict[Atom, Predicate]:
-        return self.getModificationOperations("increase")
+        return self.increases
 
     def getDecreases(self) -> Dict[Atom, Predicate]:
-        return self.getModificationOperations("decrease")
+        return self.decreases
 
     def getAssignments(self) -> Dict[Atom, Predicate]:
-        return self.getModificationOperations("assign")
+        return self.assignments
 
     def couldBeRepeated(self) -> bool:
-        return len(self.getIncrList() | self.getDecrList()) > 0
+        return len(self.getIncrList() | self.getDecrList()) > 0 and \
+            len(self.getPreB().intersection(self.getAddList() | self.getDelList())) == 0
 
     def substitute(self, sub: Dict[Atom, float], default=None) -> Operation:
         raise NotImplemented()
+
+    def __cacheLists(self):
+        self.functions = self.__getFunctions()
+        self.predicates = self.__getPredicates()
+        self.preB = self.__getPreB()
+        self.addList = self.__getAddList()
+        self.delList = self.__getDelList()
+        self.assList = self.__getAssList()
+        self.incrList = self.__getIncrList()
+        self.decrList = self.__getDecrList()
+        self.influencedAtoms = self.__getInfluencedAtoms()
+        self.increases = self.__getIncreases()
+        self.decreases = self.__getDecreases()
+        self.assignments = self.__getAssignments()
 
     def __hash__(self):
         return hash(self.name)

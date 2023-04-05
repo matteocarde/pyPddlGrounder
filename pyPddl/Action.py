@@ -26,6 +26,10 @@ class Action(Operation):
         return super().fromNode(node)
 
     @classmethod
+    def fromProperties(cls, name, preconditions, effects, planName):
+        return super().fromProperties(name, preconditions, effects, planName)
+
+    @classmethod
     def fromString(cls, string: str) -> Action:
         return cls.fromNode(Utilities.getParseTree(string).action())
 
@@ -36,11 +40,11 @@ class Action(Operation):
     def ground(self, problem) -> List[Action]:
         groundOps: List = []
         for op in self.getGroundedOperations(problem):
-            action = Action()
-            action.name = op.name
-            action.preconditions = op.preconditions
-            action.effects = op.effects
-            action.planName = op.planName
+            name = op.name
+            preconditions = op.preconditions
+            effects = op.effects
+            planName = op.planName
+            action = Action.fromProperties(name, preconditions, effects, planName)
             groundOps.append(action)
         return groundOps
 
@@ -86,20 +90,22 @@ class Action(Operation):
             dir_plus = interval.ub if effect.operator == "increase" else interval.lb
             dir_minus = interval.lb if effect.operator == "increase" else interval.ub
 
-            pre_plus = self.preconditions + [effect.rhs > 0]
-            pre_minus = self.preconditions + [effect.rhs < 0]
+            if not isinstance(effect.rhs, Constant) or effect.rhs.value > 0:
+                pre_plus = self.preconditions + [effect.rhs > 0]
+                e_plus = Supporter(self, pre_plus, SupporterEffect(atom, dir_plus))
+                supporters.add(e_plus)
 
-            e_plus = Supporter(self, pre_plus, SupporterEffect(atom, dir_plus))
-            e_minus = Supporter(self, pre_minus, SupporterEffect(atom, dir_minus))
-            supporters |= {e_plus, e_minus}
+            if not isinstance(effect.rhs, Constant) or effect.rhs.value < 0:
+                pre_minus = self.preconditions + [effect.rhs < 0]
+                e_minus = Supporter(self, pre_minus, SupporterEffect(atom, dir_minus))
+                supporters.add(e_minus)
 
         return supporters
 
     def substitute(self, sub: Dict[Atom, float], default=None) -> Action:
-        action = Action()
-        action.name = self.name
-        action.preconditions = self.preconditions.substitute(sub, default)
-        action.effects = self.effects.substitute(sub, default)
-        action.planName = self.planName
+        name = self.name
+        preconditions = self.preconditions.substitute(sub, default)
+        effects = self.effects.substitute(sub, default)
+        planName = self.planName
+        action = Action.fromProperties(name, preconditions, effects, planName)
         return action
-
