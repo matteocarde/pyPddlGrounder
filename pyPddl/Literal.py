@@ -80,6 +80,11 @@ class Literal(Predicate):
     def fromNegativeString(cls, string: str) -> Literal:
         return cls.fromNode(Utilities.getParseTree(string).negativeLiteral())
 
+    def toLatex(self) -> str:
+        if self.sign == "+":
+            return self.atom.toLatex()
+        return f"(\\neg {self.atom.toLatex()})"
+
     def __hash__(self):
         return hash(self.sign + str(self.atom))
 

@@ -26,6 +26,9 @@ class Predicate:
     def getFunctions(self) -> Set[Atom]:
         raise NotImplemented()
 
+    def toLatex(self) -> str:
+        raise NotImplemented
+
     def __eq__(self, other):
         if not isinstance(other, Predicate):
             return False

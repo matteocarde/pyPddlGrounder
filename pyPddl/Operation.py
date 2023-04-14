@@ -265,3 +265,6 @@ class Operation:
         if not isinstance(other, Operation):
             return False
         return self.name == other.name
+
+    def nameToLatex(self):
+        return self.planName.replace("_", r"\_")

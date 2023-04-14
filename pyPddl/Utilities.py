@@ -31,6 +31,21 @@ INVERSE_COMPARATORS = {
     "!=": "="
 }
 
+LATEX_OP = {
+    "+": "+",
+    "-": "-",
+    "*": r"\times",
+    ">=": r"\geq",
+    "<=": r"\leq",
+    ">": ">",
+    "<": "<",
+    "=": "=",
+    "!=": r"\neq",
+    "increase": r"\mathrel{+}=",
+    "decrease": r"\mathrel{-}=",
+    "assign": r"\mathrel{:}=",
+}
+
 
 class Utilities:
 
@@ -57,3 +72,6 @@ class Utilities:
     def inverted(cls, op: str):
         return INVERSE_COMPARATORS[op]
 
+    @classmethod
+    def latexOp(cls, op):
+        return LATEX_OP[op]

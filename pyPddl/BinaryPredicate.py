@@ -111,6 +111,11 @@ class BinaryPredicate(Predicate):
             return False
         return str(self) == str(other)
 
+    def toLatex(self) -> str:
+        if self.operator == "/":
+            return r"\frac{" + self.lhs.toLatex() + "}{" + self.rhs.toLatex + "}"
+        return f"({self.lhs.toLatex()} {Utilities.latexOp(self.operator)} {self.rhs.toLatex()})"
+
     @staticmethod
     def additiveEffectsTransformation(effect: BinaryPredicate):
         x = BinaryPredicate()

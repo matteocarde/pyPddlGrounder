@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Dict, Tuple, List
 
+from Utilities import Utilities
 from antlr4_directory.pddlParser import pddlParser
 from Predicate import Predicate
 from Type import Type

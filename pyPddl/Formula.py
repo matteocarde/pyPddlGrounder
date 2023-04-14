@@ -3,6 +3,8 @@ from __future__ import annotations
 from itertools import chain
 from typing import Dict, Set
 
+from pylatex import Document
+
 from Atom import Atom
 from BinaryPredicate import BinaryPredicate
 from Literal import Literal
@@ -96,3 +98,10 @@ class Formula:
 
     def __len__(self):
         return len(self.conditions)
+
+    def toLatex(self):
+        if not self.conditions:
+            return r"\emptyset"
+        symbol = r"\wedge" if self.type == "AND" else r"\vee"
+        return "(" + symbol.join([c.toLatex() for c in self.conditions]) + ")"
+        pass

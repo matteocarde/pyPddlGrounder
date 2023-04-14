@@ -38,8 +38,9 @@ class Atom:
         self.__hash = hash(self.__string)
         parameters = ','.join([a for a in self.attributes])
         parenthesis = f"({parameters})" if self.attributes else ""
-        self.__functionName = f"{self.name}{parenthesis}"
-        self.__alphaFunctionName = f"\\alpha_{{{self.name}}}{parenthesis}"
+        name = self.name.replace("_", r"\_")
+        self.__functionName = f"{name}{parenthesis}"
+        self.__alphaFunctionName = f"\\alpha_{{{name + parenthesis}}}"
 
     def ground(self, subs: Dict[str, str]) -> Atom:
         atom = Atom()
@@ -74,3 +75,6 @@ class Atom:
     @classmethod
     def fromString(cls, string):
         return cls.fromNode(Utilities.getParseTree(string).atom())
+
+    def toLatex(self):
+        return f"\\operatorname{{{self.__functionName}}}"

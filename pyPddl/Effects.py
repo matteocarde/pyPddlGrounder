@@ -63,3 +63,7 @@ class Effects:
 
     def __len__(self):
         return len(self.assignments)
+
+    def toLatex(self):
+        return ",".join([a.toLatex() for a in self.assignments])
+        pass

@@ -68,3 +68,6 @@ class Constant(Predicate):
 
     def toExpression(self) -> Expr or float:
         return self.value
+
+    def toLatex(self) -> str:
+        return r"\delta_e" if self.isDelta else str(self.value)
