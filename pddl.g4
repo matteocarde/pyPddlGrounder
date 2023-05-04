@@ -49,8 +49,8 @@ typedAtom: atomName typedAtomParameter*;
 
 //positiveLiteral: (name a b c d)
 //negativeLiteral: (not (name a b c d))
-positiveLiteral: LP (atom) RP;
-typedPositiveLiteral: LP (typedAtom) RP;
+positiveLiteral: LP atom RP | param=liftedAtomParameter;
+typedPositiveLiteral: LP typedAtom RP;
 negativeLiteral: LP 'not' positiveLiteral RP;
 booleanLiteral: positiveLiteral | negativeLiteral;
 
@@ -79,8 +79,8 @@ modification: LP modificator positiveLiteral operationSide RP;
 
 effect:  booleanLiteral | modification;
 
-andClause: LP 'and' (andClause | orClause | booleanLiteral | negatedComparation | comparation)+ RP;
-orClause: LP 'or' (andClause | orClause | booleanLiteral | negatedComparation | comparation)+ RP;
+andClause: LP 'and' (andClause | orClause | booleanLiteral | negatedComparation  | comparation)+ RP;
+orClause: LP 'or' (andClause | orClause | booleanLiteral | negatedComparation  | comparation)+ RP;
 andEffect : LP 'and' effect+ RP;
 emptyPrecondition: LP RP;
 preconditions: andClause | orClause | booleanLiteral | negatedComparation | comparation | emptyPrecondition;

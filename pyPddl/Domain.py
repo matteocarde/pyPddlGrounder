@@ -51,12 +51,28 @@ class Domain:
         from RPG import RPG
         from ARPG import ARPG
 
+        constants: Dict[Atom, float] = dict()
+
+        for op in gActions | gEvents | gProcess:
+            for fun in op.getFunctions():
+                if fun not in problem.init.numericAssignments:
+                    print(f"WARNING: {fun} was not initialized. Substituting it with 0")
+                    constants[fun] = 0
+
+        gDomain = gDomain.substitute(constants)
+
         rpg = RPG(gDomain, problem)
         orderedActions = rpg.getActionsOrder()
         arpg = ARPG(orderedActions, problem)
 
         gDomain.actions = orderedActions
         constants: Dict[Atom, float] = arpg.getConstantAtoms()
+
+        for op in gActions | gEvents | gProcess:
+            for fun in op.getFunctions():
+                if fun not in problem.init.numericAssignments:
+                    print(f"WARNING: {fun} was not initialized. Substituting it with 0")
+                    constants[fun] = 0
 
         gDomain = gDomain.substitute(constants)
         orderedActions = [a.substitute(constants) for a in orderedActions]

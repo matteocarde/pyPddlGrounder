@@ -9,6 +9,8 @@ from MooreInterval import MooreInterval
 
 OPERATION = "(+ 5 (- (+ 20 10) (* 20 (/ (x ?a1) (x ?a2)))))"
 
+TYPED_COMPARATION = "(not (= ?x1 ?x2))"
+
 
 class TestFormula(TestCase):
 

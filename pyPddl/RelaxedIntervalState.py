@@ -36,6 +36,9 @@ class RelaxedIntervalState:
         return ris
 
     def getAtom(self, atom: Atom) -> MooreInterval:
+        # if not atom in self.__intervals:
+        #     print(f"WARNING: The fluent {atom} was not initialized. Setting it to 0")
+        #     return MooreInterval(0, 0)
         return self.__intervals[atom]
 
     def applySupporters(self, activeSupporters: Set[Supporter]):

@@ -28,11 +28,11 @@ class Effects:
         else:
             nodes.append(node.getChild(0))
 
-        for node in nodes:
-            if isinstance(node, p.BooleanLiteralContext):
-                effects.assignments.append(Literal.fromNode(node.getChild(0)))
+        for n in nodes:
+            if isinstance(n, p.BooleanLiteralContext):
+                effects.assignments.append(Literal.fromNode(n.getChild(0)))
             else:
-                effects.assignments.append(BinaryPredicate.fromNode(node))
+                effects.assignments.append(BinaryPredicate.fromNode(n))
 
         return effects
 

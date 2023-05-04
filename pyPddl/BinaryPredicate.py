@@ -113,7 +113,7 @@ class BinaryPredicate(Predicate):
 
     def toLatex(self) -> str:
         if self.operator == "/":
-            return r"\frac{" + self.lhs.toLatex() + "}{" + self.rhs.toLatex + "}"
+            return r"\frac{" + self.lhs.toLatex() + "}{" + self.rhs.toLatex() + "}"
         return f"({self.lhs.toLatex()} {Utilities.latexOp(self.operator)} {self.rhs.toLatex()})"
 
     @staticmethod
@@ -133,7 +133,16 @@ class BinaryPredicate(Predicate):
         x.type = self.type
         x.__functions = x.getFunctionsOverwrite()
 
+        if not x.__functions:
+            return x.toConstant()
+
         return x
+
+    def toConstant(self) -> Constant:
+        if self.getFunctions():
+            raise Exception(f"Cannot transform {self} into a Consant")
+        c = Constant(float(self.toExpression()))
+        return c
 
     def getLinearIncrement(self) -> float:
         if self.type != BinaryPredicateType.OPERATION:

@@ -74,7 +74,7 @@ class Action(Operation):
                 continue
 
             # Additive Effects Transformation
-            if effect.operator == "assign" and isinstance(effect.rhs, BinaryPredicate):
+            if effect.operator == "assign":
                 effect = BinaryPredicate.additiveEffectsTransformation(effect)
 
             atom = effect.getAtom()
