@@ -1,9 +1,11 @@
 from __future__ import annotations
 from typing import List, Dict, cast
 
+from Type import Type
 from antlr4_directory.pddlParser import pddlParser as p
 from Operation import Operation
 from OperationType import OperationType
+
 
 class Event(Operation):
 
@@ -11,8 +13,8 @@ class Event(Operation):
         super().__init__()
 
     @classmethod
-    def fromNode(cls, node: p.EventContext):
-        return super().fromNode(node)
+    def fromNode(cls, node: p.EventContext, types: Dict[str, Type]):
+        return super().fromNode(node, types)
 
     @property
     def type(self):

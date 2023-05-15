@@ -34,14 +34,14 @@ requirements: LP ':requirements' requireKey* RP;
 //TYPES
 parentType: '-' typeName;
 typeName: NAME;
-type: typeName parentType*;
+type: typeName+ parent=parentType*;
 types: LP ':types' type+ RP;
 
 //ATOM AND LITERALS
 atomName: NAME;
 groundAtomParameter: NAME;
 liftedAtomParameter: VAR;
-typedAtomParameter: liftedAtomParameter+ '-' typeName;
+typedAtomParameter: liftedAtomParameter+ '-' atomsType=typeName;
 atomParameter: liftedAtomParameter | groundAtomParameter ;
 
 atom: atomName atomParameter*;

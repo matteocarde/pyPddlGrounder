@@ -98,11 +98,11 @@ class Domain:
             elif isinstance(child, pddlParser.FunctionsContext):
                 domain.__setFunctions(child)
             elif isinstance(child, pddlParser.ActionContext):
-                domain.actions.add(Action.fromNode(child))
+                domain.actions.add(Action.fromNode(child, domain.types))
             elif isinstance(child, pddlParser.EventContext):
-                domain.events.add(Event.fromNode(child))
+                domain.events.add(Event.fromNode(child, domain.types))
             elif isinstance(child, pddlParser.ProcessContext):
-                domain.processes.add(Process.fromNode(child))
+                domain.processes.add(Process.fromNode(child, domain.types))
 
         return domain
 
@@ -126,11 +126,25 @@ class Domain:
             self.requirements.append(child.getText())
 
     def __setTypesList(self, node: pddlParser.TypesContext):
-        for child in node.children:
-            if not isinstance(child, pddlParser.TypeContext):
+        for typeRows in node.children:
+            if not isinstance(typeRows, pddlParser.TypeContext):
                 continue
-            name = child.getText()
-            self.types[name] = Type(name)
+
+            parent = None
+            if typeRows.parent:
+                name = typeRows.parent.getChild(1).getText()
+                self.types[name] = self.types.setdefault(name, Type(name))
+                parent = self.types[name]
+
+            for t in typeRows.children:
+                if not isinstance(t, pddlParser.TypeNameContext):
+                    continue
+                name = t.getText()
+                self.types[name] = self.types.setdefault(name, Type(name, parent))
+                if parent:
+                    parent.addChild(self.types[name])
+
+        pass
 
     def __setPredicates(self, node: pddlParser.PredicatesContext):
         for child in node.children:

@@ -12,6 +12,7 @@ from Parameter import Parameter
 from Preconditions import Preconditions
 from Predicate import Predicate
 from Problem import Problem
+from Type import Type
 from antlr4_directory.pddlParser import pddlParser as p
 
 
@@ -43,13 +44,13 @@ class Operation:
         self.assignments = dict()
 
     @classmethod
-    def fromNode(cls, node: p.ActionContext or p.EventContext or p.ProcessContext):
+    def fromNode(cls, node: p.ActionContext or p.EventContext or p.ProcessContext, types: Dict[str, Type]):
         operation = cls()
         for child in node.children:
             if isinstance(child, p.OpNameContext):
                 operation.name = child.getText()
             elif isinstance(child, p.OpParametersContext):
-                operation.__setParameters(child.getChild(1))
+                operation.__setParameters(child.getChild(1), types)
             elif isinstance(child, p.OpPreconditionContext):
                 operation.__addPreconditions(child)
             elif isinstance(child, p.OpEffectContext):
@@ -68,17 +69,16 @@ class Operation:
         operation.__cacheLists()
         return operation
 
-    def __setParameters(self, node: p.ParametersContext):
+    def __setParameters(self, node: p.ParametersContext, types: Dict[str, Type]):
         for child in node.children:
             if not isinstance(child, p.TypedAtomParameterContext):
                 continue
             varNames = []
-            varType = None
+            varType = types[child.atomsType.getText()]
+
             for x in child.children:
                 if isinstance(x, p.LiftedAtomParameterContext):
                     varNames.append(x.getText())
-                elif isinstance(x, p.TypeNameContext):
-                    varType = x.getText()
 
             for name in varNames:
                 self.parameters.append(Parameter(name, varType))
@@ -92,7 +92,12 @@ class Operation:
     def getCombinations(self, problem: Problem) -> List[Dict[str, str]]:
         subs: List[List[str]] = list()
         for parameter in self.parameters:
-            subs.append(problem.objectsByType[parameter.type])
+            pSubs = list()
+            for childType in parameter.type.getMeAndMyChildren():
+                if childType.name not in problem.objectsByType:
+                    continue
+                pSubs += problem.objectsByType[childType.name]
+            subs.append(pSubs)
 
         combinations: List[Dict[str, str]] = list()
         for sub in itertools.product(*subs):

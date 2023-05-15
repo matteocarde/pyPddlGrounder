@@ -11,6 +11,7 @@ from MooreInterval import MooreInterval
 from Operation import Operation
 from OperationType import OperationType
 from Supporter import Supporter, SupporterEffect
+from Type import Type
 from Utilities import Utilities
 from antlr4_directory.pddlParser import pddlParser as p
 
@@ -22,8 +23,8 @@ class Action(Operation):
         super().__init__()
 
     @classmethod
-    def fromNode(cls, node: p.ActionContext):
-        return super().fromNode(node)
+    def fromNode(cls, node: p.ActionContext, types: Dict[str, Type]):
+        return super().fromNode(node, types)
 
     @classmethod
     def fromProperties(cls, name, preconditions, effects, planName):
