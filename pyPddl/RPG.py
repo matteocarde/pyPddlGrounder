@@ -35,6 +35,8 @@ class RPG:
             self.__literalsLayers.append(literals)
             self.__actionLayers.append(actions)
 
+        pass
+
     @staticmethod
     def __applyActions(actions: Set[Action]):
         newLiterals = set()
@@ -70,3 +72,15 @@ class RPG:
             usedActions |= layer
 
         return orderedActions
+
+    def getPartialOrder(self) -> List[Set[Action]]:
+
+        usedActions = set()
+        partialOrder = list()
+
+        for layer in self.__actionLayers:
+
+            partialOrder.append(layer - usedActions)
+            usedActions |= layer
+
+        return partialOrder

@@ -43,9 +43,16 @@ class ARPG:
         if not fullBooleanGoal and not state.satisfies(problem.goal):
             raise PDDLException.GoalNotReachable()
 
-    def getActionsOrder(self) -> List[Action]:
+    def __getPurelyBoolean(self) -> List[Action]:
         order: List[Action] = list()
-        usedActions: Set[Action] = set()
+        for action in self.actions:
+            if not action.getFunctions():
+                order.append(action)
+        return order
+
+    def getActionsOrder(self) -> List[Action]:
+        order: List[Action] = self.__getPurelyBoolean()
+        usedActions: Set[Action] = set(order)
         for supporters in self.supporterLevels:
             partialOrder = set()
             for supporter in supporters:
@@ -53,7 +60,8 @@ class ARPG:
                     partialOrder.add(supporter.originatingAction)
                 usedActions.add(supporter.originatingAction)
             order += sorted(partialOrder, key=lambda x: self.originalOrder[x])
-        order += sorted(set(self.actions) - usedActions, key=lambda x: self.originalOrder[x])
+        leftActions = set(self.actions) - usedActions
+        order += sorted(leftActions, key=lambda x: self.originalOrder[x])
         return order
 
     def getConstantAtoms(self) -> Dict[Atom, float]:

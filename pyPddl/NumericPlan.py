@@ -42,7 +42,7 @@ class NumericPlan:
         return True
 
     def __str__(self):
-        return "\n".join([f"{a[0]}x{a[1]}" for a in self.__plan])
+        return "\n".join([f"{a[0]} x{a[1]}" for a in self.__plan])
 
     def __repr__(self):
         return str(self)
